@@ -2,7 +2,7 @@ const { Events } = require(`../validation/eventNames`);
 const { promisify } = require("util");
 const { glob } = require("glob");
 const PG = promisify(glob);
-const chalk = require("chalk");
+const { cyanBright, greenBright, yellow, red } = require("chalk");
 const { AsciiTable3 } = require("ascii-table3");
 const { mainDir } = require(`../system/functions`);
 
@@ -15,24 +15,26 @@ module.exports = async (client) => {
     (await PG(`${mainDir()}/events/*/*.js`)).map(async (file) => {
         const event = require(file);
         const L = file.split("/");
-        const fileDir = L[L.length - 2] + `/` + L[L.length - 1];
+        const fileName = L[L.length - 1];
+        const eventName = fileName.split(".")[0]
+        const fileDir = L[L.length - 2] + `/` + fileName;
 
         // Log errors to table
-        if (!Events.includes(event.name) || !event.name) {
-            await Table.addRow(`${event.name || chalk.red("MISSING")}`, `Invalid event name or missing: ${fileDir}`);
+        if (!Events.includes(eventName)) {
+            await Table.addRow(eventName, red("MISSING"), `Invalid event name or missing: ${fileDir}`);
             return;
         }
 
         // Load the events
         if (event.once) {
-            client.once(event.name, (...args) => event.execute(client, ...args));
+            client.once(eventName, event.bind(null, client));
         } else {
-            client.on(event.name, (...args) => event.execute(client, ...args));
+            client.on(eventName, event.bind(null, client));
         }
 
         // Log success to table
-        await Table.addRow(event.name, chalk.greenBright("LOADED"), fileDir);
+        await Table.addRow(eventName, greenBright("LOADED"), fileDir);
     });
 
-    console.log(Table.toString());
+    console.log(Table.toString()); // Log table to console
 }
