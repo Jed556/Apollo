@@ -1,40 +1,13 @@
-const { MessageEmbed } = require("discord.js");
 const Discord = require("discord.js");
-const mongoose = require("mongoose");
-const os = require("os");
-const osUtils = require("os-utils");
+const { MessageEmbed } = require("discord.js");
 const { readdirSync, lstatSync } = require("fs");
-const { cyanBright, greenBright, yellow, red } = require("chalk");
-const ms = require("ms");
-
-const { connectDB, database, ownerID } = require("../../config/client.json")
+const os = require("os");
+const { cyanBright, greenBright, yellow, red, bold, dim } = require("chalk");
 const { randomNum } = require("../../system/functions");
+const { ownerID } = require("../../config/client.json")
 const emb = require("../../config/embed.json")
-const DB = require('../../Structures/Schemas/ClientDB');
 
 let OwnerID = process.env.ownerID || ownerID;
-let Database = process.env.database || database;
-
-/* ----------[CPU Usage]---------- */
-const cpus = os.cpus();
-const cpu = cpus[0];
-
-// Accumulate every CPU times values
-const total = Object.values(cpu.times).reduce(
-    (acc, tv) => acc + tv, 0
-);
-
-// Calculate the CPU usage
-const usage = process.cpuUsage();
-const currentCPUUsage = (usage.user + usage.system) * 1000;
-const perc = currentCPUUsage / total * 100;
-
-/* ----------[RAM Usage]---------- */
-
-// Get the process memory usage (in MB)
-async function getMemoryUsage() {
-    return process.memoryUsage().heapUsed / (1024 * 1024).toFixed(2);
-}
 
 module.exports = async (client) => {
     try {
@@ -81,7 +54,7 @@ module.exports = async (client) => {
                 });
             });
 
-            console.log(`${cyanBright("[INFO]")} Logged in as ${client.user.tag}`);
+            console.log(`${cyanBright.bold("[INFO]")} Logged in as ${bold(client.user.username) + dim("#" + client.user.tag.split("#")[1])}`);
 
             // Client Activity
             const initialStatus = setTimeout(() => {
@@ -96,53 +69,6 @@ module.exports = async (client) => {
                     updateStatus(client);
                 }, 5000);
             }, randomNum(1, 5)) // randTime is a random number between 1 and 5 seconds
-
-
-            if (connectDB) {
-                // Initializing database Connection 
-                if (!Database) return;
-                mongoose.connect(Database, {
-                    dbName: "Client",
-                    useNewUrlParser: true,
-                    useUnifiedTopology: true
-                }).then(() => {
-                    console.log(`${cyanBright("[INFO]")} Connected to database!`);
-                }).catch((err) => {
-                    console.log(`${red("[ERROR]")} Not connected to database \n${err}\n`);
-                });
-            } else {
-                console.log(`${yellow("[WARN]")} Database connection disabled`);
-            }
-
-            // -------------- Systems -------------- //
-            //require("../../Systems/ChatFilterSys")(client);
-
-            // -------------- Events -------------- //
-
-            // Memory Data Update
-            if (connectDB) {
-                let memArray = [];
-
-                setInterval(async () => {
-
-                    //Used Memory in GB
-                    memArray.push(await getMemoryUsage());
-
-                    if (memArray.length >= 14) {
-                        memArray.shift();
-                    }
-
-                    // Store in database
-                    await DB.findOneAndUpdate({
-                        Client: true,
-                    }, {
-                        Memory: memArray,
-                    }, {
-                        upsert: true,
-                    });
-
-                }, ms("5s")); //every 5000 (ms)
-            }
         }
     } catch (e) {
         console.log(String(e.stack))
@@ -207,14 +133,30 @@ async function updateStatus(client) {
 
             // Set status as RAM usage
             if (display == 4) {
-                client.user.setActivity(`RAM: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1)}%`, {
+                // Calculate memory usage
+                const memPerc = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1);
+
+                client.user.setActivity(`RAM: ${memPerc}%`, {
                     type: "WATCHING",
                 });
             }
 
             // Set status as CPU usage
             if (display == 5) {
-                client.user.setActivity(`CPU: ${(perc / 1000).toFixed(1)}%`, {
+                const cpus = os.cpus();
+                const cpu = cpus[0];
+
+                // Accumulate every CPU times values
+                const total = Object.values(cpu.times).reduce(
+                    (acc, tv) => acc + tv, 0
+                );
+
+                // Calculate the CPU usage
+                const usage = process.cpuUsage();
+                const currentCPUUsage = (usage.user + usage.system) * 1000;
+                const cpuPerc = currentCPUUsage / total * 100;
+
+                client.user.setActivity(`CPU: ${(cpuPerc / 1000).toFixed(1)}%`, {
                     type: "WATCHING",
                 });
             }
