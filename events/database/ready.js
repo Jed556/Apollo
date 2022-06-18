@@ -42,7 +42,7 @@ module.exports = async (client) => {
                 //Used Memory in GB
                 memArray.push(await getMemoryUsage());
 
-                if (memArray.length >= 37) {
+                if (memArray.length >= 100) {
                     memArray.shift();
                 }
 

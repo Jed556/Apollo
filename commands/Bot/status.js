@@ -60,7 +60,7 @@ module.exports = {
 
         // Create labels based on Memory array length
         const labels = [];
-        for (let i = memoryUpdate; i < docs.Memory.length; i += memoryUpdate) {
+        for (let i = memoryUpdate; i < docs.Memory.length + memoryUpdate; i += memoryUpdate) {
             labels.push(i.toString());
         }
 
@@ -101,18 +101,18 @@ module.exports = {
 
         // Chart Data
         const chartData = {
-            labels: labels,
+            labels: labels.reverse(),
             datasets: [
                 {
                     label: 'RAM Usage',
                     fill: true,
-                    backgroundColor: colors.green.low, //TODO: Change to a gradient
+                    backgroundColor: colors.green.low,
                     // gradient: {
                     //     backgroundColor: {
                     //         axis: 'y',
                     //         colors: {
-                    //             0: colors.green.half,
-                    //             50: colors.green.quarter,
+                    //             0: colors.green.quarter,
+                    //             50: colors.green.low,
                     //             100: colors.green.zero
                     //         },
                     //     },
