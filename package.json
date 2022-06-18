@@ -28,6 +28,7 @@
     "ascii-table3": "^0.7.6",
     "chalk": "^4.1.2",
     "chartjs-node-canvas": "^4.1.6",
+    "chartjs-plugin-gradient": "^0.5.0",
     "discord.js": "^13.5.0",
     "glob": "^8.0.3",
     "mathjs": "^10.6.1",
