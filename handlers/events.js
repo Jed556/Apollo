@@ -8,8 +8,9 @@ const { mainDir } = require(`../system/functions`);
 
 module.exports = async (client) => {
     // Create table
-    const Table = new AsciiTable3("EVENTS LOADED").setStyle('unicode-single');
-    Table.setHeading("Event", "Status", "Description");
+    const Table = new AsciiTable3("EVENTS LOADED").setStyle('unicode-single')
+    .setAlignCenter(3).setAlignRight(1);
+    Table.setHeading("Category", "Name", "Status", "Description");
 
     // Require every file ending with .js in the events folder
     (await PG(`${mainDir()}/events/*/*.js`)).map(async (file) => {
@@ -17,11 +18,12 @@ module.exports = async (client) => {
         const L = file.split("/");
         const fileName = L[L.length - 1];
         const eventName = fileName.split(".")[0]
-        const fileDir = L[L.length - 2] + `/` + fileName;
+        const eventCategory = L[L.length - 2];
+        const fileDir = eventCategory + `/` + fileName;
 
         // Log errors to table
         if (!Events.includes(eventName)) {
-            await Table.addRow(eventName, red("MISSING"), `Invalid event name or missing: ${fileDir}`);
+            await Table.addRow(eventCategory, eventName, red("MISSING"), `Invalid event name or missing: ${fileDir}`);
             return;
         }
 
@@ -33,7 +35,7 @@ module.exports = async (client) => {
         }
 
         // Log success to table
-        await Table.addRow(eventName, greenBright("LOADED"), fileDir);
+        await Table.addRow(eventCategory, eventName, greenBright("LOADED"), fileDir);
     });
 
     console.log(Table.toString()); // Log table to console

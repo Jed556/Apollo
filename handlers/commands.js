@@ -3,17 +3,19 @@ const { promisify } = require("util");
 const { glob } = require("glob");
 const PG = promisify(glob);
 const chalk = require("chalk")
-const {magentaBright, cyanBright, greenBright, yellow, red} = require("chalk");
+const dcCol = chalk.bold.hex("#7289da");
+const { cyanBright, greenBright, yellow, red, bold } = require("chalk");
 const { AsciiTable3 } = require("ascii-table3");
 const { mainDir } = require(`../system/functions`);
-const { token, botID, guildID, loadGlobal } = require("../config/client.json");
+const { token, botID, guildID, loadGlobal, defaultCooldown } = require("../config/client.json");
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v10');
 
 module.exports = async (client) => {
     // Create table
-    const Table = new AsciiTable3("COMMANDS LOADED").setStyle('unicode-single');
-    Table.setHeading("Command", "Status", "Description");
+    const Table = new AsciiTable3("COMMANDS LOADED").setStyle('unicode-single')
+        .setAlignCenter(2).setAlignCenter(4).setAlignRight(1);
+    Table.setHeading("Command", "Cooldown", "Permissions", "Status", "Description");
 
     CommandArray = []; //Array for commands
 
@@ -22,19 +24,21 @@ module.exports = async (client) => {
         const command = require(file);
         const L = file.split("/");
         const fileName = L[L.length - 1];
+        const perms = command.permissions.map(p => `${p}`).join(', ')
+        const cooldown = command.cooldown || defaultCooldown;
 
         // Log errors to table
         if (!command.name)
-            return Table.addRow(fileName, red("FAILED"), "Missinng name");
+            return Table.addRow(fileName, cooldown, perms, red("FAILED"), "Missinng name");
 
         if (!command.description)
-            return Table.addRow(fileName, red("FAILED"), "Missinng description");
+            return Table.addRow(fileName, cooldown, perms, red("FAILED"), "Missinng description");
 
         if (command.permission)
             if (!Permissions.includes(command.permission)) {
                 command.defaultpermission = false;
             } else {
-                return Table.addRow(fileName, red("FAILED"), "Invalid permission");
+                return Table.addRow(fileName, cooldown, perms, red("FAILED"), "Invalid permission");
             }
 
         // Push all commands to client
@@ -42,7 +46,7 @@ module.exports = async (client) => {
         CommandArray.push(command);
 
         // Log success to table
-        await Table.addRow(command.name, greenBright("LOADED"), L[L.length - 2] + `/` + fileName);
+        await Table.addRow(command.name, cooldown, perms, greenBright("LOADED"), L[L.length - 2] + `/` + fileName);
     })
 
     console.log(Table.toString()); // Log table to console
@@ -53,7 +57,7 @@ module.exports = async (client) => {
 
     (async () => {
         try {
-            console.log(magentaBright("[Discord API]") + " Refreshing commands");
+            console.log(dcCol("[REST]") + " Refreshing commands");
             // Check if will deploy globally
             if (loadGlobal) {
                 await rest.put(
@@ -68,7 +72,7 @@ module.exports = async (client) => {
                     { body: CommandArray },
                 );
             }
-            console.log(magentaBright("[Discord API]") + " Reloaded commands");
+            console.log(dcCol("[REST]") + " Reloaded commands");
         } catch (error) {
             console.error(error);
         }
