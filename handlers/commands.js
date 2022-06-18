@@ -2,9 +2,13 @@ const { Permissions } = require("../validation/permissions");
 const { promisify } = require("util");
 const { glob } = require("glob");
 const PG = promisify(glob);
-const chalk = require("chalk");
+const chalk = require("chalk")
+const {magentaBright, cyanBright, greenBright, yellow, red} = require("chalk");
 const { AsciiTable3 } = require("ascii-table3");
 const { mainDir } = require(`../system/functions`);
+const { token, botID, guildID, loadGlobal } = require("../config/client.json");
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v10');
 
 module.exports = async (client) => {
     // Create table
@@ -21,14 +25,16 @@ module.exports = async (client) => {
 
         // Log errors to table
         if (!command.name)
-            return Table.addRow(fileName, "FAILED", "Missinng name");
+            return Table.addRow(fileName, red("FAILED"), "Missinng name");
+
         if (!command.description)
-            return Table.addRow(fileName, "FAILED", "Missinng description");
+            return Table.addRow(fileName, red("FAILED"), "Missinng description");
+
         if (command.permission)
             if (!Permissions.includes(command.permission)) {
                 command.defaultpermission = false;
             } else {
-                return Table.addRow(fileName, "FAILED", "Invalid permission");
+                return Table.addRow(fileName, red("FAILED"), "Invalid permission");
             }
 
         // Push all commands to client
@@ -36,17 +42,35 @@ module.exports = async (client) => {
         CommandArray.push(command);
 
         // Log success to table
-        await Table.addRow(command.name, chalk.greenBright("LOADED"), L[L.length - 2] + `/` + fileName);
+        await Table.addRow(command.name, greenBright("LOADED"), L[L.length - 2] + `/` + fileName);
     })
 
-    console.log(Table.toString());
+    console.log(Table.toString()); // Log table to console
 
 
-    // ---------- LOAD GLOBALLY ---------- //
+    // Load the slash commands
+    const rest = new REST({ version: "10" }).setToken(token);
 
-    client.on("ready", async () => {
-            client.guilds.cache.filter((g) => {
-                g.commands.set(CommandArray);
-            });
-        });
+    (async () => {
+        try {
+            console.log(magentaBright("[Discord API]") + " Refreshing commands");
+            // Check if will deploy globally
+            if (loadGlobal) {
+                await rest.put(
+                    // Deploys globally
+                    Routes.applicationCommands(botID),
+                    { body: CommandArray },
+                );
+            } else {
+                await rest.put(
+                    // Deploys only in stated guildID
+                    Routes.applicationGuildCommands(botID, guildID),
+                    { body: CommandArray },
+                );
+            }
+            console.log(magentaBright("[Discord API]") + " Reloaded commands");
+        } catch (error) {
+            console.error(error);
+        }
+    })();
 }
