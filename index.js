@@ -1,5 +1,6 @@
 const { Client, Collection } = require("discord.js");
-const { token } = require("./config/client.json");
+const { token  } = require("./config/client.json");
+
 const client = new Client({
     fetchAllMembers: false,
     //restTimeOffset: 0,
@@ -21,14 +22,14 @@ const client = new Client({
     }
 });
 
+// Create client collections
 client.commands = new Collection();
+cooldowns = new Collection();
 
-//Require the Handlers
-["events", "commands"]
-    .filter(Boolean)
-    .forEach(h => {
-        require(`./handlers/${h}`)(client);
-    })
+// Load the Handlers
+["events", "commands"].forEach(h => {
+    require(`./handlers/${h}`)(client);
+})
 
 //Start the Bot
 client.login(process.env.token || token);
