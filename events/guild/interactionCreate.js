@@ -1,7 +1,7 @@
-const { ownerID } = require("../../config/client.json");
-const emb = require("../../config/embed.json");
 const { MessageEmbed } = require("discord.js");
+const { ownerID } = require("../../config/client.json");
 const commands = require("../../handlers/commands");
+const emb = require("../../config/embed.json");
 
 let OwnerID = process.env.ownerID || ownerID;
 
@@ -9,7 +9,7 @@ module.exports = {
     name: "interactionCreate",
 
     async execute(interaction, client) {
-        if (client.maintenance && interaction.user.id != OwnerID ) {
+        if (client.maintenance && interaction.user.id != OwnerID) {
             return interaction.reply({
                 embeds: [new MessageEmbed()
                     .setTimestamp()
@@ -46,15 +46,30 @@ module.exports = {
                     .setTimestamp()
                     .setColor(emb.errColor)
                     .setAuthor({ name: "INVALID PERMISSION", iconURL: emb.noPermission })
+                    .setDescription(`**An error occured while running command**`)
                     .addField("Command", interaction.commandName)
-                    .addField("Required Permissions", `${(command && command.permissions) ? command.memberpermissions.map(v => `\`${v}\``).join(",") : command.memberpermissions}`)
                     .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                 ],
                 ephemeral: true
             })
         }
 
-        commands.execute(interaction, client);
+        try {
+            commands.execute(interaction, client);
+        } catch (error) {
+            console.error(error);
+            interaction.reply({
+                embeds: [new MessageEmbed()
+                    .setTimestamp()
+                    .setColor(emb.errColor)
+                    .setAuthor({ name: "EXECUTION ERROR", iconURL: emb.error })
+                    .addField("Command", interaction.commandName)
+                    .addField("Required Permissions", `${(command && command.permissions) ? command.memberpermissions.map(v => `\`${v}\``).join(",") : command.memberpermissions}`)
+                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                ],
+                ephemeral: true
+            });
+        }
     }
 }
 
