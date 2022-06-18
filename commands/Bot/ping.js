@@ -1,10 +1,12 @@
 module.exports = {
     name: "ping",
-    usage: "/ping",
-    description: "PING",
-    permissions: 'SEND_MESSAGES',
+    description: "Ping command",
+    help: "/ping", //OPTIONAL (for the help cmd)
+    cooldown: 1, // Default: 2 seconds
+    permissions: [],
+    options: [],
 
-    async execute(interaction, client) {
+    run: async (client, interaction) => {
         interaction.reply("ping!");
     }
 }

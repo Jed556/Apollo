@@ -23,16 +23,13 @@ function getPBar(percent) {
 
 module.exports = {
     name: "status",
-    usage: "/status",
     description: "Bot Status Information",
-    permissions: 'SEND_MESSAGES',
+    help: "/status", //OPTIONAL (for the help cmd)
+    cooldown: 1, // Default: 2 seconds
+    permissions: [],
+    options: [],
 
-    /**
-     * 
-     * @param {CommandInteraction} interaction 
-     * @param {Client} client 
-     */
-    async execute(interaction, client) {
+    run: async (client, interaction) => {
 
         // Database 
         const docs = await DB.findOne({
