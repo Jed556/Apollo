@@ -1,16 +1,16 @@
-const Discord = require("discord.js");
 const { MessageEmbed } = require("discord.js");
-const { connectDB, database, ownerID } = require("../../config/client.json")
-const emb = require("../../config/embed.json")
-const { readdirSync, lstatSync } = require("fs");
-const { Client } = require("discord.js");
+const Discord = require("discord.js");
 const mongoose = require("mongoose");
-const { randomNum } = require("../../system/functions");
-const DB = require('../../Structures/Schemas/ClientDB');
 const os = require("os");
 const osUtils = require("os-utils");
+const { readdirSync, lstatSync } = require("fs");
 const chalk = require("chalk");
 const ms = require("ms");
+
+const { connectDB, database, ownerID } = require("../../config/client.json")
+const { randomNum } = require("../../system/functions");
+const emb = require("../../config/embed.json")
+const DB = require('../../Structures/Schemas/ClientDB');
 
 let OwnerID = process.env.ownerID || ownerID;
 let Database = process.env.database || database;
