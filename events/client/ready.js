@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const os = require("os");
 const osUtils = require("os-utils");
 const { readdirSync, lstatSync } = require("fs");
-const chalk = require("chalk");
+const { cyanBright, greenBright, yellow, red } = require("chalk");
 const ms = require("ms");
 
 const { connectDB, database, ownerID } = require("../../config/client.json")
@@ -36,122 +36,116 @@ async function getMemoryUsage() {
     return process.memoryUsage().heapUsed / (1024 * 1024).toFixed(2);
 }
 
-module.exports = {
-    name: "ready",
-    once: true,
-
-    execute(client) {
-        try {
-
-            // Check the total number of commands
-            var check = [];
-            readdirSync(`./commands`).forEach((dir) => {
-                if (lstatSync(`./commands/${dir}`).isDirectory()) {
-                    const cmd = readdirSync(`./commands/${dir}`).filter((file) => file.endsWith(".js"));
-                    for (let file of cmd) check.push(file);
-                }
-            })
-
-            // Create log template
-            let log = new MessageEmbed()
-                .setTimestamp()
-                .addField("👾 Discord.js", `\`v${Discord.version}\``, true)
-                .addField("🤖 Node", `\`${process.version}\``, true)
-                .addField("\u200b", `\u200b`, true)
-                .addField("💻 Platform", `\`${os.platform()}\` \`${os.arch()}\``, true)
-                .addField(`⚙ Loaded`, `\`${client.commands.size}/${check.length} Commands\``, true)
-                .addField("\u200b", `\u200b`, true)
-                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-
-            // Send log to admin/s
-            if (client.commands.size < check.length) {
-                // Throw error if there are commands missing
-                client.users.fetch(OwnerID, false).then((user) => {
-                    user.send({
-                        embeds: [log
-                            .setColor(emb.errColor)
-                            .setTitle(`${client.user.username} | Load Error`)
-                        ]
-                    });
-                });
-                client.user.setActivity(`Redeploys • ERROR`, { type: "WATCHING" });
-            } else {
-                // Success log
-                client.users.fetch(OwnerID, false).then((user) => {
-                    user.send({
-                        embeds: [log
-                            .setColor(emb.okColor)
-                            .setTitle(`${client.user.username} Online!`)
-                        ]
-                    });
-                });
-
-                console.log(`${chalk.cyanBright("[INFO]")} Logged in as ${client.user.tag}`);
-
-                // Client Activity
-                const initialStatus = setTimeout(() => {
-                    client.user.setPresence({
-                        activities: [{ name: `Initalizing...`, type: "WATCHING" }],
-                        status: "idle"
-                    });
-                });
-
-                setTimeout(() => {
-                    setInterval(() => {
-                        updateStatus(client);
-                    }, 5000);
-                }, randomNum(1, 5)) // randTime is a random number between 1 and 5 seconds
-
-
-                if (connectDB) {
-                    // Initializing database Connection 
-                    if (!Database) return;
-                    mongoose.connect(Database, {
-                        dbName: "Client",
-                        useNewUrlParser: true,
-                        useUnifiedTopology: true
-                    }).then(() => {
-                        console.log(`${chalk.cyanBright("[INFO]")} Connected to database!`);
-                    }).catch((err) => {
-                        console.log(`${chalk.red("[ERROR]")} Not connected to database \n${err}\n`);
-                    });
-                } else {
-                    console.log(`${chalk.yellow("[WARN]")} Database connection disabled`);
-                }
-
-                // -------------- Systems -------------- //
-                //require("../../Systems/ChatFilterSys")(client);
-
-                // -------------- Events -------------- //
-
-                // Memory Data Update
-                if (connectDB) {
-                    let memArray = [];
-
-                    setInterval(async () => {
-
-                        //Used Memory in GB
-                        memArray.push(await getMemoryUsage());
-
-                        if (memArray.length >= 14) {
-                            memArray.shift();
-                        }
-
-                        // Store in database
-                        await DB.findOneAndUpdate({
-                            Client: true,
-                        }, {
-                            Memory: memArray,
-                        }, {
-                            upsert: true,
-                        });
-
-                    }, ms("5s")); //every 5000 (ms)
-                }
+module.exports = async (client) => {
+    try {
+        // Check the total number of commands
+        var check = [];
+        readdirSync(`./commands`).forEach((dir) => {
+            if (lstatSync(`./commands/${dir}`).isDirectory()) {
+                const cmd = readdirSync(`./commands/${dir}`).filter((file) => file.endsWith(".js"));
+                for (let file of cmd) check.push(file);
             }
-        } catch (e) {
-            console.log(String(e.stack))
+        })
+
+        // Create log template
+        let log = new MessageEmbed()
+            .setTimestamp()
+            .addField("👾 Discord.js", `\`v${Discord.version}\``, true)
+            .addField("🤖 Node", `\`${process.version}\``, true)
+            .addField("\u200b", `\u200b`, true)
+            .addField("💻 Platform", `\`${os.platform()}\` \`${os.arch()}\``, true)
+            .addField(`⚙ Loaded`, `\`${client.commands.size}/${check.length} Commands\``, true)
+            .addField("\u200b", `\u200b`, true)
+            .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+
+        // Send log to admin/s
+        if (client.commands.size < check.length) {
+            // Throw error if there are commands missing
+            client.users.fetch(OwnerID, false).then((user) => {
+                user.send({
+                    embeds: [log
+                        .setColor(emb.errColor)
+                        .setTitle(`${client.user.username} | Load Error`)
+                    ]
+                });
+            });
+            client.user.setActivity(`Redeploys • ERROR`, { type: "WATCHING" });
+        } else {
+            // Success log
+            client.users.fetch(OwnerID, false).then((user) => {
+                user.send({
+                    embeds: [log
+                        .setColor(emb.okColor)
+                        .setTitle(`${client.user.username} Online!`)
+                    ]
+                });
+            });
+
+            console.log(`${cyanBright("[INFO]")} Logged in as ${client.user.tag}`);
+
+            // Client Activity
+            const initialStatus = setTimeout(() => {
+                client.user.setPresence({
+                    activities: [{ name: `Initalizing...`, type: "WATCHING" }],
+                    status: "idle"
+                });
+            });
+
+            setTimeout(() => {
+                setInterval(() => {
+                    updateStatus(client);
+                }, 5000);
+            }, randomNum(1, 5)) // randTime is a random number between 1 and 5 seconds
+
+
+            if (connectDB) {
+                // Initializing database Connection 
+                if (!Database) return;
+                mongoose.connect(Database, {
+                    dbName: "Client",
+                    useNewUrlParser: true,
+                    useUnifiedTopology: true
+                }).then(() => {
+                    console.log(`${cyanBright("[INFO]")} Connected to database!`);
+                }).catch((err) => {
+                    console.log(`${red("[ERROR]")} Not connected to database \n${err}\n`);
+                });
+            } else {
+                console.log(`${yellow("[WARN]")} Database connection disabled`);
+            }
+
+            // -------------- Systems -------------- //
+            //require("../../Systems/ChatFilterSys")(client);
+
+            // -------------- Events -------------- //
+
+            // Memory Data Update
+            if (connectDB) {
+                let memArray = [];
+
+                setInterval(async () => {
+
+                    //Used Memory in GB
+                    memArray.push(await getMemoryUsage());
+
+                    if (memArray.length >= 14) {
+                        memArray.shift();
+                    }
+
+                    // Store in database
+                    await DB.findOneAndUpdate({
+                        Client: true,
+                    }, {
+                        Memory: memArray,
+                    }, {
+                        upsert: true,
+                    });
+
+                }, ms("5s")); //every 5000 (ms)
+            }
         }
+    } catch (e) {
+        console.log(String(e.stack))
     }
 }
 
