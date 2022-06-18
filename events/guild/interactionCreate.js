@@ -1,124 +1,129 @@
-const { MessageEmbed } = require("discord.js");
-const { ownerID } = require("../../config/client.json");
-const commands = require("../../handlers/commands");
+const { MessageEmbed, Collection } = require("discord.js");
 const emb = require("../../config/embed.json");
 
-let OwnerID = process.env.ownerID || ownerID;
+module.exports = async (client, interaction) => {
 
-module.exports = {
-    name: "interactionCreate",
+    // Check if under maintenance
+    if (client.maintenance && interaction.user.id != OwnerID) {
+        return interaction.reply({
+            embeds: [new MessageEmbed()
+                .setTimestamp()
+                .setColor(emb.errColor)
+                .setAuthor({ name: "UNDER MAINTENANCE", iconURL: emb.maintenance.on })
+                .setDescription("JavaSkripp will be back soon!")
+                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+            ],
+            ephemeral: true
+        })
+    }
 
-    async execute(interaction, client) {
-        if (client.maintenance && interaction.user.id != OwnerID) {
-            return interaction.reply({
-                embeds: [new MessageEmbed()
-                    .setTimestamp()
-                    .setColor(emb.errColor)
-                    .setAuthor({ name: "UNDER MAINTENANCE", iconURL: emb.maintenance.on })
-                    .setDescription("JavaSkripp will be back soon!")
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                ],
-                ephemeral: true
-            })
-        }
-
-        // Return if interaction is not in guild
-        if (interaction.guildId == null) return;
+    // Check if interaction is valid
+    if (interaction.isCommand() || interaction.isContextMenu()) {
+        // if (!interaction.guild) return
 
         // Check if command exists
-        if (interaction.isCommand()) {
-            const command = client.commands.get(interaction.commandName);
-            if (!command)
-                return interaction.reply({
-                    embeds: [new MessageEmbed()
-                        .setColor(emb.errColor)
-                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                        .setAuthor({ name: "COMMAND ERROR", iconURL: emb.alert })
-                        .setDescription(`**Command doesn't exist**`)
-                    ],
-                    ephemeral: true
-                }) && client.commands.delete(interaction.commandName);
-        }
-
-        if (command.permission && !interaction.member.permissions.has(command.permission)) {
+        if (!client.commands.has(interaction.commandName))
             return interaction.reply({
+                embeds: [new MessageEmbed()
+                    .setColor(emb.errColor)
+                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                    .setAuthor({ name: "COMMAND ERROR", iconURL: emb.alert })
+                    .setDescription(`**Command doesn't exist**`)
+                ],
+                ephemeral: true
+            }) && client.commands.delete(interaction.commandName);
+
+        const command = client.commands.get(interaction.commandName)
+
+        // Check if command is in cooldown
+        try {
+            if (!cooldowns.has(command.name)) { cooldowns.set(command.name, new Collection()); }
+
+            const now = Date.now();
+            const timestamps = cooldowns.get(command.name);
+            const cooldownAmount = command.cooldown || (500);
+
+            if (timestamps.has(interaction.user.id)) {
+                const expirationTime = timestamps.get(interaction.user.id) + cooldownAmount;
+                if (now < expirationTime) {
+                    const timeLeft = (expirationTime - now) / 1000;
+                    return interaction.reply({
+                        embeds: [new MessageEmbed()
+                            .setColor(emb.errColor)
+                            .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                            .setAuthor({ name: "IN COOLDOWN", iconURL: emb.alert })
+                            .addField("Command", `\`${command.name}\``, true)
+                            .addField("Time left", `${timeLeft.toFixed(1)} second${timeLeft.toFixed(1) != 1 ? "s" : ""}`, true)
+                        ],
+                        ephemeral: true
+                    })
+                }
+            }
+            timestamps.set(interaction.user.id, now);
+            setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
+
+            if (command.permissions) {
+                if (!interaction.member.permissions.has(command.permissions)) {
+                    return interaction.reply({
+                        embeds: [new MessageEmbed()
+                            .setTimestamp()
+                            .setColor(emb.errColor)
+                            .setAuthor({ name: "NO PERMISSION", iconURL: emb.error })
+                            .setDescription(`**An error occured while running command**`)
+                            .addField(`Permission${command.permissions.length > 1 ? "s" : ""}`, command.permissions.map(p => `\`${p}\``).join(', '))
+                            .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                        ],
+                        ephemeral: true
+                    })
+                }
+            }
+
+            // ---------- TO BE ADDED SOON ---------- //
+            // // If Command has specific needed roles return error
+            // if (command.requiredroles && command.requiredroles.length > 0 && interaction.member.roles.cache.size > 0 && !interaction.member.roles.cache.some(r => command.requiredroles.includes(r.id))) {
+            //     return interaction.reply({
+            //         embeds: [new MessageEmbed()
+            //             .setTimestamp()
+            //             .setColor(emb.errColor)
+            //             .setAuthor("Invalid Role", emb.noRole)
+            //             .addField("Required Roles", `${(command && command.requiredroles) ? command.requiredroles.map(v => `<@&${v}>`).join(",") : command.requiredroles}`)
+            //             .setFooter(client.user.username, client.user.displayAvatarURL())
+            //         ],
+            //         ephemeral: true
+            //     })
+            // }
+
+            // // If Command has specific users return error
+            // if (command.alloweduserids && command.alloweduserids.length > 0 && !command.alloweduserids.includes(interaction.member.id)) {
+            //     return interaction.reply({
+            //         embeds: [new MessageEmbed()
+            //             .setTimestamp()
+            //             .setColor(emb.errColor)
+            //             .setAuthor("Invalid User", emb.invalidUser)
+            //             .addField("Allowed Users", `${(command && command.alloweduserids) ? command.alloweduserids.map(v => `<@${v}>`).join(",") : command.alloweduserids}`)
+            //             .setFooter(client.user.username, client.user.displayAvatarURL())
+            //         ],
+            //         ephemeral: true
+            //     })
+            // }
+
+            // Run the command
+            command.run(client, interaction);
+
+        } catch (e) {
+            // Log and return error
+            console.log(e);
+            await interaction.reply({
                 embeds: [new MessageEmbed()
                     .setTimestamp()
                     .setColor(emb.errColor)
-                    .setAuthor({ name: "INVALID PERMISSION", iconURL: emb.noPermission })
+                    .setAuthor({ name: "COMMAND ERROR", iconURL: emb.error })
                     .setDescription(`**An error occured while running command**`)
-                    .addField("Command", interaction.commandName)
+                    .addField("Command", command.name)
                     .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                 ],
                 ephemeral: true
             })
         }
-
-        try {
-            commands.execute(interaction, client);
-        } catch (error) {
-            console.error(error);
-            interaction.reply({
-                embeds: [new MessageEmbed()
-                    .setTimestamp()
-                    .setColor(emb.errColor)
-                    .setAuthor({ name: "EXECUTION ERROR", iconURL: emb.error })
-                    .addField("Command", interaction.commandName)
-                    .addField("Required Permissions", `${(command && command.permissions) ? command.memberpermissions.map(v => `\`${v}\``).join(",") : command.memberpermissions}`)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                ],
-                ephemeral: true
-            });
-        }
-    }
-}
-
-
-
-/**
- * 
- * @param {*} message A DiscordMessage, with the client, information
- * @param {*} command The Command with the command.name
- * @returns BOOLEAN
- */
-function onCoolDown(message, command) {
-    // Check for errors
-    if (!message || !message.client) throw "No Message with a valid DiscordClient granted as First Parameter";
-    if (!command || !command.name) throw "No Command with a valid Name granted as Second Parameter";
-
-    const client = message.client;
-
-    // Set a cooldown if there is no cooldown set
-    if (!client.cooldowns.has(command.name)) {
-        client.cooldowns.set(command.name, new Collection());
-    }
-
-    const now = Date.now(); // Get the current time
-    const timestamps = client.cooldowns.get(command.name); // Get the timestamp of last used command
-    const cooldownAmount = (command.cooldown || config.defaultCooldown) * 1000; // Get the cooldownamount of the command
-
-    // If the user is on cooldown
-    if (timestamps.has(message.member.id)) {
-        const expirationTime = timestamps.get(message.member.id) + cooldownAmount; // Cooldown time
-
-        if (now < expirationTime) {
-            // If user is still on cooldown
-            const timeLeft = (expirationTime - now) / 1000; // Get time left
-            return timeLeft
-        }
-        else {
-            // If user is not on cooldown, set a cooldown
-            timestamps.set(message.member.id, now);
-            setTimeout(() => timestamps.delete(message.member.id), cooldownAmount);
-            // Return not on cooldown
-            return false;
-        }
-    }
-    else {
-        // If user is not on cooldown, set a cooldown
-        timestamps.set(message.member.id, now);
-        setTimeout(() => timestamps.delete(message.member.id), cooldownAmount);
-        // Return not on cooldown
-        return false;
     }
 }
