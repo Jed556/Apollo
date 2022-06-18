@@ -1,6 +1,6 @@
-const { CommandInteraction, Client, MessageEmbed, MessageAttachment } = require("discord.js")
+const { MessageEmbed, MessageAttachment } = require("discord.js")
 const { connection } = require("mongoose");
-
+const { memoryUpdate } = require("../../config/database.json");
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
 const DB = require('../../Structures/Schemas/ClientDB');
 const moment = require("moment");
@@ -31,28 +31,12 @@ module.exports = {
 
     run: async (client, interaction) => {
 
-        // Database 
+        // Find matching database data
         const docs = await DB.findOne({
             Client: true
         });
 
-        const mem0 = docs.Memory[0];
-        const mem1 = docs.Memory[1];
-        const mem2 = docs.Memory[2];
-        const mem3 = docs.Memory[3];
-        const mem4 = docs.Memory[4];
-        const mem5 = docs.Memory[5];
-        const mem6 = docs.Memory[6];
-        const mem7 = docs.Memory[7];
-        const mem8 = docs.Memory[8];
-        const mem9 = docs.Memory[9];
-        const mem10 = docs.Memory[10];
-        const mem11 = docs.Memory[11];
-        const mem12 = docs.Memory[12];
-
-        const avgMem = (mem0 + mem1 + mem2 + mem3 + mem4 + mem5 + mem6 + mem7 + mem8 + mem9 + mem10 + mem11 + mem12) / 13;
-
-        // Graph Data
+        // Graph colors
         const colors = {
             purple: {
                 default: "rgba(149, 76, 233, 1)",
@@ -74,37 +58,19 @@ module.exports = {
             },
         };
 
-        const memData = [
-            mem0,
-            mem1,
-            mem2,
-            mem3,
-            mem4,
-            mem5,
-            mem6,
-            mem7,
-            mem8,
-            mem9,
-            mem10,
-            mem11,
-            mem12,
-        ];
+        // Create labels based on Memory array length
+        const labels = [];
+        for (let i = memoryUpdate; i < docs.Memory.length; i += memoryUpdate) {
+            labels.push(i.toString());
+        }
 
-        // Change it according to the setInterval() in the ready event
-        const labels = [
-            '60',
-            '55',
-            '50',
-            '45',
-            '40',
-            '35',
-            '30',
-            '25',
-            '20',
-            '15',
-            '10',
-            '5',
-        ];
+        // Compute for average memory usage
+        var avgMem = 0;
+        for (let i = 0; i < docs.Memory.length; i++) {
+            avgMem += docs.Memory[i];
+        }
+        avgMem = avgMem / docs.Memory.length;
+
 
         // Chart Generation
         const width = 1500;
@@ -153,7 +119,7 @@ module.exports = {
                     // },
                     pointBackgroundColor: colors.green.default,
                     borderColor: colors.green.default,
-                    data: memData,
+                    data: docs.Memory,
                     lineTension: 0.4,
                     borderWidth: 2,
                     pointRadius: 3
@@ -212,19 +178,6 @@ module.exports = {
         const image = await canvas.renderToBuffer(chartConfig);
         const attachment = new MessageAttachment(image, 'chart.png');
 
-
-        if (!docs || docs.Memory.length < 12) {
-            return interaction.reply({
-                embeds: [
-                    new MessageEmbed()
-                        .setColor('RED')
-                        .setTitle('🛑 No Data Found!')
-                        .setDescription('Please Wait For The Information To Be Collected!')
-                ],
-                ephemeral: true
-            });
-        }
-
         const response = new MessageEmbed()
             .setTitle(`Client Status`)
             .setColor(`GREEN`)
@@ -233,10 +186,10 @@ module.exports = {
                 name: `<:icon_reply:962547429914337300> GENERAL`,
                 value:
                     `
-                **\`•\` Client**: <:icon_online:970322600930721802> ONLINE
-                **\`•\` Ping**: ${client.ws.ping}ms
-                **\`•\` Uptime**: ${moment.duration(parseInt(client.uptime)).format(" D [days], H [hrs], m [mins], s [secs]")}
-                ㅤ
+                **• Client**: <:icon_online:970322600930721802> ONLINE
+                **• Ping**: ${client.ws.ping}ms
+                **• Uptime**: ${moment.duration(parseInt(client.uptime)).format(" D [days], H [hrs], m [mins], s [secs]")}
+                \n
                 `,
                 inline: false
 
@@ -245,8 +198,8 @@ module.exports = {
                 name: `<:icon_reply:962547429914337300> DATABASE`,
                 value:
                     `
-                **\`•\` Connection**: ${switchTo(connection.readyState)}
-                ㅤ
+                **• Connection**: ${switchTo(connection.readyState)}
+                \n
                 `,
                 inline: true
 
@@ -255,7 +208,7 @@ module.exports = {
                 name: `<:icon_reply:962547429914337300> HARDWARE`,
                 value:
                     `
-                **\`•\` Average RAM Usage**: ${avgMem.toFixed(2)}MB
+                **• Average RAM Usage**: ${avgMem.toFixed(2)}MB
                 `,
                 inline: false,
 
