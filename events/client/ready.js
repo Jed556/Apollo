@@ -12,7 +12,8 @@ const osUtils = require("os-utils");
 const chalk = require("chalk");
 const ms = require("ms");
 
-
+let OwnerID = process.env.ownerID || ownerID;
+let Database = process.env.database || database;
 
 /* ----------[CPU Usage]---------- */
 const cpus = os.cpus();
@@ -65,7 +66,7 @@ module.exports = {
             // Send log to admin/s
             if (client.commands.size < check.length) {
                 // Throw error if there are commands missing
-                client.users.fetch(ownerID, false).then((user) => {
+                client.users.fetch(OwnerID, false).then((user) => {
                     user.send({
                         embeds: [log
                             .setColor(emb.errColor)
@@ -76,7 +77,7 @@ module.exports = {
                 client.user.setActivity(`Redeploys • ERROR`, { type: "WATCHING" });
             } else {
                 // Success log
-                client.users.fetch(ownerID, false).then((user) => {
+                client.users.fetch(OwnerID, false).then((user) => {
                     user.send({
                         embeds: [log
                             .setColor(emb.okColor)
@@ -104,8 +105,8 @@ module.exports = {
 
                 if (connectDB) {
                     // Initializing database Connection 
-                    if (!database) return;
-                    mongoose.connect(database, {
+                    if (!Database) return;
+                    mongoose.connect(Database, {
                         dbName: "Client",
                         useNewUrlParser: true,
                         useUnifiedTopology: true

@@ -3,11 +3,13 @@ const emb = require("../../config/embed.json");
 const { MessageEmbed } = require("discord.js");
 const commands = require("../../handlers/commands");
 
+let OwnerID = process.env.ownerID || ownerID;
+
 module.exports = {
     name: "interactionCreate",
 
     async execute(interaction, client) {
-        if (client.maintenance && interaction.user.id != ownerID) {
+        if (client.maintenance && interaction.user.id != OwnerID ) {
             return interaction.reply({
                 embeds: [new MessageEmbed()
                     .setTimestamp()
