@@ -9,7 +9,7 @@ module.exports.mainDir = mainDir;
 module.exports.reSlash = reSlash;
 module.exports.randomNum = randomNum;
 module.exports.delay = delay;
-
+module.exports.escapeRegex = escapeRegex;
 
 // ---------- FUNCTIONS ---------- //
 
@@ -51,7 +51,7 @@ function randomNum(min, max) {
  * @param {*} delayInms Number | Time in Milliseconds
  * @returns Promise, waiting for the given Milliseconds
  */
- function delay(delayInms) {
+function delay(delayInms) {
     try {
         return new Promise((resolve) => {
             setTimeout(() => {
@@ -61,5 +61,22 @@ function randomNum(min, max) {
     } catch (e) {
         console.log(String(e.stack).bgRed)
         errDM(client, e)
+    }
+}
+
+/**
+ * 
+ * @param {*} str String
+ * @returns Formatted string
+ */
+function escapeRegex(str) {
+    try {
+        try {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, `\\$&`);
+        } catch {
+            return str
+        }
+    } catch (e) {
+        console.log(String(e.stack))
     }
 }
