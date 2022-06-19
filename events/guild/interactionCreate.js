@@ -1,5 +1,6 @@
 const { MessageEmbed, Collection } = require("discord.js");
 const emb = require("../../config/embed.json");
+const { defaultCooldown } = require("../../config/client.json");
 
 module.exports = async (client, interaction) => {
 
@@ -41,7 +42,7 @@ module.exports = async (client, interaction) => {
 
             const now = Date.now();
             const timestamps = cooldowns.get(command.name);
-            const cooldownAmount = command.cooldown || (500);
+            const cooldownAmount = command.cooldown || defaultCooldown;
 
             if (timestamps.has(interaction.user.id)) {
                 const expirationTime = timestamps.get(interaction.user.id) + cooldownAmount;
