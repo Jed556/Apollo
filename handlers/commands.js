@@ -3,8 +3,8 @@ const { promisify } = require("util");
 const { glob } = require("glob");
 const PG = promisify(glob);
 const chalk = require("chalk")
-const dcCol = chalk.bold.hex("#7289da");
-const { cyanBright, greenBright, yellow, red, bold } = require("chalk");
+const blurple = chalk.bold.hex("#7289da");
+const { cyanBright, greenBright, yellow, red, bold, dim } = require("chalk");
 const { AsciiTable3 } = require("ascii-table3");
 const { mainDir } = require(`../system/functions`);
 const { token, botID, guildID, loadGlobal, defaultCooldown } = require("../config/client.json");
@@ -29,16 +29,16 @@ module.exports = async (client) => {
 
         // Log errors to table
         if (!command.name)
-            return Table.addRow(fileName, cooldown, perms, red("FAILED"), "Missinng name");
+            return Table.addRow(dim(fileName), cooldown, perms, red("FAILED"), "Missinng name");
 
         if (!command.description)
-            return Table.addRow(fileName, cooldown, perms, red("FAILED"), "Missinng description");
+            return Table.addRow(dim(fileName), cooldown, perms, red("FAILED"), "Missinng description");
 
         if (command.permission)
             if (!Permissions.includes(command.permission)) {
                 command.defaultpermission = false;
             } else {
-                return Table.addRow(fileName, cooldown, perms, red("FAILED"), "Invalid permission");
+                return Table.addRow(dim(fileName), cooldown, perms, red("FAILED"), "Invalid permission");
             }
 
         // Push all commands to client
@@ -57,7 +57,7 @@ module.exports = async (client) => {
 
     (async () => {
         try {
-            console.log(dcCol("[REST]") + " Refreshing commands");
+            console.log(blurple("[REST]") + " Refreshing commands");
             // Check if will deploy globally
             if (loadGlobal) {
                 await rest.put(
@@ -72,8 +72,9 @@ module.exports = async (client) => {
                     { body: CommandArray },
                 );
             }
-            console.log(dcCol("[REST]") + " Reloaded commands");
+            console.log(greenBright.bold("[SUCCESS]") + " Reloaded commands");
         } catch (error) {
+            console.log(red.bold("[ERROR]") + " Refreshing commands failed");
             console.error(error);
         }
     })();

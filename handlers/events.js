@@ -2,7 +2,7 @@ const { Events } = require(`../validation/eventNames`);
 const { promisify } = require("util");
 const { glob } = require("glob");
 const PG = promisify(glob);
-const { cyanBright, greenBright, yellow, red } = require("chalk");
+const { cyanBright, greenBright, yellow, red, dim } = require("chalk");
 const { AsciiTable3 } = require("ascii-table3");
 const { mainDir } = require(`../system/functions`);
 
@@ -23,7 +23,7 @@ module.exports = async (client) => {
 
         // Log errors to table
         if (!Events.includes(eventName)) {
-            await Table.addRow(eventCategory, eventName, red("MISSING"), `Invalid event name or missing: ${fileDir}`);
+            await Table.addRow(dim(eventCategory), dim(eventName), red("MISSING"), `Invalid event name or missing: ${fileDir}`);
             return;
         }
 
