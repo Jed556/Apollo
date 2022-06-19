@@ -2,23 +2,26 @@ const { MessageButton, MessageActionRow, MessageEmbed, Permissions, MessageSelec
 const { delay, escapeRegex } = require("../system/functions");
 const { check_if_dj } = require("../system/distubeFunctions");
 const emb = require("../config/embed.json");
+const emoji = require("../config/emojis.json");
+const settings = require("../config/distube.json");
 const playerintervals = new Map();
 const PlayerMap = new Map()
 let songEditInterval = null;
+let endCheck = false;
 
 module.exports = (client) => {
     try {
         // AUTO-RESUME-FUNCTION
         const autoconnect = async () => {
             let guilds = client.autoresume.keyArray();
-            console.log(`AUTORESUME`.brightCyan + ` - Guilds to Autoresume:`, guilds)
+            console.log(`AUTORESUME` + ` - Guilds to Autoresume:`, guilds)
             if (!guilds || guilds.length == 0) return;
             for (const gId of guilds) {
                 try {
                     let guild = client.guilds.cache.get(gId);
                     if (!guild) {
                         client.autoresume.delete(gId);
-                        console.log(`AUTORESUME`.brightCyan + ` - Bot was kicked from the Guild`)
+                        console.log(`AUTORESUME` + ` - Bot was kicked from the Guild`)
                         continue;
                     }
                     let data = client.autoresume.get(gId);
@@ -27,7 +30,7 @@ module.exports = (client) => {
                     if (!voiceChannel && data.voiceChannel) voiceChannel = await guild.channels.fetch(data.voiceChannel).catch(() => { }) || false;
                     if (!voiceChannel || !voiceChannel.members || voiceChannel.members.filter(m => !m.user.bot && !m.voice.deaf && !m.voice.selfDeaf).size < 1) {
                         client.autoresume.delete(gId);
-                        console.log(`AUTORESUME`.brightCyan + ` - Voice Channel is either Empty / No Listeners / Deleted`)
+                        console.log(`AUTORESUME` + ` - Voice Channel is either Empty / No Listeners / Deleted`)
                         continue;
                     }
 
@@ -35,12 +38,12 @@ module.exports = (client) => {
                     if (!textChannel) textChannel = await guild.channels.fetch(data.textChannel).catch(() => { }) || false;
                     if (!textChannel) {
                         client.autoresume.delete(gId);
-                        console.log(`AUTORESUME`.brightCyan + ` - Text Channel got deleted`)
+                        console.log(`AUTORESUME` + ` - Text Channel got deleted`)
                         continue;
                     }
                     let tracks = data.songs;
                     if (!tracks || !tracks[0]) {
-                        console.log(`AUTORESUME`.brightCyan + ` - Destroyed the player, there are no tracks available`);
+                        console.log(`AUTORESUME` + ` - Destroyed the player, there are no tracks available`);
                         continue;
                     }
                     const makeTrack = async track => {
@@ -68,7 +71,7 @@ module.exports = (client) => {
                     for (const track of tracks.slice(1)) {
                         newQueue.songs.push(await makeTrack(track))
                     }
-                    console.log(`AUTORESUME`.brightCyan + ` - Added ${newQueue.songs.length} Tracks on the QUEUE and started playing ${newQueue.songs[0].name} in ${guild.name}`);
+                    console.log(`AUTORESUME` + ` - Added ${newQueue.songs.length} Tracks on the QUEUE and started playing ${newQueue.songs[0].name} in ${guild.name}`);
                     // ADJUST THE QUEUE SETTINGS
                     await newQueue.setVolume(data.volume)
                     if (data.repeatMode && data.repeatMode !== 0) {
@@ -82,7 +85,7 @@ module.exports = (client) => {
                         await newQueue.setFilter(data.filters, true);
                     }
                     client.autoresume.delete(newQueue.id)
-                    console.log(`AUTORESUME`.brightCyan + " - Changed autoresume track to queue adjustments & deleted the database entry")
+                    console.log(`AUTORESUME` + " - Changed autoresume track to queue adjustments & deleted the database entry")
                     if (!data.playing) {
                         newQueue.pause();
                     }
@@ -111,7 +114,7 @@ module.exports = (client) => {
                     var oldLoop = newQueue.repeatMode
                     updateMusicSystem(newQueue);
                     var data = receiveQueueData(newQueue, track)
-                    if (queue.textChannel.id === client.settings.get(queue.id, `music.channel`)) return;
+                    if (queue.textChannel.id === client.distubeSettings.get(queue.id, `music.channel`)) return;
                     // Send message with buttons
                     let currentSongPlayMsg = await queue.textChannel.send(data).then(msg => {
                         PlayerMap.set(`currentmsg`, msg.id);
@@ -183,7 +186,7 @@ module.exports = (client) => {
                                 embeds: [djAlert],
                                 ephemeral: true
                             }).then(interaction => {
-                                if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                     setTimeout(() => {
                                         try {
                                             i.deleteReply().catch(console.log);
@@ -216,7 +219,7 @@ module.exports = (client) => {
                                     .setAuthor(`PLAYING PREVIOUS SONG`, emb.disc.previous)
                                 ]
                             }).then(interaction => {
-                                if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                     setTimeout(() => {
                                         try {
                                             i.deleteReply().catch(console.log);
@@ -235,7 +238,7 @@ module.exports = (client) => {
                                     embeds: [noPLayerAlert],
                                     ephemeral: true
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -253,7 +256,7 @@ module.exports = (client) => {
                                     embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -275,7 +278,7 @@ module.exports = (client) => {
                                     embeds: [noPLayerAlert],
                                     ephemeral: true
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -293,7 +296,7 @@ module.exports = (client) => {
                                     embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -313,7 +316,7 @@ module.exports = (client) => {
                                         .setDescription(`**STOPPED THE PLAYER & LEFT THE VOICE CHANNEL**`)
                                     ]
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -335,7 +338,7 @@ module.exports = (client) => {
                                     .setAuthor(`SKIPPED TO THE NEXT SONG`, emb.disc.skip)
                                 ]
                             }).then(interaction => {
-                                if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                     setTimeout(() => {
                                         try {
                                             i.deleteReply().catch(console.log);
@@ -355,7 +358,7 @@ module.exports = (client) => {
                                     embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -373,7 +376,7 @@ module.exports = (client) => {
                                     .setDescription(`**STOPPED THE PLAYER & LEFT THE VOICE CHANNEL**`)
                                 ]
                             }).then(interaction => {
-                                if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                     setTimeout(() => {
                                         try {
                                             i.deleteReply().catch(console.log);
@@ -385,6 +388,7 @@ module.exports = (client) => {
                             })
                             clearInterval(songEditInterval);
                             // Edit the current song message
+                            stopCheck = true;
                             await client.distube.stop(i.guild.id)
                         }
 
@@ -396,7 +400,7 @@ module.exports = (client) => {
                                     embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -418,7 +422,7 @@ module.exports = (client) => {
                                         .setAuthor(`PAUSED`, emb.disc.pause)
                                     ]
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -440,7 +444,7 @@ module.exports = (client) => {
                                         .setAuthor(`RESUMED`, emb.disc.resume)
                                     ]
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -461,7 +465,7 @@ module.exports = (client) => {
                                     embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -481,7 +485,7 @@ module.exports = (client) => {
                                     .setAuthor(`SHUFFELED  ${newQueue.songs.length} SONGS`, emb.disc.shuffle)
                                 ]
                             }).then(interaction => {
-                                if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                     setTimeout(() => {
                                         try {
                                             i.deleteReply().catch(console.log);
@@ -502,7 +506,7 @@ module.exports = (client) => {
                                     embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -533,7 +537,7 @@ module.exports = (client) => {
                                         .setAuthor(`ENABLED AUTOPLAY`, emb.disc.autoplay.on)
                                     ]
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -549,7 +553,7 @@ module.exports = (client) => {
                                         .setAuthor(`DISABLED AUTOPLAY`, emb.disc.autoplay.off)
                                     ]
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -570,7 +574,7 @@ module.exports = (client) => {
                                     embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -589,7 +593,7 @@ module.exports = (client) => {
                                         .setAuthor(`DISABLED SONG LOOP`, emb.disc.loop.none)
                                     ]
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -608,7 +612,7 @@ module.exports = (client) => {
                                         .setAuthor(`${oldLoop == 0 ? "ENABLED SONG" : "DISABLED QUEUE LOOP & ENABLED SONG"} LOOP`, emb.disc.loop.song)
                                     ]
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -634,7 +638,7 @@ module.exports = (client) => {
                                     embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -653,7 +657,7 @@ module.exports = (client) => {
                                         .setAuthor(`DISABLED QUEUE LOOP`, emb.disc.loop.none)
                                     ]
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -672,7 +676,7 @@ module.exports = (client) => {
                                         .setAuthor(`${oldLoop == 0 ? "ENABLED QUEUE" : "DISABLED SONG LOOP & ENABLED QUEUE"} LOOP`, emb.disc.loop.queue)
                                     ]
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -698,7 +702,7 @@ module.exports = (client) => {
                                     embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -719,7 +723,7 @@ module.exports = (client) => {
                                     .setAuthor(`REWINDED FOR 10 SECONDS`, emb.disc.rewind)
                                 ]
                             }).then(interaction => {
-                                if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                     setTimeout(() => {
                                         try {
                                             i.deleteReply().catch(console.log);
@@ -744,7 +748,7 @@ module.exports = (client) => {
                                     embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
-                                    if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                    if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                         setTimeout(() => {
                                             try {
                                                 i.deleteReply().catch(console.log);
@@ -764,7 +768,7 @@ module.exports = (client) => {
                                     .setAuthor(`FORWARDED FOR 10 SECONDS`, emb.disc.forward)
                                 ]
                             }).then(interaction => {
-                                if (newQueue.textChannel.id === client.settings.get(newQueue.id, `music.channel`)) {
+                                if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                     setTimeout(() => {
                                         try {
                                             i.deleteReply().catch(console.log);
@@ -800,7 +804,7 @@ module.exports = (client) => {
                         .addField(`🌀 **Queue Duration:**`, `\`${queue.formattedDuration}\``)
                     ]
                 }).then(msg => {
-                    if (queue.textChannel.id === client.settings.get(queue.id, `music.channel`)) {
+                    if (queue.textChannel.id === client.distubeSettings.get(queue.id, `music.channel`)) {
                         setTimeout(() => {
                             try {
                                 if (!msg.deleted) {
@@ -829,7 +833,7 @@ module.exports = (client) => {
                             .addField(`🌀 **Queue Duration:**`, `\`${queue.formattedDuration}\``)
                     ]
                 }).then(msg => {
-                    if (queue.textChannel.id === client.settings.get(queue.id, `music.channel`)) {
+                    if (queue.textChannel.id === client.distubeSettings.get(queue.id, `music.channel`)) {
                         setTimeout(() => {
                             try {
                                 if (!msg.deleted) {
@@ -867,6 +871,7 @@ module.exports = (client) => {
 
             // Leave if the voice channel is empty
             .on(`empty`, queue => {
+                endCheck = true;
                 var embed = new MessageEmbed()
                     .setTimestamp()
                     .setColor(emb.color)
@@ -922,27 +927,30 @@ module.exports = (client) => {
                         console.log(e)
                     }
                     updateMusicSystem(queue, true);
-                    queue.textChannel.send({
-                        embeds: [new MessageEmbed()
-                            .setTimestamp()
-                            .setColor(emb.color)
-                            .setAuthor(`LEFT THE CHANNEL`, emb.disc.alert)
-                            .setDescription(`**NO MORE SONGS LEFT**`)
-                            .setFooter(client.user.username, client.user.displayAvatarURL())
-                        ]
-                    }).then(msg => {
-                        if (queue.textChannel.id === client.settings.get(queue.id, `music.channel`)) {
-                            setTimeout(() => {
-                                try {
-                                    if (!msg.deleted) {
-                                        msg.delete().catch(() => { });
-                                    }
-                                } catch (e) {
+                    if (endCheck) {
+                        queue.textChannel.send({
+                            embeds: [new MessageEmbed()
+                                .setTimestamp()
+                                .setColor(emb.color)
+                                .setAuthor(`LEFT THE CHANNEL`, emb.disc.alert)
+                                .setDescription(`**NO MORE SONGS LEFT**`)
+                                .setFooter(client.user.username, client.user.displayAvatarURL())
+                            ]
+                        }).then(msg => {
+                            if (queue.textChannel.id === client.distubeSettings.get(queue.id, `music.channel`)) {
+                                setTimeout(() => {
+                                    try {
+                                        if (!msg.deleted) {
+                                            msg.delete().catch(() => { });
+                                        }
+                                    } catch (e) {
 
-                                }
-                            })
-                        }
-                    }, 3000)
+                                    }
+                                })
+                            }
+                        }, 3000)
+                        endCheck = false;
+                    }
                 }
             })
 
@@ -951,7 +959,7 @@ module.exports = (client) => {
                     if (PlayerMap.has(`deleted-${queue.id}`)) {
                         PlayerMap.delete(`deleted-${queue.id}`)
                     }
-                    let data = client.settings.get(queue.id)
+                    let data = client.distubeSettings.get(queue.id)
                     queue.autoplay = Boolean(data.defaultautoplay);
                     queue.volume = Number(data.defaultvolume);
                     queue.setFilter(data.defaultfilters);
@@ -960,15 +968,15 @@ module.exports = (client) => {
                      * Check-Relevant-Messages inside of the Music System Request Channel
                      */
                     var checkrelevantinterval = setInterval(async () => {
-                        if (client.settings.get(queue.id, `music.channel`) && client.settings.get(queue.id, `music.channel`).length > 5) {
+                        if (client.distubeSettings.get(queue.id, `music.channel`) && client.distubeSettings.get(queue.id, `music.channel`).length > 5) {
                             console.log(`Music System - Relevant Checker`.brightCyan + ` - Checkingfor unrelevant Messages`)
-                            let messageId = client.settings.get(queue.id, `music.message`);
+                            let messageId = client.distubeSettings.get(queue.id, `music.message`);
                             //try to get the guild
                             let guild = client.guilds.cache.get(queue.id);
                             if (!guild) return console.log(`Music System - Relevant Checker`.brightCyan + ` - Guild not found!`)
                             //try to get the channel
-                            let channel = guild.channels.cache.get(client.settings.get(queue.id, `music.channel`));
-                            if (!channel) channel = await guild.channels.fetch(client.settings.get(queue.id, `music.channel`)).catch(() => { }) || false
+                            let channel = guild.channels.cache.get(client.distubeSettings.get(queue.id, `music.channel`));
+                            if (!channel) channel = await guild.channels.fetch(client.distubeSettings.get(queue.id, `music.channel`)).catch(() => { }) || false
                             if (!channel) return console.log(`Music System - Relevant Checker`.brightCyan + ` - Channel not found!`)
                             if (!channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.MANAGE_MESSAGES)) return console.log(`Music System - Relevant Checker`.brightCyan + ` - Missing Permissions`)
                             //try to get the channel
@@ -988,7 +996,7 @@ module.exports = (client) => {
                      */
                     var autoresumeinterval = setInterval(async () => {
                         var newQueue = client.distube.getQueue(queue.id);
-                        if (newQueue && newQueue.id && client.settings.get(newQueue.id, `autoresume`)) {
+                        if (newQueue && newQueue.id && client.distubeSettings.get(newQueue.id, `autoresume`)) {
                             const makeTrackData = track => {
                                 return {
                                     memberId: track.member.id,
@@ -1049,14 +1057,14 @@ module.exports = (client) => {
                      */
 
                     var musicsystemeditinterval = setInterval(async () => {
-                        if (client.settings.get(queue.id, `music.channel`) && client.settings.get(queue.id, `music.channel`).length > 5) {
-                            let messageId = client.settings.get(queue.id, `music.message`);
+                        if (client.distubeSettings.get(queue.id, `music.channel`) && client.distubeSettings.get(queue.id, `music.channel`).length > 5) {
+                            let messageId = client.distubeSettings.get(queue.id, `music.message`);
                             //try to get the guild
                             let guild = client.guilds.cache.get(queue.id);
                             if (!guild) return console.log(`Music System Edit Embeds` + ` - Music System - Guild not found!`)
                             //try to get the channel
-                            let channel = guild.channels.cache.get(client.settings.get(queue.id, `music.channel`));
-                            if (!channel) channel = await guild.channels.fetch(client.settings.get(queue.id, `music.channel`)).catch(() => { }) || false
+                            let channel = guild.channels.cache.get(client.distubeSettings.get(queue.id, `music.channel`));
+                            if (!channel) channel = await guild.channels.fetch(client.distubeSettings.get(queue.id, `music.channel`)).catch(() => { }) || false
                             if (!channel) return console.log(`Music System Edit Embeds` + ` - Music System - Channel not found!`)
                             if (!channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) return console.log(`Music System - Missing Permissions`)
                             //try to get the channel
@@ -1085,7 +1093,7 @@ module.exports = (client) => {
 
     // DASHBOARD
     function receiveQueueData(newQueue, newTrack) {
-        var djs = client.settings.get(newQueue.id, `djroles`);
+        var djs = client.distubeSettings.get(newQueue.id, `djroles`);
         if (!djs || !Array.isArray(djs)) djs = [];
         else djs = djs.map(r => `<@&${r}>`);
         if (djs.length == 0) djs = "`Not Set`";
@@ -1100,11 +1108,11 @@ module.exports = (client) => {
             .addField(`⏱ Duration:`, `>>> \`${newQueue.formattedCurrentTime} / ${newTrack.formattedDuration}\``, true)
             .addField(`🌀 Queue:`, `>>> \`${newQueue.songs.length} song${newQueue.songs.length != 1 ? "s" : ""}\` - \`${newQueue.formattedDuration}\``, true)
             .addField(`🔊 Volume:`, `>>> \`${newQueue.volume} %\``, true)
-            .addField(`♾ Loop:`, `>>> ${newQueue.repeatMode ? newQueue.repeatMode === 2 ? `${client.emoji.check}\` Queue\`` : `${client.emoji.check} \`Song\`` : `${client.emoji.x}`}`, true)
-            .addField(`↪️ Autoplay:`, `>>> ${newQueue.autoplay ? `${client.emoji.check}` : `${client.emoji.x}`}`, true)
+            .addField(`♾ Loop:`, `>>> ${newQueue.repeatMode ? newQueue.repeatMode === 2 ? `${emoji.check}\` Queue\`` : `${emoji.check} \`Song\`` : `${emoji.x}`}`, true)
+            .addField(`↪️ Autoplay:`, `>>> ${newQueue.autoplay ? `${emoji.check}` : `${emoji.x}`}`, true)
             .addField(`⬇ Download:`, `>>> [\`Music Link\`](${newTrack.streamURL})`, true)
-            .addField(`🎙 Filter${newQueue.filters.length != 1 ? "s" : ""}:`, `>>> ${newQueue.filters && newQueue.filters.length > 0 ? `${newQueue.filters.map(f => `\`${f}\``).join(`, `)}` : `${client.emoji.x}`}`, newQueue.filters.length > 2 ? false : true)
-            .addField(`💿 DJ-Role${client.settings.get(newQueue.id, "djroles").length > 1 ? "s" : ""}:`, `>>> ${djs}`, (client.settings.get(newQueue.id, "djroles").length > 2 || djs != "`Not Set`") ? false : true)
+            .addField(`🎙 Filter${newQueue.filters.length != 1 ? "s" : ""}:`, `>>> ${newQueue.filters && newQueue.filters.length > 0 ? `${newQueue.filters.map(f => `\`${f}\``).join(`, `)}` : `${emoji.x}`}`, newQueue.filters.length > 2 ? false : true)
+            .addField(`💿 DJ-Role${client.distubeSettings.get(newQueue.id, "djroles").length > 1 ? "s" : ""}:`, `>>> ${djs}`, (client.distubeSettings.get(newQueue.id, "djroles").length > 2 || djs != "`Not Set`") ? false : true)
             .setAuthor(`DASHBOARD | NOW PLAYING`, emb.disc.spin)
             .setThumbnail(`https://img.youtube.com/vi/${newTrack.id}/mqdefault.jpg`)
             .setFooter(`${newTrack.user.tag}`, newTrack.user.displayAvatarURL({ dynamic: true }));
@@ -1176,14 +1184,14 @@ module.exports = (client) => {
      */
     async function updateMusicSystem(queue, leave = false) {
         if (!queue) return;
-        if (client.settings.get(queue.id, `music.channel`) && client.settings.get(queue.id, `music.channel`).length > 5) {
-            let messageId = client.settings.get(queue.id, `music.message`);
+        if (client.distubeSettings.get(queue.id, `music.channel`) && client.distubeSettings.get(queue.id, `music.channel`).length > 5) {
+            let messageId = client.distubeSettings.get(queue.id, `music.message`);
             //try to get the guild
             let guild = client.guilds.cache.get(queue.id);
             if (!guild) return console.log(`Update-Music-System` + ` - Music System - Guild not found!`)
             //try to get the channel
-            let channel = guild.channels.cache.get(client.settings.get(queue.id, `music.channel`));
-            if (!channel) channel = await guild.channels.fetch(client.settings.get(queue.id, `music.channel`)).catch(() => { }) || false
+            let channel = guild.channels.cache.get(client.distubeSettings.get(queue.id, `music.channel`));
+            if (!channel) channel = await guild.channels.fetch(client.distubeSettings.get(queue.id, `music.channel`)).catch(() => { }) || false
             if (!channel) return console.log(`Update-Music-System` + ` - Music System - Channel not found!`)
             if (!channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) return console.log(`Music System - Missing Permissions`)
             //try to get the channel

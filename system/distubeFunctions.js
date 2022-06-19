@@ -5,7 +5,7 @@ function check_if_dj(client, member, song) {
     //if no message added return
     if (!client) return false;
     //get the adminroles
-    var roleid = client.settings.get(member.guild.id, `djroles`)
+    var roleid = client.distubeSettings.get(member.guild.id, `djroles`)
     //if no dj roles return false, so that it continues
     if (String(roleid) == "") return false;
 
