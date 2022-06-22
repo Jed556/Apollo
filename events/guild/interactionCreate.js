@@ -1,6 +1,6 @@
-const { MessageEmbed, Collection } = require("discord.js");
-const emb = require("../../config/embed.json");
-const { defaultCooldown } = require("../../config/client.json");
+const { MessageEmbed, Collection } = require('discord.js');
+const emb = require('../../config/embed.json');
+const { defaultCooldown } = require('../../config/client.json');
 
 module.exports = async (client, interaction) => {
 

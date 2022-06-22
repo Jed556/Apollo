@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
-const os = require("os");
-const osUtils = require("os-utils");
-const ms = require("ms");
-const DB = require('../../Structures/Schemas/ClientDB');
-const { cyanBright, greenBright, yellow, red } = require("chalk");
-const { connectDB, database, memoryUpdate } = require("../../config/database.json")
+const mongoose = require('mongoose');
+const os = require('os');
+const osUtils = require('os-utils');
+const ms = require('ms');
+const DB = require('../../Structures/Schemas/Client');
+const { cyanBright, greenBright, yellow, red } = require('chalk');
+const { connectDB, database, memoryUpdate } = require('../../config/database.json');
 
 let Database = process.env.database || database;
 
@@ -47,13 +47,10 @@ module.exports = async (client) => {
                 }
 
                 // Store memory usage date in database
-                await DB.findOneAndUpdate({
-                    Client: true,
-                }, {
-                    Memory: memArray,
-                }, {
-                    upsert: true,
-                });
+                await DB.findOneAndUpdate(
+                    { Client: true },
+                    { Memory: memArray },
+                    { upsert: true });
 
             }, ms(memoryUpdate + "s")); //Update every x seconds
         }

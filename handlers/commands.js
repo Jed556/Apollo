@@ -1,13 +1,13 @@
-const { Permissions } = require("../validation/permissions");
-const { promisify } = require("util");
-const { glob } = require("glob");
+const { Permissions } = require('../validation/permissions');
+const { promisify } = require('util');
+const { glob } = require('glob');
 const PG = promisify(glob);
-const chalk = require("chalk")
+const chalk = require('chalk')
 const blurple = chalk.bold.hex("#7289da");
-const { cyanBright, greenBright, yellow, red, bold, dim } = require("chalk");
-const { AsciiTable3 } = require("ascii-table3");
-const { mainDir } = require(`../system/functions`);
-const { token, botID, guildID, loadGlobal, defaultCooldown } = require("../config/client.json");
+const { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk');
+const { AsciiTable3 } = require('ascii-table3');
+const { mainDir } = require('../system/functions');
+const { token, botID, guildID, loadGlobal, defaultCooldown } = require('../config/client.json');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v10');
 

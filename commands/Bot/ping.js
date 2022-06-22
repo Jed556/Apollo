@@ -1,8 +1,8 @@
 module.exports = {
     name: "ping",
     description: "Ping command",
-    help: "/ping", //OPTIONAL (for the help cmd)
-    cooldown: 1, // Default: 2 seconds
+    help: "/ping",
+    cooldown: 1,
     permissions: [],
     options: [],
 

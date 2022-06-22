@@ -1,11 +1,11 @@
-const Discord = require("discord.js");
-const { MessageEmbed } = require("discord.js");
-const { readdirSync, lstatSync } = require("fs");
-const os = require("os");
-const { cyanBright, greenBright, yellow, red, bold, dim } = require("chalk");
-const { randomNum } = require("../../system/functions");
-const { ownerID } = require("../../config/client.json")
-const emb = require("../../config/embed.json")
+const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
+const { readdirSync, lstatSync } = require('fs');
+const os = require('os');
+const { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk');
+const { randomNum } = require('../../system/functions');
+const { ownerID } = require('../../config/client.json')
+const emb = require('../../config/embed.json')
 
 let OwnerID = process.env.ownerID || ownerID;
 

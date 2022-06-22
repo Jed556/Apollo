@@ -5,7 +5,7 @@ function check_if_dj(client, member, song) {
     //if no message added return
     if (!client) return false;
     //get the adminroles
-    var roleid = client.distubeSettings.get(member.guild.id, `djroles`)
+    var roleid = client.distubeSettings.get(member.guild.id, 'djroles');
     //if no dj roles return false, so that it continues
     if (String(roleid) == "") return false;
 
@@ -21,6 +21,7 @@ function check_if_dj(client, member, song) {
         //add the role to the string
     }
     //if no dj and not an admin, return the string
+    if (!song) return;
     if (!isdj && !member.permissions.has("ADMINISTRATOR") && song.user.id != member.id)
         return roleid.map(i => `<@&${i}>`).join(", ");
     //if he is a dj or admin, then return false, which will continue the cmd

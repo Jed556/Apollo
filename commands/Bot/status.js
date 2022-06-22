@@ -1,11 +1,12 @@
 const { MessageEmbed, MessageAttachment } = require("discord.js")
+const emb = require('../../config/embed.json');
 const { connection } = require("mongoose");
 const { memoryUpdate } = require("../../config/database.json");
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
-const DB = require('../../Structures/Schemas/ClientDB');
+const DB = require('../../Structures/Schemas/Client');
 const moment = require("moment");
 
-require("../../Events/Client/ready");
+require("../../events/client/ready");
 require("moment-duration-format");
 
 // Optional, disabled by Default
@@ -24,8 +25,8 @@ function getPBar(percent) {
 module.exports = {
     name: "status",
     description: "Bot Status Information",
-    help: "/status", //OPTIONAL (for the help cmd)
-    cooldown: 1, // Default: 2 seconds
+    help: "/status",
+    cooldown: 1,
     permissions: [],
     options: [],
 
@@ -179,10 +180,9 @@ module.exports = {
         const attachment = new MessageAttachment(image, 'chart.png');
 
         const response = new MessageEmbed()
-            .setTitle(`Client Status`)
-            .setColor(`GREEN`)
+            .setTitle("Client Status")
+            .setColor(emb.color)
             .addFields({
-
                 name: `<:icon_reply:962547429914337300> GENERAL`,
                 value:
                     `
@@ -192,9 +192,7 @@ module.exports = {
                 \n
                 `,
                 inline: false
-
             }, {
-
                 name: `<:icon_reply:962547429914337300> DATABASE`,
                 value:
                     `
@@ -202,16 +200,13 @@ module.exports = {
                 \n
                 `,
                 inline: true
-
             }, {
-
                 name: `<:icon_reply:962547429914337300> HARDWARE`,
                 value:
                     `
                 **• Average RAM Usage**: ${avgMem.toFixed(2)}MB
                 `,
                 inline: false,
-
             })
             .setImage('attachment://chart.png')
 

@@ -1,10 +1,10 @@
-const { Client, Collection } = require("discord.js");
-const { token } = require("./config/client.json");
-const filters = require("./config/filters.json");
-const {spotify_api, youtubeCookie, nsfwMusic} = require("./config/distube.json");
-const DisTube = require("distube").default;
-const https = require("https-proxy-agent");
-const Enmap = require("enmap");
+const { Client, Collection } = require('discord.js');
+const { token } = require('./config/client.json');
+const filters = require('./config/filters.json');
+const {spotify_api, youtubeCookie, nsfwMusic} = require('./config/distube.json');
+const DisTube = require('distube').default;
+const https = require('https-proxy-agent');
+const Enmap = require('enmap');
 
 const client = new Client({
     fetchAllMembers: false,
@@ -30,8 +30,8 @@ const client = new Client({
 // DISTUBE
 //const proxy = 'http://123.123.123.123:8080';
 //const agent = https(proxy);
-const { SpotifyPlugin } = require("@distube/spotify");
-const { SoundCloudPlugin } = require("@distube/soundcloud");
+const { SpotifyPlugin } = require('@distube/spotify');
+const { SoundCloudPlugin } = require('@distube/soundcloud');
 let spotifyoptions = {
     parallel: true,
     emitEventsAfterFetching: true,

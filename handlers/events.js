@@ -1,10 +1,10 @@
-const { Events } = require(`../validation/eventNames`);
-const { promisify } = require("util");
-const { glob } = require("glob");
+const { Events } = require('../validation/eventNames');
+const { promisify } = require('util');
+const { glob } = require('glob');
 const PG = promisify(glob);
-const { cyanBright, greenBright, yellow, red, dim } = require("chalk");
-const { AsciiTable3 } = require("ascii-table3");
-const { mainDir } = require(`../system/functions`);
+const { cyanBright, greenBright, yellow, red, dim } = require('chalk');
+const { AsciiTable3 } = require('ascii-table3');
+const { mainDir } = require('../system/functions');
 
 module.exports = async (client) => {
     // Create table
