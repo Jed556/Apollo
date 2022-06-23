@@ -41,13 +41,22 @@ module.exports = {
             const { channel } = member.voice;
             let newQueue = client.distube.getQueue(guildId);
 
-            if (!channel && channel.guild.me.voice.channel.id != channel.id)
+            if (!channel) {
                 return interaction.reply({
                     embeds: [new MessageEmbed()
                         .setColor(emb.errColor)
                         .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                        .setAuthor({ name: `JOIN ${channel.guild.me.voice.channel ? "MY" : "A"} VOICE CHANNEL FIRST`, iconURL: emb.disc.alert })
-                        .setDescription(channel.id ? `**Channel: <#${channel.id}>**` : "")
+                        .setAuthor({ name: "JOIN A VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
+                    ],
+                    ephemeral: true
+                })
+            } else if (channel.guild.me.voice.channel && channel.guild.me.voice.channel.id != channel.id)
+                return interaction.reply({
+                    embeds: [new MessageEmbed()
+                        .setColor(emb.errColor)
+                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                        .setAuthor({ name: "JOIN MY VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
+                        .setDescription(`**Channel: <#${channel.guild.me.voice.channel.id}>**`)
                     ],
                     ephemeral: true
                 })

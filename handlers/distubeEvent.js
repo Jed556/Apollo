@@ -17,11 +17,34 @@ module.exports = (client) => {
     try {
 
         // ---------------------------------------- GLOBAL EMBEDS ---------------------------------------- //
-        const joinAlert = new MessageEmbed()
-            .setTimestamp()
-            .setColor(emb.errColor)
-            .setAuthor({ name: `JOIN ${channel.guild.me.voice.channel ? "MY" : "A"} VOICE CHANNEL FIRST`, iconURL: emb.disc.alert })
-            .setDescription(channel.id ? `**Channel: <#${channel.id}>**` : "")
+       
+       /**
+        * 
+        * @param {*} channel Voice channel of member
+        * @returns Response for voice channel issues "JOIN A/MY VOICE CHANNEL"
+        */
+        function joinAlert(channel) {
+            if (!channel) {
+                return interaction.reply({
+                    embeds: [new MessageEmbed()
+                        .setColor(emb.errColor)
+                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                        .setAuthor({ name: "JOIN A VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
+                    ],
+                    ephemeral: true
+                })
+            } else if (channel.guild.me.voice.channel && channel.guild.me.voice.channel.id != channel.id)
+                return interaction.reply({
+                    embeds: [new MessageEmbed()
+                        .setColor(emb.errColor)
+                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                        .setAuthor({ name: "JOIN MY VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
+                        .setDescription(`**Channel: <#${channel.guild.me.voice.channel.id}>**`)
+                    ],
+                    ephemeral: true
+                })
+        }
+
 
         const djAlert = new MessageEmbed()
             .setTimestamp()
@@ -297,7 +320,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert],
+                                    embeds: [joinAlert(channel)],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -337,7 +360,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert],
+                                    embeds: [joinAlert(channel)],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -399,7 +422,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert],
+                                    embeds: [joinAlert(channel)],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -441,7 +464,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert],
+                                    embeds: [joinAlert(channel)],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -506,7 +529,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert],
+                                    embeds: [joinAlert(channel)],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -547,7 +570,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert],
+                                    embeds: [joinAlert(channel)],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -615,7 +638,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert],
+                                    embeds: [joinAlert(channel)],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -679,7 +702,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert],
+                                    embeds: [joinAlert(channel)],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -743,7 +766,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert],
+                                    embeds: [joinAlert(channel)],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -789,7 +812,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert],
+                                    embeds: [joinAlert(channel)],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -915,7 +938,7 @@ module.exports = (client) => {
                     .setTimestamp()
                     .setColor(emb.color)
                     .setAuthor({ name: "VOICE CHANNEL EMPTY", iconURL: emb.disc.alert })
-                    .setDescription(`**LEFT THE CHANNEL**`)
+                    .setDescription("**LEFT THE CHANNEL**")
                     .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                 queue.textChannel.send({ embeds: [embed], components: [] }).catch((e) => {
                     console.log(e.stack ? String(e.stack).grey : String(e).grey)
