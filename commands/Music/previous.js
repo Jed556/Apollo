@@ -59,11 +59,12 @@ module.exports = {
                 });
             }
 
-            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0) return interaction.reply({
+            if (!newQueue || !newQueue.previousSongs || newQueue.previousSongs.length == 0) return interaction.reply({
                 embeds: [new MessageEmbed()
+                    .setTimestamp()
                     .setColor(emb.errColor)
                     .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                    .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
+                    .setAuthor({ name: "NO PREVIOUS SONG", iconURL: emb.disc.alert })
                 ],
                 ephemeral: true
             })
