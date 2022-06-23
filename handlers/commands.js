@@ -6,7 +6,7 @@ const chalk = require('chalk')
 const blurple = chalk.bold.hex("#7289da");
 const { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk');
 const { AsciiTable3 } = require('ascii-table3');
-const { mainDir } = require('../system/functions');
+const { mainDir, toTitleCase } = require('../system/functions');
 const { token, botID, guildID, loadGlobal, defaultCooldown } = require('../config/client.json');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v10');
@@ -21,7 +21,7 @@ module.exports = async (client) => {
 
     // Require every file ending with .js in the commands folder
     (await PG(`${mainDir()}/commands/*/*.js`)).map(async (file) => {
-        const command = require(file);
+        let command = require(file);
         const L = file.split("/");
         const fileName = L[L.length - 1];
         const perms = command.permissions.map(p => `${p}`).join(', ')
@@ -40,6 +40,9 @@ module.exports = async (client) => {
             } else {
                 return Table.addRow(dim(fileName), cooldown, perms, red("FAILED"), "Invalid permission");
             }
+
+        // Add the category to description
+        command.description = `Category: ${toTitleCase(L[L.length - 2]) || "None"} | ` + command.description
 
         // Push all commands to client
         client.commands.set(command.name, command);
