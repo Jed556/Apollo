@@ -15,6 +15,44 @@ let Database = process.env.database || database;
 
 module.exports = (client) => {
     try {
+
+        // ---------------------------------------- GLOBAL EMBEDS ---------------------------------------- //
+        const joinAlert = new MessageEmbed()
+            .setTimestamp()
+            .setColor(emb.errColor)
+            .setAuthor({ name: `JOIN ${channel.guild.me.voice.channel ? "MY" : "A"} VOICE CHANNEL FIRST`, iconURL: emb.disc.alert })
+            .setDescription(channel.id ? `**Channel: <#${channel.id}>**` : "")
+
+        const djAlert = new MessageEmbed()
+            .setTimestamp()
+            .setColor(emb.errColor)
+            .setAuthor({ name: "YOU ARE NOT A DJ OR THE SONG REQUESTER", iconURL: emb.disc.alert })
+            .setDescription(`**DJ-ROLES:**\n${check_if_dj(client, member, client.distube.getQueue(i.guild.id).songs[0])}`)
+
+        const noPLayerAlert = new MessageEmbed()
+            .setTimestamp()
+            .setColor(emb.errColor)
+            .setAuthor(`NOTHING PLAYING YET`, emb.disc.alert)
+            .setFooter(`Action by: ${member.user.tag}`, member.user.displayAvatarURL({ dynamic: true }))
+
+        const errorEmb = new MessageEmbed()
+            .setTimestamp()
+            .setColor(emb.errColor)
+            .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
+
+        const successEmb = new MessageEmbed()
+            .setTimestamp()
+            .setColor(emb.color)
+            .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
+
+        const errLogEmb = new MessageEmbed()
+            .setTimestamp()
+            .setColor(emb.errColor)
+            .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+            .setAuthor({ name: "AN ERROR OCCURED", iconURL: emb.disc.error })
+            .setDescription(`\`/info support\` for support or DM me \`${client.user.tag}\` \`\`\`${e}\`\`\``)
+
+
         // ---------------------  AUTORESUNE AND DATABASING IS NOT AVAILABLE YET  --------------------- //
 
         // // Connect to database
@@ -187,36 +225,6 @@ module.exports = (client) => {
                         let { member } = i;
                         const { channel } = member.voice
 
-                        // ---------------------------------------- GLOBAL EMBEDS ---------------------------------------- //
-                        const joinAlert = new MessageEmbed()
-                            .setTimestamp()
-                            .setColor(emb.errColor)
-                            .setAuthor(`JOIN ${channel.guild.me.voice.channel ? "MY" : "A"} VOICE CHANNEL FIRST!`, emb.disc.alert)
-                            .setDescription(channel.id ? `**Channel: <#${channel.id}>**` : "")
-
-                        const djAlert = new MessageEmbed()
-                            .setTimestamp()
-                            .setColor(emb.errColor)
-                            .setAuthor(`YOU ARE NOT A DJ OR THE SONG REQUESTER`, emb.disc.alert)
-                            .setDescription(`**DJ-ROLES:**\n${check_if_dj(client, member, client.distube.getQueue(i.guild.id).songs[0])}`)
-
-                        const noPLayerAlert = new MessageEmbed()
-                            .setTimestamp()
-                            .setColor(emb.errColor)
-                            .setAuthor(`NOTHING PLAYING YET`, emb.disc.alert)
-                            .setFooter(`Action by: ${member.user.tag}`, member.user.displayAvatarURL({ dynamic: true }))
-
-                        const errorEmb = new MessageEmbed()
-                            .setTimestamp()
-                            .setColor(emb.errColor)
-                            .setFooter(`Action by: ${member.user.tag}`, member.user.displayAvatarURL({ dynamic: true }))
-
-                        const successEmb = new MessageEmbed()
-                            .setTimestamp()
-                            .setColor(emb.color)
-                            .setFooter(`Action by: ${member.user.tag}`, member.user.displayAvatarURL({ dynamic: true }))
-
-
                         if (i.customId != `10` && check_if_dj(client, i.member, client.distube.getQueue(i.guild.id).songs[0])) {
                             return i.reply({
                                 embeds: [djAlert],
@@ -225,7 +233,7 @@ module.exports = (client) => {
                                 if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                     setTimeout(() => {
                                         try {
-                                            i.deleteReply().catch(console.log);
+                                            interaction.deleteReply().catch(console.log);
                                         } catch (e) {
                                             console.log(e)
                                         }
@@ -244,7 +252,7 @@ module.exports = (client) => {
                             if (!newQueue.previousSongs || newQueue.previousSongs.length == 0) {
                                 return i.reply({
                                     embeds: [errorEmb
-                                        .setAuthor(`NO PREVIOUS SONG`, emb.disc.alert)
+                                        .setAuthor({ name: "NO PREVIOUS SONG", iconURL: emb.disc.alert })
                                     ],
                                     ephemeral: true
                                 })
@@ -252,13 +260,13 @@ module.exports = (client) => {
                             await newQueue.previous();
                             i.reply({
                                 embeds: [successEmb
-                                    .setAuthor(`PLAYING PREVIOUS SONG`, emb.disc.previous)
+                                    .setAuthor({ name: "PLAYING PREVIOUS SONG", iconURL: emb.disc.previous })
                                 ]
                             }).then(interaction => {
                                 if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                     setTimeout(() => {
                                         try {
-                                            i.deleteReply().catch(console.log);
+                                            interaction.deleteReply().catch(console.log);
                                         } catch (e) {
                                             console.log(e)
                                         }
@@ -348,7 +356,7 @@ module.exports = (client) => {
                                 // If its on autoplay mode, then do autoplay before leaving...
                                 i.reply({
                                     embeds: [successEmb
-                                        .setAuthor(`NO MORE SONGS IN QUEUE`, emb.disc.skip)
+                                        .setAuthor({ name: "NO MORE SONGS IN QUEUE", iconURL: emb.disc.skip })
                                         .setDescription(`**STOPPED THE PLAYER & LEFT THE VOICE CHANNEL**`)
                                     ]
                                 }).then(interaction => {
@@ -371,7 +379,7 @@ module.exports = (client) => {
                             await client.distube.skip(i.guild.id)
                             i.reply({
                                 embeds: [successEmb
-                                    .setAuthor(`SKIPPED TO THE NEXT SONG`, emb.disc.skip)
+                                    .setAuthor({ name: "SKIPPED TO NEXT SONG", iconURL: emb.disc.skip })
                                 ]
                             }).then(interaction => {
                                 if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -408,7 +416,7 @@ module.exports = (client) => {
                             // Stop the track
                             i.reply({
                                 embeds: [successEmb
-                                    .setAuthor(`STOPPED PLAYING`, emb.disc.stop)
+                                    .setAuthor({ name: "STOPPED PLAYING", iconURL: emb.disc.stop })
                                     .setDescription(`**STOPPED THE PLAYER & LEFT THE VOICE CHANNEL**`)
                                 ]
                             }).then(interaction => {
@@ -455,7 +463,7 @@ module.exports = (client) => {
                                 })
                                 i.reply({
                                     embeds: [successEmb
-                                        .setAuthor(`PAUSED`, emb.disc.pause)
+                                        .setAuthor({ name: "PAUSED", iconURL: emb.disc.pause })
                                     ]
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -477,7 +485,7 @@ module.exports = (client) => {
                                 })
                                 i.reply({
                                     embeds: [successEmb
-                                        .setAuthor(`RESUMED`, emb.disc.resume)
+                                        .setAuthor({ name: "RESUMED", iconURL: emb.disc.resume })
                                     ]
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -518,7 +526,7 @@ module.exports = (client) => {
                             //Send Success Message
                             i.reply({
                                 embeds: [successEmb
-                                    .setAuthor(`SHUFFELED  ${newQueue.songs.length} SONGS`, emb.disc.shuffle)
+                                    .setAuthor({ name: `SHUFFELED  ${newQueue.songs.length} SONGS`, iconURL: emb.disc.shuffle })
                                 ]
                             }).then(interaction => {
                                 if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -570,7 +578,7 @@ module.exports = (client) => {
                             if (newQueue.autoplay) {
                                 i.reply({
                                     embeds: [successEmb
-                                        .setAuthor(`ENABLED AUTOPLAY`, emb.disc.autoplay.on)
+                                        .setAuthor({ name: "ENABLED AUTOPLAY", iconURL: emb.disc.autoplay.on })
                                     ]
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -586,7 +594,7 @@ module.exports = (client) => {
                             } else {
                                 i.reply({
                                     embeds: [successEmb
-                                        .setAuthor(`DISABLED AUTOPLAY`, emb.disc.autoplay.off)
+                                        .setAuthor({ name: "DISABLED AUTOPLAY", iconURL: emb.disc.autoplay.off })
                                     ]
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -621,12 +629,12 @@ module.exports = (client) => {
                                     }
                                 })
 
-                            //Disable the Repeatmode
+                            // Disable the Repeatmode
                             if (newQueue.repeatMode == 1) {
                                 await newQueue.setRepeatMode(0)
                                 i.reply({
                                     embeds: [successEmb
-                                        .setAuthor(`DISABLED SONG LOOP`, emb.disc.loop.none)
+                                        .setAuthor({ name: "DISABLED SONG LOOP", iconURL: emb.disc.loop.none })
                                     ]
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -640,12 +648,12 @@ module.exports = (client) => {
                                     }
                                 })
                             }
-                            //Enable it
+                            // Enable loop
                             else {
                                 await newQueue.setRepeatMode(1)
                                 i.reply({
                                     embeds: [successEmb
-                                        .setAuthor(`${oldLoop == 0 ? "ENABLED SONG" : "DISABLED QUEUE LOOP & ENABLED SONG"} LOOP`, emb.disc.loop.song)
+                                        .setAuthor({ name: `${oldLoop == 0 ? "ENABLED SONG" : "DISABLED QUEUE LOOP & ENABLED SONG"} LOOP`, iconURL: emb.disc.loop.song })
                                     ]
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -690,7 +698,7 @@ module.exports = (client) => {
                                 await newQueue.setRepeatMode(0)
                                 i.reply({
                                     embeds: [successEmb
-                                        .setAuthor(`DISABLED QUEUE LOOP`, emb.disc.loop.none)
+                                        .setAuthor({ name: "DISABLED QUEUE LOOP", iconURL: emb.disc.loop.none })
                                     ]
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -709,7 +717,7 @@ module.exports = (client) => {
                                 await newQueue.setRepeatMode(2)
                                 i.reply({
                                     embeds: [successEmb
-                                        .setAuthor(`${oldLoop == 0 ? "ENABLED QUEUE" : "DISABLED SONG LOOP & ENABLED QUEUE"} LOOP`, emb.disc.loop.queue)
+                                        .setAuthor({ name: `${oldLoop == 0 ? "ENABLED QUEUE" : "DISABLED SONG LOOP & ENABLED QUEUE"} LOOP`, iconURL: emb.disc.loop.queue })
                                     ]
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -756,7 +764,7 @@ module.exports = (client) => {
                             collector.resetTimer({ time: (newQueue.songs[0].duration - newQueue.currentTime) * 1000 })
                             i.reply({
                                 embeds: [successEmb
-                                    .setAuthor(`REWINDED FOR 10 SECONDS`, emb.disc.rewind)
+                                    .setAuthor({ name: "REWINDED FOR 10 SECONDS", iconURL: emb.disc.rewind })
                                 ]
                             }).then(interaction => {
                                 if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -801,7 +809,7 @@ module.exports = (client) => {
                             collector.resetTimer({ time: (newQueue.songs[0].duration - newQueue.currentTime) * 1000 })
                             i.reply({
                                 embeds: [successEmb
-                                    .setAuthor(`FORWARDED FOR 10 SECONDS`, emb.disc.forward)
+                                    .setAuthor({ name: "FORWARDED FOR 10 SECONDS", iconURL: emb.disc.forward })
                                 ]
                             }).then(interaction => {
                                 if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -833,8 +841,8 @@ module.exports = (client) => {
                     embeds: [new MessageEmbed()
                         .setColor(emb.color)
                         .setThumbnail(`https://img.youtube.com/vi/${song.id}/mqdefault.jpg`)
-                        .setFooter(song.user.tag, song.user.displayAvatarURL({ dynamic: true }))
-                        .setAuthor(`SONG ADDED TO QUEUE`, emb.disc.song.add)
+                        .setFooter({ name: song.user.tag, iconURL: song.user.displayAvatarURL({ dynamic: true }) })
+                        .setAuthor({ name: "SONG ADDED TO QUEUE", iconURL: emb.disc.song.add })
                         .setDescription(`Song: [\`${song.name}\`](${song.url})  -  \`${song.formattedDuration}\``)
                         .addField(`⌛ **Estimated Time:**`, `\`${queue.songs.length - 1} song${queue.songs.length != 1 ? "s" : ""}\` - \`${(Math.floor((queue.duration - song.duration) / 60 * 100) / 100).toString().replace(".", ":")}\``)
                         .addField(`🌀 **Queue Duration:**`, `\`${queue.formattedDuration}\``)
@@ -862,8 +870,8 @@ module.exports = (client) => {
                         new MessageEmbed()
                             .setColor(emb.color)
                             .setThumbnail(playlist.thumbnail.url ? playlist.thumbnail.url : `https://img.youtube.com/vi/${playlist.songs[0].id}/mqdefault.jpg`)
-                            .setFooter(playlist.user.tag, playlist.user.displayAvatarURL({ dynamic: true }))
-                            .setAuthor(`PLAYLIST ADDED TO QUEUE`, emb.disc.song.add)
+                            .setFooter({ name: playlist.user.tag, iconURL: playlist.user.displayAvatarURL({ dynamic: true }) })
+                            .setAuthor({ name: "PLAYLIST ADDED TO QUEUE", iconURL: emb.disc.song.add })
                             .setDescription(`Playlist: [\`${playlist.name}\`](${playlist.url ? playlist.url : ""})  -  \`${playlist.songs.length} Song${playlist.songs.length != 0 ? "s" : ""}\``)
                             .addField(`⌛ **Estimated Time:**`, `\`${queue.songs.length - - playlist.songs.length} song${queue.songs.length != 1 ? "s" : ""}\` - \`${(Math.floor((queue.duration - playlist.duration) / 60 * 100) / 100).toString().replace(".", ":")}\``)
                             .addField(`🌀 **Queue Duration:**`, `\`${queue.formattedDuration}\``)
@@ -895,13 +903,7 @@ module.exports = (client) => {
             // If an error occured
             .on(`error`, (channel, e) => {
                 channel.send({
-                    embeds: [new MessageEmbed()
-                        .setTimestamp()
-                        .setColor(emb.errColor)
-                        .setAuthor(`AN ERROR OCCURED`, emb.disc.error)
-                        .setDescription(`\`/info support\` for support or DM me \`${client.user.tag}\` \`\`\`${e}\`\`\``)
-                        .setFooter(client.user.username, client.user.displayAvatarURL())
-                    ]
+                    embeds: [errLogEmb]
                 }).catch((e) => console.log(e))
                 console.error(e)
             })
@@ -912,9 +914,9 @@ module.exports = (client) => {
                 var embed = new MessageEmbed()
                     .setTimestamp()
                     .setColor(emb.color)
-                    .setAuthor(`VOICE CHANNEL EMPTY`, emb.disc.alert)
+                    .setAuthor({ name: "VOICE CHANNEL EMPTY", iconURL: emb.disc.alert })
                     .setDescription(`**LEFT THE CHANNEL**`)
-                    .setFooter(client.user.username, client.user.displayAvatarURL())
+                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                 queue.textChannel.send({ embeds: [embed], components: [] }).catch((e) => {
                     console.log(e.stack ? String(e.stack).grey : String(e).grey)
                 })
@@ -926,12 +928,12 @@ module.exports = (client) => {
             // If a song is done playing
             .on(`finishSong`, (queue, song) => {
                 var embed = new MessageEmbed()
+                    .setTimestamp()
                     .setColor(emb.color)
-                    .setAuthor(`DASHBOARD | SONG ENDED`, emb.disc.done)
+                    .setAuthor({ name: "DASHBOARD | SONG ENDED", iconURL: emb.disc.done })
                     .setDescription(`**[${song.name}](${song.url})**`)
                     .setThumbnail(`https://img.youtube.com/vi/${song.id}/mqdefault.jpg`)
-                    .setFooter(`${song.user.tag}`, song.user.displayAvatarURL({ dynamic: true }))
-                    .setTimestamp();
+                    .setFooter({ name: song.user.tag, iconURL: song.user.displayAvatarURL({ dynamic: true }) })
 
                 queue.textChannel.messages.fetch(PlayerMap.get(`currentmsg`)).then(currentSongPlayMsg => {
                     currentSongPlayMsg.edit({ embeds: [embed], components: [] }).catch((e) => {
@@ -971,9 +973,9 @@ module.exports = (client) => {
                             embeds: [new MessageEmbed()
                                 .setTimestamp()
                                 .setColor(emb.color)
-                                .setAuthor(`LEFT THE CHANNEL`, emb.disc.alert)
+                                .setAuthor({ name: "LEFT THE CHANNEL", iconURL: emb.disc.alert })
                                 .setDescription(`**NO MORE SONGS LEFT**`)
-                                .setFooter(client.user.username, client.user.displayAvatarURL())
+                                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                             ]
                         }).then(msg => {
                             if (queue.textChannel.id === client.distubeSettings.get(queue.id, `music.channel`)) {
@@ -1143,8 +1145,8 @@ module.exports = (client) => {
         else djs.slice(0, 15).join(", ");
         if (!newTrack) return new MessageEmbed()
             .setColor(emb.errColor)
-            .setAuthor("NO SONG FOUND", emb.disc.error)
-            .setFooter(`${newTrack.user.tag}`, newTrack.user.displayAvatarURL({ dynamic: true }));
+            .setAuthor({ name: "NO SONG FOUND", iconURL: emb.disc.error })
+            .setFooter({ name: newTrack.user.tag, iconURL: newTrack.user.displayAvatarURL({ dynamic: true }) });
         var embed = new MessageEmbed().setColor(emb.color).setTimestamp()
             .setDescription(`**[${newTrack.name}](${newTrack.url})**`)
             .addField(`${(newTrack.user === client.user) ? "💡 Autoplay by:" : "💡 Request by:"}`, `>>> ${newTrack.user}`, true)
@@ -1156,9 +1158,9 @@ module.exports = (client) => {
             .addField(`⬇ Download:`, `>>> [\`Music Link\`](${newTrack.streamURL})`, true)
             .addField(`🎙 Filter${newQueue.filters.length != 1 ? "s" : ""}:`, `>>> ${newQueue.filters && newQueue.filters.length > 0 ? `${newQueue.filters.map(f => `\`${f}\``).join(`, `)}` : `${emoji.x}`}`, newQueue.filters.length > 2 ? false : true)
             .addField(`💿 DJ-Role${client.distubeSettings.get(newQueue.id, "djroles").length > 1 ? "s" : ""}:`, `>>> ${djs}`, (client.distubeSettings.get(newQueue.id, "djroles").length > 2 || djs != "`Not Set`") ? false : true)
-            .setAuthor(`DASHBOARD | NOW PLAYING`, emb.disc.spin)
+            .setAuthor({ name: "DASHBOARD | NOW PLAYING", iconURL: emb.disc.spin })
             .setThumbnail(`https://img.youtube.com/vi/${newTrack.id}/mqdefault.jpg`)
-            .setFooter(`${newTrack.user.tag}`, newTrack.user.displayAvatarURL({ dynamic: true }));
+            .setFooter({ name: newTrack.user.tag, iconURL: newTrack.user.displayAvatarURL({ dynamic: true }) });
 
         // Setup dashboard buttons
         let previous = new MessageButton().setStyle('PRIMARY').setCustomId('1').setEmoji('⏮').setLabel(`Previous`);
