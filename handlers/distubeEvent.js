@@ -16,66 +16,6 @@ let Database = process.env.database || database;
 module.exports = (client) => {
     try {
 
-        // ---------------------------------------- GLOBAL EMBEDS ---------------------------------------- //
-       
-       /**
-        * 
-        * @param {*} channel Voice channel of member
-        * @returns Response for voice channel issues "JOIN A/MY VOICE CHANNEL"
-        */
-        function joinAlert(channel) {
-            if (!channel) {
-                return interaction.reply({
-                    embeds: [new MessageEmbed()
-                        .setColor(emb.errColor)
-                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                        .setAuthor({ name: "JOIN A VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
-                    ],
-                    ephemeral: true
-                })
-            } else if (channel.guild.me.voice.channel && channel.guild.me.voice.channel.id != channel.id)
-                return interaction.reply({
-                    embeds: [new MessageEmbed()
-                        .setColor(emb.errColor)
-                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                        .setAuthor({ name: "JOIN MY VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
-                        .setDescription(`**Channel: <#${channel.guild.me.voice.channel.id}>**`)
-                    ],
-                    ephemeral: true
-                })
-        }
-
-
-        const djAlert = new MessageEmbed()
-            .setTimestamp()
-            .setColor(emb.errColor)
-            .setAuthor({ name: "YOU ARE NOT A DJ OR THE SONG REQUESTER", iconURL: emb.disc.alert })
-            .setDescription(`**DJ-ROLES:**\n${check_if_dj(client, member, client.distube.getQueue(i.guild.id).songs[0])}`)
-
-        const noPLayerAlert = new MessageEmbed()
-            .setTimestamp()
-            .setColor(emb.errColor)
-            .setAuthor(`NOTHING PLAYING YET`, emb.disc.alert)
-            .setFooter(`Action by: ${member.user.tag}`, member.user.displayAvatarURL({ dynamic: true }))
-
-        const errorEmb = new MessageEmbed()
-            .setTimestamp()
-            .setColor(emb.errColor)
-            .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-
-        const successEmb = new MessageEmbed()
-            .setTimestamp()
-            .setColor(emb.color)
-            .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-
-        const errLogEmb = new MessageEmbed()
-            .setTimestamp()
-            .setColor(emb.errColor)
-            .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-            .setAuthor({ name: "AN ERROR OCCURED", iconURL: emb.disc.error })
-            .setDescription(`\`/info support\` for support or DM me \`${client.user.tag}\` \`\`\`${e}\`\`\``)
-
-
         // ---------------------  AUTORESUNE AND DATABASING IS NOT AVAILABLE YET  --------------------- //
 
         // // Connect to database
@@ -248,6 +188,44 @@ module.exports = (client) => {
                         let { member } = i;
                         const { channel } = member.voice
 
+                        // ---------------------------------------- GLOBAL EMBEDS ---------------------------------------- //
+
+                        let joinAlert;
+                        if (!channel) {
+                            joinAlert = new MessageEmbed()
+                                .setColor(emb.errColor)
+                                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                                .setAuthor({ name: "JOIN A VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
+                        } else if (channel.guild.me.voice.channel && channel.guild.me.voice.channel.id != channel.id) {
+                            joinAlert = new MessageEmbed()
+                                .setColor(emb.errColor)
+                                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                                .setAuthor({ name: "JOIN MY VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
+                                .setDescription(`**Channel: <#${channel.guild.me.voice.channel.id}>**`)
+                        }
+
+                        const djAlert = new MessageEmbed()
+                            .setTimestamp()
+                            .setColor(emb.errColor)
+                            .setAuthor({ name: "YOU ARE NOT A DJ OR THE SONG REQUESTER", iconURL: emb.disc.alert })
+                            .setDescription(`**DJ-ROLES:**\n${check_if_dj(client, member, client.distube.getQueue(i.guild.id).songs[0])}`)
+
+                        const noPLayerAlert = new MessageEmbed()
+                            .setTimestamp()
+                            .setColor(emb.errColor)
+                            .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
+                            .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
+
+                        const errorEmb = new MessageEmbed()
+                            .setTimestamp()
+                            .setColor(emb.errColor)
+                            .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
+
+                        const successEmb = new MessageEmbed()
+                            .setTimestamp()
+                            .setColor(emb.color)
+                            .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
+
                         if (i.customId != `10` && check_if_dj(client, i.member, client.distube.getQueue(i.guild.id).songs[0])) {
                             return i.reply({
                                 embeds: [djAlert],
@@ -320,7 +298,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert(channel)],
+                                    embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -360,7 +338,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert(channel)],
+                                    embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -422,7 +400,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert(channel)],
+                                    embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -464,7 +442,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert(channel)],
+                                    embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -529,7 +507,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert(channel)],
+                                    embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -570,7 +548,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert(channel)],
+                                    embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -638,7 +616,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert(channel)],
+                                    embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -702,7 +680,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert(channel)],
+                                    embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -766,7 +744,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert(channel)],
+                                    embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -812,7 +790,7 @@ module.exports = (client) => {
                             // If the member is not in a channel or in the same channel, return
                             if (!channel || channel.id !== newQueue.voiceChannel.id)
                                 return i.reply({
-                                    embeds: [joinAlert(channel)],
+                                    embeds: [joinAlert],
                                     ephemeral: true
                                 }).then(interaction => {
                                     if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
@@ -864,7 +842,7 @@ module.exports = (client) => {
                     embeds: [new MessageEmbed()
                         .setColor(emb.color)
                         .setThumbnail(`https://img.youtube.com/vi/${song.id}/mqdefault.jpg`)
-                        .setFooter({ name: song.user.tag, iconURL: song.user.displayAvatarURL({ dynamic: true }) })
+                        .setFooter({ text: song.user.tag, iconURL: song.user.displayAvatarURL({ dynamic: true }) })
                         .setAuthor({ name: "SONG ADDED TO QUEUE", iconURL: emb.disc.song.add })
                         .setDescription(`Song: [\`${song.name}\`](${song.url})  -  \`${song.formattedDuration}\``)
                         .addField(`⌛ **Estimated Time:**`, `\`${queue.songs.length - 1} song${queue.songs.length != 1 ? "s" : ""}\` - \`${(Math.floor((queue.duration - song.duration) / 60 * 100) / 100).toString().replace(".", ":")}\``)
@@ -893,7 +871,7 @@ module.exports = (client) => {
                         new MessageEmbed()
                             .setColor(emb.color)
                             .setThumbnail(playlist.thumbnail.url ? playlist.thumbnail.url : `https://img.youtube.com/vi/${playlist.songs[0].id}/mqdefault.jpg`)
-                            .setFooter({ name: playlist.user.tag, iconURL: playlist.user.displayAvatarURL({ dynamic: true }) })
+                            .setFooter({ text: playlist.user.tag, iconURL: playlist.user.displayAvatarURL({ dynamic: true }) })
                             .setAuthor({ name: "PLAYLIST ADDED TO QUEUE", iconURL: emb.disc.song.add })
                             .setDescription(`Playlist: [\`${playlist.name}\`](${playlist.url ? playlist.url : ""})  -  \`${playlist.songs.length} Song${playlist.songs.length != 0 ? "s" : ""}\``)
                             .addField(`⌛ **Estimated Time:**`, `\`${queue.songs.length - - playlist.songs.length} song${queue.songs.length != 1 ? "s" : ""}\` - \`${(Math.floor((queue.duration - playlist.duration) / 60 * 100) / 100).toString().replace(".", ":")}\``)
@@ -926,7 +904,12 @@ module.exports = (client) => {
             // If an error occured
             .on(`error`, (channel, e) => {
                 channel.send({
-                    embeds: [errLogEmb]
+                    embeds: [new MessageEmbed()
+                        .setTimestamp()
+                        .setColor(emb.errColor)
+                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                        .setAuthor({ name: "AN ERROR OCCURED", iconURL: emb.disc.error })
+                        .setDescription(`\`/info support\` for support or DM me \`${client.user.tag}\` \`\`\`${e}\`\`\``)]
                 }).catch((e) => console.log(e))
                 console.error(e)
             })
@@ -956,7 +939,7 @@ module.exports = (client) => {
                     .setAuthor({ name: "DASHBOARD | SONG ENDED", iconURL: emb.disc.done })
                     .setDescription(`**[${song.name}](${song.url})**`)
                     .setThumbnail(`https://img.youtube.com/vi/${song.id}/mqdefault.jpg`)
-                    .setFooter({ name: song.user.tag, iconURL: song.user.displayAvatarURL({ dynamic: true }) })
+                    .setFooter({ text: song.user.tag, iconURL: song.user.displayAvatarURL({ dynamic: true }) })
 
                 queue.textChannel.messages.fetch(PlayerMap.get(`currentmsg`)).then(currentSongPlayMsg => {
                     currentSongPlayMsg.edit({ embeds: [embed], components: [] }).catch((e) => {
@@ -1156,7 +1139,7 @@ module.exports = (client) => {
                 }
             });
     } catch (e) {
-        console.log(String(e.stack).bgRed)
+        console.log(String(e.stack))
     }
 
     // DASHBOARD
@@ -1169,7 +1152,7 @@ module.exports = (client) => {
         if (!newTrack) return new MessageEmbed()
             .setColor(emb.errColor)
             .setAuthor({ name: "NO SONG FOUND", iconURL: emb.disc.error })
-            .setFooter({ name: newTrack.user.tag, iconURL: newTrack.user.displayAvatarURL({ dynamic: true }) });
+            .setFooter({ text: newTrack.user.tag, iconURL: newTrack.user.displayAvatarURL({ dynamic: true }) });
         var embed = new MessageEmbed().setColor(emb.color).setTimestamp()
             .setDescription(`**[${newTrack.name}](${newTrack.url})**`)
             .addField(`${(newTrack.user === client.user) ? "💡 Autoplay by:" : "💡 Request by:"}`, `>>> ${newTrack.user}`, true)
@@ -1178,12 +1161,12 @@ module.exports = (client) => {
             .addField(`🔊 Volume:`, `>>> \`${newQueue.volume} %\``, true)
             .addField(`♾ Loop:`, `>>> ${newQueue.repeatMode ? newQueue.repeatMode === 2 ? `${emoji.check}\` Queue\`` : `${emoji.check} \`Song\`` : `${emoji.x}`}`, true)
             .addField(`↪️ Autoplay:`, `>>> ${newQueue.autoplay ? `${emoji.check}` : `${emoji.x}`}`, true)
-            .addField(`⬇ Download:`, `>>> [\`Music Link\`](${newTrack.streamURL})`, true)
+            .addField(`⬇ Download:`, `>>> [\`File Link\`](${newTrack.streamURL})`, true)
             .addField(`🎙 Filter${newQueue.filters.length != 1 ? "s" : ""}:`, `>>> ${newQueue.filters && newQueue.filters.length > 0 ? `${newQueue.filters.map(f => `\`${f}\``).join(`, `)}` : `${emoji.x}`}`, newQueue.filters.length > 2 ? false : true)
             .addField(`💿 DJ-Role${client.distubeSettings.get(newQueue.id, "djroles").length > 1 ? "s" : ""}:`, `>>> ${djs}`, (client.distubeSettings.get(newQueue.id, "djroles").length > 2 || djs != "`Not Set`") ? false : true)
             .setAuthor({ name: "DASHBOARD | NOW PLAYING", iconURL: emb.disc.spin })
             .setThumbnail(`https://img.youtube.com/vi/${newTrack.id}/mqdefault.jpg`)
-            .setFooter({ name: newTrack.user.tag, iconURL: newTrack.user.displayAvatarURL({ dynamic: true }) });
+            .setFooter({ text: newTrack.user.tag, iconURL: newTrack.user.displayAvatarURL({ dynamic: true }) });
 
         // Setup dashboard buttons
         let previous = new MessageButton().setStyle('PRIMARY').setCustomId('1').setEmoji('⏮').setLabel(`Previous`);

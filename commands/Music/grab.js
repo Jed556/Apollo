@@ -69,7 +69,7 @@ module.exports = {
                     .addField(`🔊 Volume:`, `>>> \`${newQueue.volume} %\``, true)
                     .addField(`♾ Loop:`, `>>> ${newQueue.repeatMode ? newQueue.repeatMode === 2 ? `${emoji.check} \`Queue\`` : `${emoji.check} \`Song\`` : `${emoji.x}`}`, true)
                     .addField(`↪️ Autoplay:`, `>>> ${newQueue.autoplay ? `${emoji.check}` : `${emoji.x}`}`, true)
-                    .addField(`⬇ Download:`, `>>> [\`Music Link\`](${newTrack.streamURL})`, true)
+                    .addField(`⬇ Download:`, `>>> [\`File Link\`](${newTrack.streamURL})`, true)
                     .addField(`🎙 Filter${newQueue.filters.length != 1 ? "s" : ""}:`, `>>> ${newQueue.filters && newQueue.filters.length > 0 ? `${newQueue.filters.map(f => `\`${f}\``).join(`, `)}` : `${emoji.x}`}`, newQueue.filters.length > 2 ? false : true)
                     .addField("\u200b", `\u200b`, true)
                     .setThumbnail(`https://img.youtube.com/vi/${newTrack.id}/mqdefault.jpg`)
