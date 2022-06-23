@@ -5,11 +5,14 @@ const config = require('../config/client.json');
 const emb = require('../config/embed.json');
 
 // EXPORT ALL FUNCTIONS
-module.exports.mainDir = mainDir;
-module.exports.reSlash = reSlash;
-module.exports.randomNum = randomNum;
-module.exports.delay = delay;
-module.exports.escapeRegex = escapeRegex;
+module.exports = {
+    mainDir,
+    reSlash,
+    randomNum,
+    delay,
+    escapeRegex,
+    toTitleCase,
+}
 
 // ---------- FUNCTIONS ---------- //
 
@@ -79,4 +82,15 @@ function escapeRegex(str) {
     } catch (e) {
         console.log(String(e.stack))
     }
+}
+
+/**
+ * 
+ * @param {*} str String
+ * @returns String in title case
+ */
+function toTitleCase(str) {
+    return str.toLowerCase().split(' ').map(function (word) {
+        return (word.charAt(0).toUpperCase() + word.slice(1));
+    }).join(' ');
 }
