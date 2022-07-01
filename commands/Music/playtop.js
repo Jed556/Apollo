@@ -5,7 +5,7 @@ const { check_if_dj } = require('../../system/distubeFunctions');
 module.exports = {
     name: "playtop",
     description: "Plays a song/playlist and adds it to the top",
-    help: "/play [song]",
+    help: "/playtop [song]",
     cooldown: 2,
     permissions: [],
     options: [
