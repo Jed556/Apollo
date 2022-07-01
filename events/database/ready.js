@@ -4,9 +4,20 @@ const osUtils = require('os-utils');
 const ms = require('ms');
 const DB = require('../../Structures/Schemas/Client');
 const { cyanBright, greenBright, yellow, red } = require('chalk');
-const { connectDB, database, memoryUpdate } = require('../../config/database.json');
 
-let Database = process.env.database || database;
+// Variable checks (Use .env if present)
+require('dotenv').config();
+let Database, ConnectDB, MemoryUpdate
+if (process.env.database) {
+    Database = process.env.database;
+    ConnectDB = process.env.connectDB;
+    MemoryUpdate = process.env.memoryUpdate;
+} else {
+    const { connectDB, database, memoryUpdate } = require('../../config/database.json');
+    Database = database;
+    ConnectDB = connectDB;
+    MemoryUpdate = memoryUpdate;
+}
 
 /* ----------[RAM Usage]---------- */
 
@@ -18,7 +29,7 @@ async function getMemoryUsage() {
 module.exports = async (client) => {
     try {
         /* ---------- CONNECTING TO DATABASE ---------- */
-        if (connectDB) {
+        if (ConnectDB) {
             if (!Database) return;
             mongoose.connect(Database, {
                 dbName: "Client",
@@ -31,15 +42,14 @@ module.exports = async (client) => {
             });
         } else {
             console.log(`${yellow.bold("[WARN]")} Database connection disabled`);
-        }
 
-        /* ---------- MEMORY LOGGING ---------- */
-        if (connectDB) {
+
+            /* ---------- MEMORY LOGGING ---------- */
             let memArray = [];
 
             setInterval(async () => {
 
-                //Used Memory in GB
+                // Used Memory in GB
                 memArray.push(await getMemoryUsage());
 
                 if (memArray.length >= 100) {
@@ -52,7 +62,7 @@ module.exports = async (client) => {
                     { Memory: memArray },
                     { upsert: true });
 
-            }, ms(memoryUpdate + "s")); //Update every x seconds
+            }, ms(MemoryUpdate + "s")); // Update every x seconds
         }
     } catch (e) {
         console.log(String(e.stack))
