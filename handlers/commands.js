@@ -7,9 +7,29 @@ const blurple = chalk.bold.hex("#7289da");
 const { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk');
 const { AsciiTable3 } = require('ascii-table3');
 const { mainDir, toTitleCase } = require('../system/functions');
-const { token, botID, guildID, loadGlobal, defaultCooldown } = require('../config/client.json');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v10');
+
+// Variable checks (Use .env if present)
+require('dotenv').config();
+let Token, BotID, GuildID, LoadGlobal, DefaultCooldown;
+if (process.env.token && process.env.guildID && process.env.botID && process.env.loadGlobal && process.env.defaultCooldown) {
+    Token = process.env.token;
+    BotID = process.env.botID;
+    GuildID = process.env.guildID;
+    LoadGlobal = process.env.loadGlobal;
+    DefaultCooldown = process.env.defaultCooldown;
+} else {
+    envPresent = false
+    const { token, botID, guildID, loadGlobal, defaultCooldown } = require('../config/client.json');
+    Token = token
+    BotID = botID
+    GuildID = guildID
+    LoadGlobal = loadGlobal
+    DefaultCooldown = defaultCooldown
+
+}
+
 
 module.exports = async (client) => {
     // Create table
@@ -25,7 +45,7 @@ module.exports = async (client) => {
         const L = file.split("/");
         const fileName = L[L.length - 1];
         const perms = command.permissions.map(p => `${p}`).join(', ')
-        const cooldown = command.cooldown || defaultCooldown;
+        const cooldown = command.cooldown || DefaultCooldown;
 
         // Log errors to table
         if (!command.name)
@@ -56,22 +76,22 @@ module.exports = async (client) => {
 
 
     // Load the slash commands
-    const rest = new REST({ version: "10" }).setToken(token);
+    const rest = new REST({ version: "10" }).setToken(Token);
 
     (async () => {
         try {
             console.log(blurple("[REST]") + " Refreshing commands");
             // Check if will deploy globally
-            if (loadGlobal) {
+            if (LoadGlobal) {
                 await rest.put(
                     // Deploys globally
-                    Routes.applicationCommands(botID),
+                    Routes.applicationCommands(BotID),
                     { body: CommandArray },
                 );
             } else {
                 await rest.put(
                     // Deploys only in stated guildID
-                    Routes.applicationGuildCommands(botID, guildID),
+                    Routes.applicationGuildCommands(BotID, GuildID),
                     { body: CommandArray },
                 );
             }

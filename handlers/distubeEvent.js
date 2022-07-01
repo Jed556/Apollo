@@ -2,7 +2,6 @@ const { MessageButton, MessageActionRow, MessageEmbed, Permissions, MessageSelec
 const { delay, escapeRegex } = require('../system/functions');
 const { check_if_dj } = require('../system/distubeFunctions');
 const emb = require('../config/embed.json');
-const { database } = require('../config/database.json');
 const emoji = require('../config/emojis.json');
 const settings = require('../config/distube.json');
 const DB = require('../Structures/Schemas/Distube');
@@ -11,7 +10,15 @@ const PlayerMap = new Map()
 let songEditInterval = null;
 let endCheck = false;
 
-let Database = process.env.database || database;
+// Variable checks (Use .env if present)
+require('dotenv').config();
+let Database
+if (process.env.database) {
+    Database = process.env.database;
+} else {
+    const { database } = require('../config/database.json');
+    Database = database;
+}
 
 module.exports = (client) => {
     try {

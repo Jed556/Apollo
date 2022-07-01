@@ -4,10 +4,17 @@ const { readdirSync, lstatSync } = require('fs');
 const os = require('os');
 const { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk');
 const { randomNum } = require('../../system/functions');
-const { ownerID } = require('../../config/client.json')
 const emb = require('../../config/embed.json')
 
-let OwnerID = process.env.ownerID || ownerID;
+// Variable checks (Use .env if present)
+require('dotenv').config();
+let OwnerID
+if (process.env.ownerID) {
+    OwnerID = process.env.ownerID;
+} else {
+    const { ownerID } = require('../../config/client.json');
+    OwnerID = ownerID;
+}
 
 module.exports = async (client) => {
     try {

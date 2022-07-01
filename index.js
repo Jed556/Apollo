@@ -1,10 +1,19 @@
 const { Client, Collection } = require('discord.js');
-const { token } = require('./config/client.json');
 const filters = require('./config/filters.json');
-const {spotify_api, youtubeCookie, nsfwMusic} = require('./config/distube.json');
+const { spotify_api, youtubeCookie, nsfwMusic } = require('./config/distube.json');
 const DisTube = require('distube').default;
 const https = require('https-proxy-agent');
 const Enmap = require('enmap');
+
+// Variable checks (Use .env if present)
+let Token;
+require('dotenv').config();
+if (process.env.token) {
+    Token = process.env.token;
+} else {
+    const { token } = require('./config/client.json');
+    Token = token;
+}
 
 const client = new Client({
     fetchAllMembers: false,
@@ -90,4 +99,4 @@ client.maps = new Map();
 })
 
 // Start the Bot
-client.login(process.env.token || token);
+client.login(Token);
