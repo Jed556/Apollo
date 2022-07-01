@@ -17,6 +17,15 @@ module.exports = {
             const { channel } = member.voice;
             let newQueue = client.distube.getQueue(guildId);
 
+            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0) return interaction.reply({
+                embeds: [new MessageEmbed()
+                    .setColor(emb.errColor)
+                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                    .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
+                ],
+                ephemeral: true
+            })
+
             if (!channel) {
                 return interaction.reply({
                     embeds: [new MessageEmbed()
@@ -46,15 +55,6 @@ module.exports = {
                     ],
                     ephemeral: true
                 });
-
-            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0) return interaction.reply({
-                embeds: [new MessageEmbed()
-                    .setColor(emb.errColor)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                    .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
-                ],
-                ephemeral: true
-            })
 
             let newTrack = newQueue.songs[0];
             interaction.reply({
