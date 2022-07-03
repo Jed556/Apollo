@@ -8,6 +8,7 @@ module.exports = {
     help: "/rewind [seconds]",
     cooldown: 2,
     permissions: [],
+    allowedUIDs: [],
     options: [
         {
             name: "volume",

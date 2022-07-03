@@ -8,6 +8,7 @@ module.exports = {
     help: "/remove [song] (amount)",
     cooldown: 2,
     permissions: [],
+    allowedUIDs: [],
     options: [
         {
             name: "song",

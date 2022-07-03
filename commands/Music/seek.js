@@ -8,6 +8,7 @@ module.exports = {
     help: "/seek [seconds]",
     cooldown: 2,
     permissions: [],
+    allowedUIDs: [],
     options: [
         {
             name: "seconds",

@@ -8,6 +8,7 @@ module.exports = {
     help: "/playtop [song]",
     cooldown: 2,
     permissions: [],
+    allowedUIDs: [],
     options: [
         {
             name: "song",

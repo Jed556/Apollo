@@ -8,6 +8,7 @@ module.exports = {
     help: "/mix [mix]",
     cooldown: 2,
     permissions: [],
+    allowedUIDs: [],
     options: [{
         name: "mix",
         description: "Music mix",

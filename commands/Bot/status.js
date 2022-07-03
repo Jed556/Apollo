@@ -37,6 +37,7 @@ module.exports = {
     help: "/status",
     cooldown: 1,
     permissions: [],
+    allowedUIDs: [],
     options: [],
 
     run: async (client, interaction) => {

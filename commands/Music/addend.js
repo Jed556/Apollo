@@ -8,6 +8,7 @@ module.exports = {
     help: "/addend",
     cooldown: 2,
     permissions: [],
+    allowedUIDs: [],
     options: [],
 
     run: async (client, interaction) => {

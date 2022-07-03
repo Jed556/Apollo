@@ -8,6 +8,7 @@ module.exports = {
     help: "/forward [seconds]",
     cooldown: 2,
     permissions: [],
+    allowedUIDs: [],
     options: [
         {
             name: "seconds",

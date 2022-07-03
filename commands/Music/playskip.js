@@ -8,6 +8,7 @@ module.exports = {
     help: "/playskip [song]",
     cooldown: 2,
     permissions: [],
+    allowedUIDs: [],
     options: [
         {
             name: "song",

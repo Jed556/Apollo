@@ -103,19 +103,19 @@ module.exports = async (client, interaction) => {
             //     })
             // }
 
-            // // If Command has specific users return error
-            // if (command.alloweduserids && command.alloweduserids.length > 0 && !command.alloweduserids.includes(interaction.member.id)) {
-            //     return interaction.reply({
-            //         embeds: [new MessageEmbed()
-            //             .setTimestamp()
-            //             .setColor(emb.errColor)
-            //             .setAuthor("Invalid User", emb.invalidUser)
-            //             .addField("Allowed Users", `${(command && command.alloweduserids) ? command.alloweduserids.map(v => `<@${v}>`).join(",") : command.alloweduserids}`)
-            //             .setFooter(client.user.username, client.user.displayAvatarURL())
-            //         ],
-            //         ephemeral: true
-            //     })
-            // }
+            // Return error if command has user whitelist
+            if (command.allowedUIDs && command.allowedUIDs.length > 0 && !command.allowedUIDs.includes(interaction.member.id)) {
+                return interaction.reply({
+                    embeds: [new MessageEmbed()
+                        .setTimestamp()
+                        .setColor(emb.errColor)
+                        .setAuthor({ name: "INVALID USER", iconURL: emb.error }) // emb.invalidUser is null
+                        .addField("Allowed Users", `${(command && command.allowedUIDs) ? command.allowedUIDs.map(v => `<@${v}>`).join(",") : command.allowedUIDs}`)
+                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                    ],
+                    ephemeral: true
+                })
+            }
 
             // Run the command
             command.run(client, interaction);
