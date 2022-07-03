@@ -1,13 +1,22 @@
-const { MessageEmbed, MessageAttachment } = require("discord.js")
+const { MessageEmbed, MessageAttachment } = require('discord.js')
 const emb = require('../../config/embed.json');
-const { connection } = require("mongoose");
-const { memoryUpdate } = require("../../config/database.json");
+const { connection } = require('mongoose');
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
 const DB = require('../../Structures/Schemas/Client');
-const moment = require("moment");
+const moment = require('moment');
 
-require("../../events/client/ready");
-require("moment-duration-format");
+require('../../events/client/ready');
+require('moment-duration-format');
+
+// Variable checks (Use .env if present)
+require('dotenv').config();
+let MemoryUpdate;
+if (process.env.memoryUpdate) {
+    MemoryUpdate = process.env.memoryUpdate;
+} else {
+    const { memoryUpdate } = require('../../config/database.json');
+    MemoryUpdate = memoryUpdate;
+}
 
 // Optional, disabled by Default
 function getPBar(percent) {
@@ -61,7 +70,7 @@ module.exports = {
 
         // Create labels based on Memory array length
         const labels = [];
-        for (let i = memoryUpdate; i < docs.Memory.length + memoryUpdate; i += memoryUpdate) {
+        for (let i = MemoryUpdate; i < docs.Memory.length + MemoryUpdate; i += MemoryUpdate) {
             labels.push(i.toString());
         }
 
