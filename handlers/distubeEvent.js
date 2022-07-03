@@ -200,11 +200,13 @@ module.exports = (client) => {
                         let joinAlert;
                         if (!channel) {
                             joinAlert = new MessageEmbed()
+                                .setTimestamp()
                                 .setColor(emb.errColor)
                                 .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                                 .setAuthor({ name: "JOIN A VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
                         } else if (channel.guild.me.voice.channel && channel.guild.me.voice.channel.id != channel.id) {
                             joinAlert = new MessageEmbed()
+                                .setTimestamp()
                                 .setColor(emb.errColor)
                                 .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                                 .setAuthor({ name: "JOIN MY VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
@@ -847,6 +849,7 @@ module.exports = (client) => {
                 updateMusicSystem(queue);
                 queue.textChannel.send({
                     embeds: [new MessageEmbed()
+                        .setTimestamp()
                         .setColor(emb.color)
                         .setThumbnail(`https://img.youtube.com/vi/${song.id}/mqdefault.jpg`)
                         .setFooter({ text: song.user.tag, iconURL: song.user.displayAvatarURL({ dynamic: true }) })
@@ -876,6 +879,7 @@ module.exports = (client) => {
                 queue.textChannel.send({
                     embeds: [
                         new MessageEmbed()
+                            .setTimestamp()
                             .setColor(emb.color)
                             .setThumbnail(playlist.thumbnail.url ? playlist.thumbnail.url : `https://img.youtube.com/vi/${playlist.songs[0].id}/mqdefault.jpg`)
                             .setFooter({ text: playlist.user.tag, iconURL: playlist.user.displayAvatarURL({ dynamic: true }) })
