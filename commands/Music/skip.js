@@ -24,7 +24,7 @@ module.exports = {
                         .setAuthor({ name: "JOIN A VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
                     ],
                     ephemeral: true
-                })
+                });
             } else if (channel.guild.me.voice.channel && channel.guild.me.voice.channel.id != channel.id)
                 return interaction.reply({
                     embeds: [new MessageEmbed()
@@ -34,7 +34,7 @@ module.exports = {
                         .setDescription(`**Channel: <#${channel.guild.me.voice.channel.id}>**`)
                     ],
                     ephemeral: true
-                })
+                });
 
             if (channel.userLimit != 0 && channel.full && !channel)
                 return interaction.reply({
@@ -53,7 +53,7 @@ module.exports = {
                     .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
                 ],
                 ephemeral: true
-            })
+            });
 
             if (check_if_dj(client, member, newQueue?.songs[0])) {
                 return interaction.reply({
@@ -76,9 +76,9 @@ module.exports = {
                     .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
                     .setAuthor({ name: "SKIPPED TO NEXT SONG", iconURL: emb.disc.skip })
                 ]
-            })
+            });
         } catch (e) {
-            console.log(e.stack ? e.stack : e)
+            console.log(e.stack ? e.stack : e);
             interaction.editReply({
                 embeds: [new MessageEmbed()
                     .setTimestamp()
@@ -88,7 +88,7 @@ module.exports = {
                     .setDescription(`\`/info support\` for support or DM me \`${client.user.tag}\` \`\`\`${e}\`\`\``)
                 ],
                 ephemeral: true
-            })
+            });
         }
     }
 }

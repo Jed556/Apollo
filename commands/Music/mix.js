@@ -49,7 +49,7 @@ module.exports = {
                         .setAuthor({ name: "JOIN A VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
                     ],
                     ephemeral: true
-                })
+                });
             } else if (channel.guild.me.voice.channel && channel.guild.me.voice.channel.id != channel.id)
                 return interaction.reply({
                     embeds: [new MessageEmbed()
@@ -59,7 +59,7 @@ module.exports = {
                         .setDescription(`**Channel: <#${channel.guild.me.voice.channel.id}>**`)
                     ],
                     ephemeral: true
-                })
+                });
 
             if (channel.userLimit != 0 && channel.full && !channel)
                 return interaction.reply({
@@ -85,39 +85,39 @@ module.exports = {
             }
 
             let link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj";
-            let args = [interaction.options.getString("mix")]
+            let args = [interaction.options.getString("mix")];
             if (args[0]) {
-                //ncs | no copyrighted music
+                // NCS | No Copyrighted Music
                 if (args[0].toLowerCase().startsWith("n")) link = "https://open.spotify.com/playlist/7sZbq8QGyMnhKPcLJvCUFD";
                 //pop
                 if (args[0].toLowerCase().startsWith("p")) link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj";
                 //default
                 if (args[0].toLowerCase().startsWith("d")) link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj";
-                //remixes from Magic Release
+                // Remixes from Magic Release
                 if (args[0].toLowerCase().startsWith("re")) link = "https://www.youtube.com/watch?v=NX7BqdQ1KeU&list=PLYUn4YaogdahwfEkuu5V14gYtTqODx7R2"
-                //rock
+                // Rock
                 if (args[0].toLowerCase().startsWith("ro")) link = "https://open.spotify.com/playlist/37i9dQZF1DWXRqgorJj26U";
-                //oldgaming
+                // Old Gaming
                 if (args[0].toLowerCase().startsWith("o")) link = "https://www.youtube.com/watch?v=iFOAJ12lDDU&list=PLYUn4YaogdahPQPTnBGCrytV97h8ABEav"
-                //gaming
+                // Gaming
                 if (args[0].toLowerCase().startsWith("g")) link = "https://open.spotify.com/playlist/4a54P2VHy30WTi7gix0KW6";
-                //Charts
+                // Charts
                 if (args[0].toLowerCase().startsWith("cha")) link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKvYin_USF1qoJQnIyMAfRxl"
-                //Chill
+                // Chill
                 if (args[0].toLowerCase().startsWith("chi")) link = "https://open.spotify.com/playlist/37i9dQZF1DX4WYpdgoIcn6";
-                //Jazz
+                // Jazz
                 if (args[0].toLowerCase().startsWith("j")) link = "https://open.spotify.com/playlist/37i9dQZF1DXbITWG1ZJKYt";
                 //blues
                 if (args[0].toLowerCase().startsWith("b")) link = "https://open.spotify.com/playlist/37i9dQZF1DXd9rSDyQguIk";
-                //strange-fruits
+                // Strange-fruits
                 if (args[0].toLowerCase().startsWith("s")) link = "https://open.spotify.com/playlist/6xGLprv9fmlMgeAMpW0x51";
-                //magic-release
+                // Magic-release
                 if (args[0].toLowerCase().startsWith("ma")) link = "https://www.youtube.com/watch?v=WvMc5_RbQNc&list=PLYUn4Yaogdagvwe69dczceHTNm0K_ZG3P"
-                //metal
+                // Metal
                 if (args[0].toLowerCase().startsWith("me")) link = "https://open.spotify.com/playlist/37i9dQZF1DX9qNs32fujYe";
-                //heavy metal
+                // Heavy metal
                 if (args[0].toLowerCase().startsWith("h")) link = "https://open.spotify.com/playlist/37i9dQZF1DX9qNs32fujYe";
-            } //update it without a response!
+            } // Update it without a response
             await interaction.reply({
                 embeds: [new MessageEmbed()
                     .setAuthor({ name: "LOADING MUSIC MIX", iconURL: emb.disc.loading })
@@ -127,10 +127,10 @@ module.exports = {
             });
 
             try {
-                let queue = client.distube.getQueue(guildId)
-                let options = { member: member, }
-                if (!queue) options.textChannel = guild.channels.cache.get(channelId)
-                await client.distube.play(channel, link, options)
+                let queue = client.distube.getQueue(guildId);
+                let options = { member: member, };
+                if (!queue) options.textChannel = guild.channels.cache.get(channelId);
+                await client.distube.play(channel, link, options);
             } catch (e) {
                 console.log(e.stack ? e.stack : e)
                 interaction.editReply({
@@ -142,7 +142,7 @@ module.exports = {
                         .setDescription(`\`/info support\` for support or DM me \`${client.user.tag}\` \`\`\`${e}\`\`\``)
                     ],
                     ephemeral: true
-                })
+                });
             }
 
             //Edit the reply
@@ -154,7 +154,7 @@ module.exports = {
                 ephemeral: true
             });
         } catch (e) {
-            console.log(e.stack ? e.stack : e)
+            console.log(e.stack ? e.stack : e);
             interaction.editReply({
                 embeds: [new MessageEmbed()
                     .setTimestamp()
@@ -164,7 +164,7 @@ module.exports = {
                     .setDescription(`\`/info support\` for support or DM me \`${client.user.tag}\` \`\`\`${e}\`\`\``)
                 ],
                 ephemeral: true
-            })
+            });
         }
     }
 }

@@ -17,7 +17,7 @@ module.exports = async (client) => {
         const event = require(file);
         const L = file.split("/");
         const fileName = L[L.length - 1];
-        const eventName = fileName.split(".")[0]
+        const eventName = fileName.split(".")[0];
         const eventCategory = L[L.length - 2];
         const fileDir = eventCategory + `/` + fileName;
 

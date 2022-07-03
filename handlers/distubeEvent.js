@@ -6,7 +6,7 @@ const emoji = require('../config/emojis.json');
 const settings = require('../config/distube.json');
 const DB = require('../Structures/Schemas/Distube');
 const playerintervals = new Map();
-const PlayerMap = new Map()
+const PlayerMap = new Map();
 let songEditInterval = null;
 let endCheck = false;
 
@@ -134,12 +134,12 @@ module.exports = (client) => {
                     }
                     await delay(settings["auto-resume-delay"] || 1000)
                 } catch (e) {
-                    console.log(e)
+                    console.log(e);
                 }
             }
         }
         client.on("ready", () => {
-            setTimeout(() => autoconnect(), 2 * client.ws.ping)
+            setTimeout(() => autoconnect(), 2 * client.ws.ping);
         })
 
         client.distube
@@ -148,15 +148,15 @@ module.exports = (client) => {
                     if (!client.guilds.cache.get(queue.id).me.voice.deaf)
                         client.guilds.cache.get(queue.id).me.voice.setDeaf(true).catch((e) => {
                             //console.log(e.stack ? String(e.stack) : String(e))
-                        })
+                        });
                 } catch (error) {
-                    console.log(error)
+                    console.log(error);
                 }
                 try {
-                    var newQueue = client.distube.getQueue(queue.id)
-                    var oldLoop = newQueue.repeatMode
+                    var newQueue = client.distube.getQueue(queue.id);
+                    var oldLoop = newQueue.repeatMode;
                     updateMusicSystem(newQueue);
-                    var data = receiveQueueData(newQueue, track)
+                    var data = receiveQueueData(newQueue, track);
                     if (queue.textChannel.id === client.distubeSettings.get(queue.id, `music.channel`)) return;
 
                     // Send message with buttons
@@ -179,21 +179,21 @@ module.exports = (client) => {
                     songEditInterval = setInterval(async () => {
                         if (!lastEdited) {
                             try {
-                                var newQueue = client.distube.getQueue(queue.id)
-                                var data = receiveQueueData(newQueue, newQueue.songs[0])
+                                var newQueue = client.distube.getQueue(queue.id);
+                                var data = receiveQueueData(newQueue, newQueue.songs[0]);
                                 await currentSongPlayMsg.edit(data).catch((e) => {
                                     // console.log(e.stack ? String(e.stack) : String(e))
-                                })
+                                });
                             } catch (e) {
                                 clearInterval(songEditInterval)
                             }
                         }
-                    }, 10000)
+                    }, 10000);
 
                     collector.on('collect', async i => {
                         // Get the channel instances from i (interaction)
                         let { member } = i;
-                        const { channel } = member.voice
+                        const { channel } = member.voice;
 
                         // ---------------------------------------- GLOBAL EMBEDS ---------------------------------------- //
 

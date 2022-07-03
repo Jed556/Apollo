@@ -80,7 +80,7 @@ module.exports = {
                 ephemeral: true
             });
         } catch (e) {
-            console.log(e.stack ? e.stack : e)
+            console.log(e.stack ? e.stack : e);
             interaction.editReply({
                 embeds: [new MessageEmbed()
                     .setTimestamp()
@@ -90,7 +90,7 @@ module.exports = {
                     .setDescription(`\`/info support\` for support or DM me \`${client.user.tag}\` \`\`\`${e}\`\`\``)
                 ],
                 ephemeral: true
-            })
+            });
         }
     }
 }

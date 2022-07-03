@@ -77,7 +77,7 @@ module.exports = {
                         .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
                         .setAuthor({ name: "ENABLED AUTOPLAY", iconURL: emb.disc.autoplay.on })
                     ]
-                })
+                });
             } else {
                 i.reply({
                     embeds: [new MessageEmbed()
@@ -86,10 +86,10 @@ module.exports = {
                         .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
                         .setAuthor({ name: "DISABLED AUTOPLAY", iconURL: emb.disc.autoplay.off })
                     ]
-                })
+                });
             }
         } catch (e) {
-            console.log(e.stack ? e.stack : e)
+            console.log(e.stack ? e.stack : e);
             interaction.editReply({
                 embeds: [new MessageEmbed()
                     .setTimestamp()
@@ -99,7 +99,7 @@ module.exports = {
                     .setDescription(`\`/info support\` for support or DM me \`${client.user.tag}\` \`\`\`${e}\`\`\``)
                 ],
                 ephemeral: true
-            })
+            });
         }
     }
 }

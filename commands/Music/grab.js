@@ -24,7 +24,7 @@ module.exports = {
                     .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
                 ],
                 ephemeral: true
-            })
+            });
 
             if (!channel) {
                 return interaction.reply({
@@ -34,7 +34,7 @@ module.exports = {
                         .setAuthor({ name: "JOIN A VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
                     ],
                     ephemeral: true
-                })
+                });
             } else if (channel.guild.me.voice.channel && channel.guild.me.voice.channel.id != channel.id)
                 return interaction.reply({
                     embeds: [new MessageEmbed()
@@ -44,7 +44,7 @@ module.exports = {
                         .setDescription(`**Channel: <#${channel.guild.me.voice.channel.id}>**`)
                     ],
                     ephemeral: true
-                })
+                });
 
             if (channel.userLimit != 0 && channel.full && !channel)
                 return interaction.reply({
@@ -85,7 +85,7 @@ module.exports = {
                         .setAuthor({ name: "GRABBED! CHECK YOUR DMs", iconURL: emb.disc.grab })
                     ],
                     ephemeral: true
-                })
+                });
             }).catch(() => {
                 interaction.reply({
                     embeds: [new MessageEmbed()
@@ -95,10 +95,10 @@ module.exports = {
                         .setAuthor({ name: "I CAN'T DM YOU", iconURL: emb.disc.error })
                     ],
                     ephemeral: true
-                })
+                });
             })
         } catch (e) {
-            console.log(e.stack ? e.stack : e)
+            console.log(e.stack ? e.stack : e);
             interaction.editReply({
                 embeds: [new MessageEmbed()
                     .setTimestamp()
@@ -108,7 +108,7 @@ module.exports = {
                     .setDescription(`\`/info support\` for support or DM me \`${client.user.tag}\` \`\`\`${e}\`\`\``)
                 ],
                 ephemeral: true
-            })
+            });
         }
     }
 }

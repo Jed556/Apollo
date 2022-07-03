@@ -20,13 +20,12 @@ if (process.env.token && process.env.guildID && process.env.botID && process.env
     LoadGlobal = process.env.loadGlobal;
     DefaultCooldown = process.env.defaultCooldown;
 } else {
-    envPresent = false
     const { token, botID, guildID, loadGlobal, defaultCooldown } = require('../config/client.json');
-    Token = token
-    BotID = botID
-    GuildID = guildID
-    LoadGlobal = loadGlobal
-    DefaultCooldown = defaultCooldown
+    Token = token;
+    BotID = botID;
+    GuildID = guildID;
+    LoadGlobal = loadGlobal;
+    DefaultCooldown = defaultCooldown;
 
 }
 
@@ -44,7 +43,7 @@ module.exports = async (client) => {
         let command = require(file);
         const L = file.split("/");
         const fileName = L[L.length - 1];
-        const perms = command.permissions.map(p => `${p}`).join(', ')
+        const perms = command.permissions.map(p => `${p}`).join(', ');
         const cooldown = command.cooldown || DefaultCooldown;
 
         // Log errors to table
@@ -62,7 +61,7 @@ module.exports = async (client) => {
             }
 
         // Add the category to description
-        command.description = `Category: ${toTitleCase(L[L.length - 2]) || "None"} | ` + command.description
+        command.description = `Category: ${toTitleCase(L[L.length - 2]) || "None"} | ` + command.description;
 
         // Push all commands to client
         client.commands.set(command.name, command);

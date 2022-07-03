@@ -82,7 +82,7 @@ client.distube = new DisTube(client, {
         new SpotifyPlugin(spotifyoptions),
         new SoundCloudPlugin()
     ]
-})
+});
 
 // Create client collections
 client.commands = new Collection();
