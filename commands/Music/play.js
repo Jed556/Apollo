@@ -15,6 +15,16 @@ module.exports = {
             description: "Song to play",
             type: 3,
             required: true,
+        },
+        {
+            name: "mode",
+            description: "Skip: Skips the current song | Top: Adds the song to the top",
+            type: 3,
+            required: false,
+            choices: [
+                { name: "Skip", value: "skip" },
+                { name: "Top", value: "top" },
+            ]
         }
     ],
 
@@ -24,6 +34,7 @@ module.exports = {
             const { guild } = member;
             const { channel } = member.voice;
             let newQueue = client.distube.getQueue(guildId);
+            const mode = interaction.options.getString("mode");
 
             if (!channel) {
                 return interaction.reply({
@@ -44,6 +55,15 @@ module.exports = {
                     ],
                     ephemeral: true
                 });
+
+            if ((!newQueue || !newQueue.songs || newQueue.songs.length == 0) && mode) return interaction.reply({
+                embeds: [new MessageEmbed()
+                    .setColor(emb.errColor)
+                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                    .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
+                ],
+                ephemeral: true
+            });
 
             if (channel.userLimit != 0 && channel.full && !channel)
                 return interaction.reply({
@@ -69,7 +89,6 @@ module.exports = {
             }
 
             const Text = options.getString("song");
-            //update it without a response!
             await interaction.reply({
                 embeds: [new MessageEmbed()
                     .setAuthor({ name: "SEARCHING", iconURL: emb.disc.spin })
@@ -80,9 +99,36 @@ module.exports = {
 
             try {
                 let queue = client.distube.getQueue(guildId);
-                let options = { member: member, };
+                let response, icon, options;
                 if (!queue) options.textChannel = guild.channels.cache.get(channelId);
+                switch (mode) {
+                    case "skip":
+                        response = "SKIPPED TO SONG"
+                        icon = emb.disc.skip;
+                        options = { member: member, skip: true };
+                        break;
+
+                    case "top":
+                        response = "SONG ADDED TO TOP";
+                        icon = emb.disc.song.add;
+                        options = { member: member, unshift: true };
+                        break;
+
+                    default:
+                        response = "ADDED TO QUEUE";
+                        icon = emb.disc.song.add;
+                        options = { member: member, };
+                }
                 await client.distube.play(channel, Text, options);
+
+                // Edit the reply
+                interaction.editReply({
+                    embeds: [new MessageEmbed()
+                        .setAuthor({ name: response, iconURL: icon })
+                        .setDescription(`Song: **${Text}**`)
+                    ],
+                    ephemeral: true
+                });
             } catch (e) {
                 console.log(e.stack ? e.stack : e);
                 interaction.editReply({
@@ -96,15 +142,6 @@ module.exports = {
                     ephemeral: true
                 });
             }
-
-            // Edit the reply
-            interaction.editReply({
-                embeds: [new MessageEmbed()
-                    .setAuthor({ name: "ADDED TO QUEUE", iconURL: emb.disc.song.add })
-                    .setDescription(`Song: **${Text}**`)
-                ],
-                ephemeral: true
-            });
         } catch (e) {
             console.log(e.stack ? e.stack : e);
             interaction.editReply({
