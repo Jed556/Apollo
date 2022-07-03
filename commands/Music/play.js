@@ -99,8 +99,7 @@ module.exports = {
 
             try {
                 let queue = client.distube.getQueue(guildId);
-                let response, icon, options;
-                if (!queue) options.textChannel = guild.channels.cache.get(channelId);
+                let response, icon, options = {};
                 switch (mode) {
                     case "skip":
                         response = "SKIPPED TO SONG"
@@ -111,14 +110,15 @@ module.exports = {
                     case "top":
                         response = "SONG ADDED TO TOP";
                         icon = emb.disc.song.add;
-                        options = { member: member, unshift: true };
+                        options = { member: member, position: 1 };
                         break;
 
                     default:
                         response = "ADDED TO QUEUE";
                         icon = emb.disc.song.add;
-                        options = { member: member, };
+                        options = { member: member };
                 }
+                if (!queue) options.textChannel = guild.channels.cache.get(channelId);
                 await client.distube.play(channel, Text, options);
 
                 // Edit the reply
