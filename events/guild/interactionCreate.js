@@ -7,7 +7,7 @@ let DefaultCooldown
 if (process.env.defaultCooldown) {
     DefaultCooldown = process.env.defaultCooldown
 } else {
-    const { defaultCooldown } = require('./config/client.json');
+    const { defaultCooldown } = require('../../config/client.json');
     DefaultCooldown = defaultCooldown
 }
 
