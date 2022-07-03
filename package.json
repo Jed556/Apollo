@@ -1,6 +1,6 @@
 {
-  "name": "javaskripp",
-  "version": "0.2.7",
+  "name": "apollo",
+  "version": "0.2.8",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,16 +9,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Jed556/JavaSkripp.git"
+    "url": "git+https://github.com/Jed556/Apollo.git"
   },
   "keywords": [],
   "author": "Jerrald J. Guiriba",
   "license": "SEE LICENSE IN LICENSE.md",
   "bugs": {
-    "url": "https://github.com/Jed556/JavaSkripp/issues"
+    "url": "https://github.com/Jed556/Apollo/issues"
   },
-  "homepage": "https://github.com/Jed556/JavaSkripp#readme",
-  "description": "A Javascript based Discord bot",
+  "homepage": "https://github.com/Jed556/Apollo#readme",
+  "description": "A cool Javascript based Discord bot",
   "engines": {
     "node": "^17.x",
     "npm": "^8.x"
