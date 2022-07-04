@@ -47,6 +47,27 @@ module.exports = {
             Client: true
         });
 
+        let response = new MessageEmbed()
+            .setTitle("Client Status")
+            .setColor(emb.color)
+            .addFields({
+                name: `<:icon_reply:962547429914337300> GENERAL`,
+                value: `
+            **• Client**: <:icon_online:970322600930721802> ONLINE
+            **• Ping**: ${client.ws.ping}ms
+            **• Uptime**: ${moment.duration(parseInt(client.uptime)).format(" D [days], H [hrs], m [mins], s [secs]")}
+            \n`,
+                inline: false
+            }, {
+                name: `<:icon_reply:962547429914337300> DATABASE`,
+                value: `**• Connection**: ${switchTo(connection.readyState)}\n`,
+                inline: true
+            })
+
+        await interaction.reply({
+            embeds: [response],
+        });
+
         // Graph colors
         const colors = {
             purple: {
@@ -189,39 +210,14 @@ module.exports = {
         const image = await canvas.renderToBuffer(chartConfig);
         const attachment = new MessageAttachment(image, 'chart.png');
 
-        const response = new MessageEmbed()
-            .setTitle("Client Status")
-            .setColor(emb.color)
-            .addFields({
-                name: `<:icon_reply:962547429914337300> GENERAL`,
-                value:
-                    `
-                **• Client**: <:icon_online:970322600930721802> ONLINE
-                **• Ping**: ${client.ws.ping}ms
-                **• Uptime**: ${moment.duration(parseInt(client.uptime)).format(" D [days], H [hrs], m [mins], s [secs]")}
-                \n
-                `,
-                inline: false
-            }, {
-                name: `<:icon_reply:962547429914337300> DATABASE`,
-                value:
-                    `
-                **• Connection**: ${switchTo(connection.readyState)}
-                \n
-                `,
-                inline: true
-            }, {
-                name: `<:icon_reply:962547429914337300> HARDWARE`,
-                value:
-                    `
-                **• Average RAM Usage**: ${avgMem.toFixed(2)}MB
-                `,
-                inline: false,
-            })
-            .setImage('attachment://chart.png')
-
-        interaction.reply({
-            embeds: [response],
+        interaction.editReply({
+            embeds: [response
+                .addField(
+                    `<:icon_reply:962547429914337300> HARDWARE`,
+                    `**• Average RAM Usage**: ${avgMem.toFixed(2)}MB`,
+                    false
+                )
+                .setImage('attachment://chart.png')],
             files: [attachment],
         });
     }
