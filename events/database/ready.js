@@ -19,8 +19,6 @@ if (process.env.database) {
     MemoryUpdate = memoryUpdate;
 }
 
-/* ----------[RAM Usage]---------- */
-
 // Get the process memory usage (in MB)
 async function getMemoryUsage() {
     return process.memoryUsage().heapUsed / (1024 * 1024).toFixed(2);
@@ -28,42 +26,41 @@ async function getMemoryUsage() {
 
 module.exports = async (client) => {
     try {
-        /* ---------- CONNECTING TO DATABASE ---------- */
-        if (ConnectDB) {
-            if (!Database) return;
-            mongoose.connect(Database, {
-                dbName: "Client",
-                useNewUrlParser: true,
-                useUnifiedTopology: true
-            }).then(() => {
-                console.log(`${cyanBright.bold("[INFO]")} Connected to database!`);
-            }).catch((err) => {
-                console.log(`${red.bold("[ERROR]")} Not connected to database \n${err}\n`);
-            });
-        } else {
-            console.log(`${yellow.bold("[WARN]")} Database connection disabled`);
+        // Check if can connect to database
+        if (!ConnectDB)
+            return console.log(`${yellow.bold("[WARN]")} Database connection disabled`);
+        if (!Database) return console.log(`${yellow.bold("[WARN]")} MongoDB connection string is null`);
 
+        // Connecting to database
+        mongoose.connect(Database, {
+            dbName: "Client",
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        }).then(() => {
+            console.log(`${cyanBright.bold("[INFO]")} Connected to database!`);
+        }).catch((err) => {
+            console.log(`${red.bold("[ERROR]")} Can't connect to database \n${err}\n`);
+        });
 
-            /* ---------- MEMORY LOGGING ---------- */
-            let memArray = [];
+        /* ---------- MEMORY LOGGING ---------- */
+        let memArray = [];
 
-            setInterval(async () => {
+        setInterval(async () => {
+            memArray.push(await getMemoryUsage()); // Used Memory in GB
 
-                // Used Memory in GB
-                memArray.push(await getMemoryUsage());
+            // Shift array if length is greater than 100
+            if (memArray.length > 100) {
+                memArray.shift();
+            }
 
-                if (memArray.length >= 100) {
-                    memArray.shift();
-                }
+            // Store memory usage in database
+            await DB.findOneAndUpdate(
+                { Client: true },
+                { Memory: memArray },
+                { upsert: true });
 
-                // Store memory usage date in database
-                await DB.findOneAndUpdate(
-                    { Client: true },
-                    { Memory: memArray },
-                    { upsert: true });
+        }, ms(MemoryUpdate + "s")); // Update every x seconds
 
-            }, ms(MemoryUpdate + "s")); // Update every x seconds
-        }
     } catch (e) {
         console.log(String(e.stack))
     }
