@@ -8,15 +8,17 @@ const { cyanBright, greenBright, yellow, red } = require('chalk');
 // Variable checks (Use .env if present)
 require('dotenv').config();
 let Database, ConnectDB, MemoryUpdate
-if (process.env.database) {
+if (process.env.database && process.env.connectDB && process.env.memoryUpdate && process.env.memoryShift) {
     Database = process.env.database;
     ConnectDB = process.env.connectDB;
     MemoryUpdate = process.env.memoryUpdate;
+    MemoryShift = process.env.memoryShift;
 } else {
-    const { connectDB, database, memoryUpdate } = require('../../config/database.json');
+    const { connectDB, database, memoryUpdate, memoryShift } = require('../../config/database.json');
     Database = database;
     ConnectDB = connectDB;
     MemoryUpdate = memoryUpdate;
+    MemoryShift = memoryShift;
 }
 
 // Get the process memory usage (in MB)
@@ -48,8 +50,8 @@ module.exports = async (client) => {
         setInterval(async () => {
             memArray.push(await getMemoryUsage()); // Used Memory in GB
 
-            // Shift array if length is greater than 100
-            if (memArray.length > 100) {
+            // Shift array if length is greater than x
+            if (memArray.length > MemoryShift) {
                 memArray.shift();
             }
 
