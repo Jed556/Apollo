@@ -4,20 +4,18 @@ const FiltersSettings = require("../../config/filters.json");
 const { check_if_dj } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "custombassboost",
+    name: "bassboost",
     description: "Sets a custom song bassboost with gain",
-    category: "Filter",
-    cooldown: 5,
-    requiredroles: [],
-    alloweduserids: [],
-    options: [
-        {
-            "Integer": {
-                name: "gain",
-                description: "Gain of bassboost",
-                required: true
-            }
-        },
+    help: "/bassboost [gain]",
+    cooldown: 2,
+    permissions: [],
+    allowedUIDs: [],
+    options: [{
+        name: "gain",
+        description: "Sets a custom song bassboost with gain",
+        type: 4,
+        required: true,
+    }
     ],
 
     run: async (client, interaction) => {
