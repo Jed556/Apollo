@@ -1,0 +1,12 @@
+{
+    "youtubeCookie": "",
+    "spotify_api": {
+        "enabled": false,
+        "clientSecret": "",
+        "clientId": ""
+    },
+    "nsfwMusic": true,
+    "auto-resume-delay": 1000,
+    "music-request-edit-delay": 6000,
+    "auto-resume-save-cooldown": 5000
+}

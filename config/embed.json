@@ -1,0 +1,95 @@
+{
+    "color": "#253C4F",
+    "errColor": "#E01E01",
+    "okColor": "#00E500",
+    "iconC": "https://i.imgur.com/ZLYujDw.png",
+    "iconS": "https://i.imgur.com/V4FC1eg.png",
+    "heroku": "https://i.imgur.com/eoMwLGs.png",
+    "dead": "https://i.imgur.com/Z1Kv9hN.png",
+    "antiCrash": "",
+    "log": "",
+    "maintenance": {
+        "on": "https://i.imgur.com/KEuffeH.png",
+        "off": "https://i.imgur.com/ZlNXoLb.png"
+    },
+    "check": "Checkmark",
+    "alert": "https://i.imgur.com/93xN1eG.png",
+    "error": "https://i.imgur.com/S9MMEn0.png",
+    "loading1": "",
+    "loading2": "",
+    "loading3": "",
+    "cooldown": "",
+    "noPermission": "",
+    "noRole": "",
+    "invalidUser": "",
+    "syntaxCheck": "Icon for syntaxCheck",
+    "ping": "",
+    "guilds": "",
+    "game": {
+        "win": "",
+        "lose": ""
+    },
+    "rps": {
+        "rock": "",
+        "paper": "",
+        "scissors": "",
+        "request": ""
+    },
+    "tictactoe": {
+        "x": "",
+        "o": "",
+        "request": ""
+    },
+    "disc": {
+        "spin": "https://i.imgur.com/PsBpnQE.gif",
+        "song": {
+            "add": "https://i.imgur.com/GFxHP8N.png",
+            "remove": "https://i.imgur.com/6R2Dl1M.png"
+        },
+        "error": "https://i.imgur.com/sc6WFzn.png",
+        "alert": "https://i.imgur.com/Nu0Ul0L.png",
+        "done": "https://i.imgur.com/phcsy0g.png",
+        "resume": "https://i.imgur.com/d4g0kuY.png",
+        "pause": "https://i.imgur.com/vEEXWoU.png",
+        "stop": "https://i.imgur.com/5q6xE8s.png",
+        "rewind": "https://i.imgur.com/eGv9UJ4.png",
+        "forward": "https://i.imgur.com/8jIV4ZC.png",
+        "skip": "https://i.imgur.com/l0oYRaS.png",
+        "previous": "https://i.imgur.com/30dIeYm.png",
+        "jump": "https://i.imgur.com/etAHsKp.png",
+        "clear": "https://i.imgur.com/FUAH1oj.png",
+        "seek": "https://i.imgur.com/toQCtdP.png",
+        "loop": {
+            "song": "https://i.imgur.com/OfbPtmg.png",
+            "queue": "https://i.imgur.com/cmGoP7R.png",
+            "none": "https://i.imgur.com/FoxmBcN.png"
+        },
+        "shuffle": "https://i.imgur.com/Dy6cU2C.png",
+        "unshuffle": "https://i.imgur.com/myT7zhF.png",
+        "autoplay": {
+            "on": "https://i.imgur.com/o825rbI.png",
+            "off": "https://i.imgur.com/LkiwHd8.png"
+        },
+        "filter": {
+            "add": "https://i.imgur.com/r8pwNY3.png",
+            "remove": "https://i.imgur.com/JZUMYbh.png",
+            "set": "https://i.imgur.com/ErWrqSv.png",
+            "clear": "https://i.imgur.com/gIUifCM.png"
+        },
+        "mix": "https://i.imgur.com/12EpQJt.png",
+        "list": "https://i.imgur.com/PrdAdtn.png",
+        "move": "https://i.imgur.com/VsVJwM5.png",
+        "grab": "https://i.imgur.com/U2bOFZq.png",
+        "playing": "",
+        "autoresume": {
+            "on": "https://i.imgur.com/5yrHWnf.png",
+            "off": "https://i.imgur.com/fyfHXBV.png"
+        },
+        "volume": "https://i.imgur.com/DB1y2Wm.png",
+        "settings": "https://i.imgur.com/3yQ3Pc9.png",
+        "dj": "https://i.imgur.com/zPR9EXl.png"
+    },
+    "email": "jguiriba11@gmail.com",
+    "invite": "https://tinyurl.com/JavaSkripp",
+    "ownerAvatar": "https://i.imgur.com/blShpHq.png"
+}
