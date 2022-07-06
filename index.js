@@ -41,6 +41,8 @@ const client = new Client({
 //const agent = https(proxy);
 const { SpotifyPlugin } = require('@distube/spotify');
 const { SoundCloudPlugin } = require('@distube/soundcloud');
+const { YouTubeDLPlugin } = require('@distube/yt-dlp');
+
 let spotifyoptions = {
     parallel: true,
     emitEventsAfterFetching: true,
@@ -65,10 +67,24 @@ client.distube = new DisTube(client, {
     youtubeCookie: youtubeCookie,
     nsfw: nsfwMusic,
     emptyCooldown: 25,
+    ytdlOptions: {
+        // requestOptions: {
+        //  agent //ONLY USE ONE IF YOU KNOW WHAT YOU DO
+        // },
+        highWaterMark: 1024 * 1024 * 64,
+        quality: "highestaudio",
+        format: "audioonly",
+        liveBuffer: 75000,
+        dlChunkSize: 1024 * 1024 * 4,
+    },
+    youtubeDL: false,
     customFilters: filters,
     plugins: [
         new SpotifyPlugin(spotifyoptions),
-        new SoundCloudPlugin()
+        new SoundCloudPlugin(),
+        new YouTubeDLPlugin({
+            updateYouTubeDL: true
+        })
     ]
 });
 
