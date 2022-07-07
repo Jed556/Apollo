@@ -41,7 +41,7 @@ const client = new Client({
 //const agent = https(proxy);
 const { SpotifyPlugin } = require('@distube/spotify');
 const { SoundCloudPlugin } = require('@distube/soundcloud');
-const { YouTubeDLPlugin } = require('@distube/yt-dlp');
+const { YtDlpPlugin } = require('@distube/yt-dlp');
 
 let spotifyoptions = {
     parallel: true,
@@ -82,7 +82,7 @@ client.distube = new DisTube(client, {
     plugins: [
         new SpotifyPlugin(spotifyoptions),
         new SoundCloudPlugin(),
-        new YouTubeDLPlugin({
+        new YtDlpPlugin({
             updateYouTubeDL: true
         })
     ]
