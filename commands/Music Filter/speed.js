@@ -4,18 +4,28 @@ const FiltersSettings = require("../../config/filters.json");
 const { check_if_dj } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "set-filter",
-    description: "Sets / Overrides current filters",
-    help: "/set-filter [filters]",
+    name: "speed-filter",
+    description: "Changes the speed of the song",
+    help: "/speed-filter [speed]",
     cooldown: 2,
     permissions: [],
     allowedUIDs: [],
     options: [
         {
-            name: "filters",
-            description: "Filters to set (Use spaces for multiple filters)",
+            name: "speed",
+            description: "Speed percentage to set",
             type: 3,
             required: true,
+            choices: [
+                { name: "25", value: "0.25" },
+                { name: "50", value: "0.50" },
+                { name: "75", value: "0.75" },
+                { name: "100", value: "1" },
+                { name: "125", value: "1.25" },
+                { name: "150", value: "1.50" },
+                { name: "175", value: "1.75" },
+                { name: "200", value: "2" },
+            ]
         }
     ],
 
@@ -55,14 +65,15 @@ module.exports = {
                     ephemeral: true
                 });
 
-            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0) return interaction.reply({
-                embeds: [new MessageEmbed()
-                    .setColor(emb.errColor)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                    .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
-                ],
-                ephemeral: true
-            })
+            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0)
+                return interaction.reply({
+                    embeds: [new MessageEmbed()
+                        .setColor(emb.errColor)
+                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                        .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
+                    ],
+                    ephemeral: true
+                })
 
             if (check_if_dj(client, member, newQueue?.songs[0])) {
                 return interaction.reply({
@@ -77,47 +88,23 @@ module.exports = {
                 });
             }
 
-            let filters = options.getString("filters").toLowerCase().split(" ");
-            if (!filters) filters = [options.getString("filters").toLowerCase()]
-            if (filters.some(a => !FiltersSettings[a])) {
-                return interaction.reply({
-                    embeds: [new MessageEmbed()
-                        .setColor(emb.errColor)
-                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                        .setAuthor({ name: "SPECIFIED FILTER IS INVALID", iconURL: emb.disc.alert })
-                        .setDescription("**Add a SPACE (` `) in between to define multiple filters**")
-                        .addField("**All Valid Filters:**", Object.keys(FiltersSettings).map(f => `\`${f}\``).join(", ") + "\n\n**Note:**\n> *All filters, starting with custom are having there own command, please use them to define what custom amount u want*")
-                    ],
-                })
-            }
+            let speed_amount = options.getString("speed")
 
-            let amount = filters.length;
-            let toAdded = filters;
+            FiltersSettings.customspeed = `atempo=${speed_amount}`;
+            client.distube.filters = FiltersSettings;
             //add old filters so that they get removed 	
-            newQueue.filters.forEach((f) => {
-                if (!filters.includes(f)) {
-                    toAdded.push(f)
-                }
-            })
-            if (!toAdded || toAdded.length == 0) {
-                return interaction.reply({
-                    embeds: [
-                        new MessageEmbed()
-                            .setColor(emb.errColor)
-                            .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                            .setAuthor({ name: "NO FILTER SPECIFIED FILTER", iconURL: emb.disc.alert })
-                            .addField("**All current filters:**", newQueue.filters.map(f => `\`${f}\``).join(", "))
-                    ],
-                })
+            //if it was enabled before then add it
+            if (newQueue.filters.includes("customspeed")) {
+                await newQueue.setFilter(["customspeed"]);
             }
 
-            await newQueue.setFilter(filters);
+            await newQueue.setFilter(["customspeed"]);
             interaction.reply({
                 embeds: [new MessageEmbed()
                     .setTimestamp()
                     .setColor(emb.color)
                     .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-                    .setAuthor({ name: `SET ${amount} FILTERS`, iconURL: emb.disc.set })
+                    .setAuthor({ name: `SPEED SET TO ${speed_amount}`, iconURL: emb.disc.filter.set })
                 ]
             })
         } catch (e) {

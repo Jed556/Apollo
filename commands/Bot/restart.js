@@ -1,5 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const emb = require('../../config/embed.json');
+const chalk = require('chalk')
+const blurple = chalk.bold.hex("#7289da");
 var Heroku = require('heroku-client');
 let os = require('os');
 
@@ -39,24 +41,34 @@ module.exports = {
     run: async (client, interaction) => {
         try {
             const cd = interaction.options.getInteger("countdown");
-            if (os.hostname().length == 36)
-                interaction.reply({
+            if (os.hostname().length != 36)
+                return interaction.reply({
                     embeds: [new MessageEmbed()
                         .setTimestamp()
-                        .setColor(emb.color)
+                        .setColor(emb.errColor)
                         .setAuthor({ name: "HEROKU | restart.js", iconURL: emb.heroku })
-                        .setDescription(`**Restarting ${client.user.username}${cd ? ` in ${cd} sec${cd != 1 ? "s" : ""}` : "..."}**`)
+                        .setDescription(`**${client.user.username} is not hosted in heroku**`)
                         .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                     ],
                     ephemeral: true
                 });
+
+            interaction.reply({
+                embeds: [new MessageEmbed()
+                    .setTimestamp()
+                    .setColor(emb.color)
+                    .setAuthor({ name: "HEROKU | restart.js", iconURL: emb.heroku })
+                    .setDescription(`**Restarting ${client.user.username}${cd ? ` in ${cd} sec${cd != 1 ? "s" : ""}` : "..."}**`)
+                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                ],
+                ephemeral: true
+            });
+
             if (cd)
                 setTimeout(async () => {
-                    try {
-                        var heroku = new Heroku({ token: Token });
-                        heroku.delete('/apps/' + AppName + '/dynos/' + DynoName)
-                            .then(x => console.log(x));
-                    } catch { }
+                    var heroku = new Heroku({ token: Token });
+                    heroku.delete('/apps/' + AppName + '/dynos/' + DynoName)
+                        .then(x => console.log(x));
                 }, cd * 1000);
             else interaction.reply({
                 embeds: [new MessageEmbed()
@@ -68,6 +80,7 @@ module.exports = {
                 ],
                 ephemeral: true
             });
+            console.log(blurple("[HEROKU]") + ` Restarting ${AppName}: ${DynoName}`)
         } catch (e) {
             console.log(String(e.stack));
         }

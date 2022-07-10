@@ -1,20 +1,19 @@
-const { MessageEmbed } = require("discord.js");
-const emb = require("../../config/embed.json");
-const FiltersSettings = require("../../config/filters.json");
+const { MessageEmbed } = require('discord.js');
+const emb = require('../../config/embed.json');
 const { check_if_dj } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "add-filter",
-    description: "Adds a filter to the song",
-    help: "/add-filter [filters]",
+    name: "seek-song",
+    description: "Jumps to a specific position of the song",
+    help: "/seek-song [seconds]",
     cooldown: 2,
     permissions: [],
     allowedUIDs: [],
     options: [
         {
-            name: "filters",
-            description: "Filters to add (Use spaces for multiple filters)",
-            type: 3,
+            name: "seconds",
+            description: "Position to seek in seconds",
+            type: 4,
             required: true,
         }
     ],
@@ -33,7 +32,7 @@ module.exports = {
                         .setAuthor({ name: "JOIN A VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
                     ],
                     ephemeral: true
-                })
+                });
             } else if (channel.guild.me.voice.channel && channel.guild.me.voice.channel.id != channel.id)
                 return interaction.reply({
                     embeds: [new MessageEmbed()
@@ -43,7 +42,7 @@ module.exports = {
                         .setDescription(`**Channel: <#${channel.guild.me.voice.channel.id}>**`)
                     ],
                     ephemeral: true
-                })
+                });
 
             if (channel.userLimit != 0 && channel.full && !channel)
                 return interaction.reply({
@@ -55,14 +54,15 @@ module.exports = {
                     ephemeral: true
                 });
 
-            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0) return interaction.reply({
-                embeds: [new MessageEmbed()
-                    .setColor(emb.errColor)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                    .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
-                ],
-                ephemeral: true
-            })
+            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0)
+                return interaction.reply({
+                    embeds: [new MessageEmbed()
+                        .setColor(emb.errColor)
+                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                        .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
+                    ],
+                    ephemeral: true
+                });
 
             if (check_if_dj(client, member, newQueue?.songs[0])) {
                 return interaction.reply({
@@ -77,48 +77,27 @@ module.exports = {
                 });
             }
 
-            let filters = options.getString("filters").toLowerCase().split(" ");
-            if (!filters) filters = [options.getString("filters").toLowerCase()]
-            if (filters.some(a => !FiltersSettings[a])) {
-                return interaction.reply({
-                    embeds: [new MessageEmbed()
-                        .setColor(emb.errColor)
-                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                        .setAuthor({ name: "SPECIFIED FILTER IS INVALID", iconURL: emb.disc.alert })
-                        .setDescription("**Add a SPACE (` `) in between to define multiple filters**")
-                        .addField("**All Valid Filters:**", Object.keys(FiltersSettings).map(f => `\`${f}\``).join(", ") + "\n\n**Note:**\n> *All filters, starting with custom are having there own command, please use them to define what custom amount u want*")
-                    ],
-                })
-            }
+            let seekNumber = options.getInteger("seconds");
+            if (seekNumber > newQueue.songs[0].duration || seekNumber < 0) return interaction.reply({
+                embeds: [new MessageEmbed()
+                    .setTimestamp()
+                    .setColor(emb.errColor)
+                    .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
+                    .setAuthor({ name: "POSITION EXCEEDS SONG DURATION", iconURL: emb.disc.alert })
+                    .setDescription(`**Seek position must be between 0 and ${newQueue.songs[0].duration}**`)
+                ],
+                ephemeral: true
+            });
 
-            let toAdded = [];
-            // Add new filters
-            filters.forEach((f) => {
-                if (!newQueue.filters.includes(f)) {
-                    toAdded.push(f)
-                }
-            })
-            if (!toAdded || toAdded.length == 0) {
-                return interaction.reply({
-                    embeds: [
-                        new MessageEmbed()
-                            .setColor(emb.errColor)
-                            .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                            .setAuthor({ name: "NO FILTER SPECIFIED FILTER", iconURL: emb.disc.alert })
-                            .addField("**All current filters:**", newQueue.filters.map(f => `\`${f}\``).join(", "))
-                    ],
-                })
-            }
-
-            await newQueue.setFilter(toAdded);
+            await newQueue.seek(seekNumber);
             interaction.reply({
                 embeds: [new MessageEmbed()
                     .setTimestamp()
                     .setColor(emb.color)
                     .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-                    .setAuthor({ name: `ADDED ${toAdded.length} ${toAdded.length == filters.length ? "FILTERS" : `OF ${filters.length} FILTERS`}`, iconURL: emb.disc.filter.add })
+                    .setAuthor({ name: `SEEKED TO ${seekNumber} SECONDS`, iconURL: emb.disc.seek })
                 ]
-            })
+            });
         } catch (e) {
             console.log(e.stack ? e.stack : e);
             interaction.editReply({

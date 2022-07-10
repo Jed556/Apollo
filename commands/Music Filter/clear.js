@@ -1,11 +1,11 @@
-const { MessageEmbed } = require('discord.js');
-const emb = require('../../config/embed.json');
+const { MessageEmbed } = require("discord.js");
+const emb = require("../../config/embed.json");
 const { check_if_dj } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "addend",
-    description: "Adds current song back to the end of the queue",
-    help: "/addend",
+    name: "clear-filter",
+    description: "Clears all song filters",
+    help: "/clear-filter",
     cooldown: 2,
     permissions: [],
     allowedUIDs: [],
@@ -47,14 +47,15 @@ module.exports = {
                     ephemeral: true
                 });
 
-            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0) return interaction.reply({
-                embeds: [new MessageEmbed()
-                    .setColor(emb.errColor)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                    .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
-                ],
-                ephemeral: true
-            })
+            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0)
+                return interaction.reply({
+                    embeds: [new MessageEmbed()
+                        .setColor(emb.errColor)
+                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                        .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
+                    ],
+                    ephemeral: true
+                })
 
             if (check_if_dj(client, member, newQueue?.songs[0])) {
                 return interaction.reply({
@@ -69,17 +70,15 @@ module.exports = {
                 });
             }
 
-            await client.distube.play(channel, newQueue.songs[0].url)
+            await newQueue.setFilter(false);
             interaction.reply({
                 embeds: [new MessageEmbed()
                     .setTimestamp()
                     .setColor(emb.color)
                     .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-                    .setAuthor({ name: "SONG ADDED TO END", iconURL: emb.disc.song.add })
-                    .setDescription(`**Song: ${newQueue.songs[newQueue.songs.length - 1].name}**`)
-                ],
-                ephemeral: true
-            });
+                    .setAuthor({ name: "CLEARED ALL FILTERS", iconURL: emb.disc.filter.clear })
+                ]
+            })
         } catch (e) {
             console.log(e.stack ? e.stack : e);
             interaction.editReply({

@@ -16,14 +16,15 @@ module.exports = {
             const { guildId } = interaction;
             let newQueue = client.distube.getQueue(guildId);
 
-            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0) return interaction.reply({
-                embeds: [new MessageEmbed()
-                    .setColor(emb.errColor)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                    .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
-                ],
-                ephemeral: true
-            })
+            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0)
+                return interaction.reply({
+                    embeds: [new MessageEmbed()
+                        .setColor(emb.errColor)
+                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                        .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
+                    ],
+                    ephemeral: true
+                })
 
             return interaction.reply({
                 embeds: [new MessageEmbed()

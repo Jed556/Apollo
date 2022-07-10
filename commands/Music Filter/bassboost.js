@@ -1,18 +1,19 @@
-const { MessageEmbed } = require('discord.js');
-const emb = require('../../config/embed.json');
+const { MessageEmbed } = require("discord.js");
+const emb = require("../../config/embed.json");
+const FiltersSettings = require("../../config/filters.json");
 const { check_if_dj } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "volume",
-    description: "Adjusts the volume of the music",
-    help: "/rewind [seconds]",
+    name: "bass-filter",
+    description: "Sets a custom song bassboost with gain",
+    help: "/bass-filter [gain]",
     cooldown: 2,
     permissions: [],
     allowedUIDs: [],
     options: [
         {
-            name: "volume",
-            description: "Volume to set (0 - 150)",
+            name: "gain",
+            description: "Sets a custom song bassboost with gain",
             type: 4,
             required: true,
         }
@@ -32,7 +33,7 @@ module.exports = {
                         .setAuthor({ name: "JOIN A VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
                     ],
                     ephemeral: true
-                });
+                })
             } else if (channel.guild.me.voice.channel && channel.guild.me.voice.channel.id != channel.id)
                 return interaction.reply({
                     embeds: [new MessageEmbed()
@@ -42,7 +43,7 @@ module.exports = {
                         .setDescription(`**Channel: <#${channel.guild.me.voice.channel.id}>**`)
                     ],
                     ephemeral: true
-                });
+                })
 
             if (channel.userLimit != 0 && channel.full && !channel)
                 return interaction.reply({
@@ -53,6 +54,16 @@ module.exports = {
                     ],
                     ephemeral: true
                 });
+
+            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0)
+                return interaction.reply({
+                    embeds: [new MessageEmbed()
+                        .setColor(emb.errColor)
+                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                        .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
+                    ],
+                    ephemeral: true
+                })
 
             if (check_if_dj(client, member, newQueue?.songs[0])) {
                 return interaction.reply({
@@ -67,39 +78,35 @@ module.exports = {
                 });
             }
 
-            let volume = options.getInteger("volume");
-            let oldVolume = newQueue.volume;
+            let bass_gain = options.getInteger("gain")
+            if (bass_gain > 20 || bass_gain < 0) {
+                return interaction.reply({
+                    embeds: [new MessageEmbed()
+                        .setTimestamp()
+                        .setColor(emb.errColor)
+                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                        .setAuthor({ name: "BASSBOOST GAIN MUST BE BETWEEN 0 AND 20", iconURL: emb.disc.alert })
+                    ],
+                })
+            }
 
-            if (volume > 150 || volume < 0) return interaction.reply({
-                embeds: [new MessageEmbed()
-                    .setTimestamp()
-                    .setColor(emb.errColor)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                    .setAuthor({ name: `VOLUME ${volume > 150 ? "TOO HIGH" : ""}${volume < 0 ? "TOO LOW" : ""}`, iconURL: emb.disc.alert })
-                    .setDescription(`**Volume must be from 0 to 150`)
-                ],
-                ephemeral: true
-            });
+            FiltersSettings.custombassboost = `bass=g=${bass_gain},dynaudnorm=f=200`;
+            client.distube.filters = FiltersSettings;
+            //add old filters so that they get removed 	
+            //if it was enabled before then add it
+            if (newQueue.filters.includes("custombassboost")) {
+                await newQueue.setFilter(["custombassboost"]);
+            }
 
-            if (volume == oldVolume) return interaction.reply({
-                embeds: [new MessageEmbed()
-                    .setTimestamp()
-                    .setColor(emb.errColor)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                    .setAuthor({ name: `VOLUME IS ALREADY SET TO ${volume}}`, iconURL: emb.disc.alert })
-                ],
-                ephemeral: true
-            });
-
-            await newQueue.setVolume(volume);
+            await newQueue.setFilter(["custombassboost"]);
             interaction.reply({
                 embeds: [new MessageEmbed()
                     .setTimestamp()
                     .setColor(emb.color)
                     .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-                    .setAuthor({ name: `${(oldVolume > volume) ? "INCREASED" : "DECREASED"} VOLUME TO ${volume}`, iconURL: emb.disc.alert })
+                    .setAuthor({ name: `BASSBOOST SET TO ${bass_gain}`, iconURL: emb.disc.filter.set })
                 ]
-            });
+            })
         } catch (e) {
             console.log(e.stack ? e.stack : e);
             interaction.editReply({

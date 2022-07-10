@@ -20,7 +20,7 @@ module.exports = async (client, interaction) => {
                 .setTimestamp()
                 .setColor(emb.errColor)
                 .setAuthor({ name: "UNDER MAINTENANCE", iconURL: emb.maintenance.on })
-                .setDescription("JavaSkripp will be back soon!")
+                .setDescription(`${client.user.username} will be back soon!`)
                 .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
             ],
             ephemeral: true
@@ -51,7 +51,7 @@ module.exports = async (client, interaction) => {
 
             const now = Date.now();
             const timestamps = cooldowns.get(command.name);
-            const cooldownAmount = command.cooldown || process.env.defaultCooldown || defaultCooldown;
+            const cooldownAmount = command.cooldown || process.env.defaultCooldown || DefaultCooldown;
 
             if (timestamps.has(interaction.user.id)) {
                 const expirationTime = timestamps.get(interaction.user.id) + cooldownAmount;
@@ -88,7 +88,7 @@ module.exports = async (client, interaction) => {
                 }
             }
 
-            // ---------- TO BE ADDED SOON ---------- //
+            // ---------- MIGHT ADD SOON ---------- //
             // // If Command has specific needed roles return error
             // if (command.requiredroles && command.requiredroles.length > 0 && interaction.member.roles.cache.size > 0 && !interaction.member.roles.cache.some(r => command.requiredroles.includes(r.id))) {
             //     return interaction.reply({

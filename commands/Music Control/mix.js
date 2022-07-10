@@ -5,34 +5,34 @@ const { check_if_dj } = require('../../system/distubeFunctions');
 module.exports = {
     name: "mix",
     description: "Plays a defined mix",
-    help: "/mix [mix]",
+    help: "/mix [playlist]",
     cooldown: 2,
     permissions: [],
     allowedUIDs: [],
-    options: [{
-        name: "mix",
-        description: "Music mix",
-        type: 3,
-        required: true,
-        choices: [
-            { name: "Blues Mix", value: "blues" },
-            { name: "Charts Mix", value: "charts" },
-            { name: "Chill Mix", value: "chill" },
-            { name: "Default Mix", value: "default" },
-            { name: "Heavymetal Mix", value: "heavymetal" },
-            { name: "Gaming Mix", value: "gaming" },
-            { name: "Jazz Mix", value: "jazz" },
-            { name: "Metal Mix", value: "metal" },
-            { name: "Magic-Release Mix", value: "magic-release" },
-            { name: "NCS Mix", value: "ncs" },
-            { name: "No Copyright Mix", value: "nocopyright" },
-            { name: "Old Gaming Mix", value: "oldgaming" },
-            { name: "Pop Mix", value: "pop" },
-            { name: "Remixes Mix", value: "remixes" },
-            { name: "Rock Mix", value: "rock" },
-            { name: "Strange-Fruits Mix", value: "strange-fruits-gaming" },
-        ]
-    }
+    options: [
+        {
+            name: "playlist",
+            description: "Music mix",
+            type: 3,
+            required: true,
+            choices: [
+                { name: "Blues Mix", value: "Blues" },
+                { name: "Charts Mix", value: "Charts" },
+                { name: "Chill Mix", value: "Chill" },
+                { name: "Default Mix", value: "Default" },
+                { name: "Heavymetal Mix", value: "Heavymetal" },
+                { name: "Gaming Mix", value: "Gaming" },
+                { name: "Jazz Mix", value: "Jazz" },
+                { name: "Metal Mix", value: "Metal" },
+                { name: "Magic Music Mix", value: "Magic Music" },
+                { name: "NCS Mix", value: "NCS" },
+                { name: "Old Gaming Mix", value: "Old Gaming" },
+                { name: "Pop Mix", value: "Pop" },
+                { name: "Remixes Mix", value: "Remixes" },
+                { name: "Rock Mix", value: "Rock" },
+                { name: "Strange-Fruits Mix", value: "Strange Fruits" },
+            ]
+        }
     ],
 
     run: async (client, interaction) => {
@@ -85,44 +85,75 @@ module.exports = {
                 });
             }
 
-            let link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj";
-            let args = [interaction.options.getString("mix")];
-            if (args[0]) {
-                // NCS | No Copyrighted Music
-                if (args[0].toLowerCase().startsWith("n")) link = "https://open.spotify.com/playlist/7sZbq8QGyMnhKPcLJvCUFD";
-                //pop
-                if (args[0].toLowerCase().startsWith("p")) link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj";
-                //default
-                if (args[0].toLowerCase().startsWith("d")) link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj";
-                // Remixes from Magic Release
-                if (args[0].toLowerCase().startsWith("re")) link = "https://www.youtube.com/watch?v=NX7BqdQ1KeU&list=PLYUn4YaogdahwfEkuu5V14gYtTqODx7R2"
-                // Rock
-                if (args[0].toLowerCase().startsWith("ro")) link = "https://open.spotify.com/playlist/37i9dQZF1DWXRqgorJj26U";
-                // Old Gaming
-                if (args[0].toLowerCase().startsWith("o")) link = "https://www.youtube.com/watch?v=iFOAJ12lDDU&list=PLYUn4YaogdahPQPTnBGCrytV97h8ABEav"
-                // Gaming
-                if (args[0].toLowerCase().startsWith("g")) link = "https://open.spotify.com/playlist/4a54P2VHy30WTi7gix0KW6";
-                // Charts
-                if (args[0].toLowerCase().startsWith("cha")) link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKvYin_USF1qoJQnIyMAfRxl"
-                // Chill
-                if (args[0].toLowerCase().startsWith("chi")) link = "https://open.spotify.com/playlist/37i9dQZF1DX4WYpdgoIcn6";
-                // Jazz
-                if (args[0].toLowerCase().startsWith("j")) link = "https://open.spotify.com/playlist/37i9dQZF1DXbITWG1ZJKYt";
-                //blues
-                if (args[0].toLowerCase().startsWith("b")) link = "https://open.spotify.com/playlist/37i9dQZF1DXd9rSDyQguIk";
-                // Strange-fruits
-                if (args[0].toLowerCase().startsWith("s")) link = "https://open.spotify.com/playlist/6xGLprv9fmlMgeAMpW0x51";
-                // Magic-release
-                if (args[0].toLowerCase().startsWith("ma")) link = "https://www.youtube.com/watch?v=WvMc5_RbQNc&list=PLYUn4Yaogdagvwe69dczceHTNm0K_ZG3P"
-                // Metal
-                if (args[0].toLowerCase().startsWith("me")) link = "https://open.spotify.com/playlist/37i9dQZF1DX9qNs32fujYe";
-                // Heavy metal
-                if (args[0].toLowerCase().startsWith("h")) link = "https://open.spotify.com/playlist/37i9dQZF1DX9qNs32fujYe";
-            } // Update it without a response
+            let link, mixName;
+            let mix = interaction.options.getString("playlist");
+            switch (mix) {
+                case "NCS":
+                    mixName = "NCS";
+                    link = "https://open.spotify.com/playlist/7sZbq8QGyMnhKPcLJvCUFD";
+                    break;
+
+                case "Pop":
+                    link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj";
+                    break;
+
+                case "Default":
+                    link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKtPzgY-5rmhvj7fax8fdxoj";
+                    break;
+
+                case "Remixes":
+                    link = "https://www.youtube.com/watch?v=NX7BqdQ1KeU&list=PLYUn4YaogdahwfEkuu5V14gYtTqODx7R2"
+                    break;
+
+                case "Rock":
+                    link = "https://open.spotify.com/playlist/37i9dQZF1DWXRqgorJj26U";
+                    break;
+
+                case "Old Gaming":
+                    link = "https://www.youtube.com/watch?v=iFOAJ12lDDU&list=PLYUn4YaogdahPQPTnBGCrytV97h8ABEav";
+                    break;
+
+                case "Gaming":
+                    link = "https://open.spotify.com/playlist/4a54P2VHy30WTi7gix0KW6";
+                    break;
+
+                case "Charts":
+                    link = "https://www.youtube.com/playlist?list=PLMC9KNkIncKvYin_USF1qoJQnIyMAfRxl";
+                    break;
+
+                case "Chill":
+                    link = "https://open.spotify.com/playlist/37i9dQZF1DX4WYpdgoIcn6";
+                    break;
+
+                case "Jazz":
+                    link = "https://open.spotify.com/playlist/37i9dQZF1DXbITWG1ZJKYt";
+                    break;
+
+                case "Blues":
+                    link = "https://open.spotify.com/playlist/37i9dQZF1DXd9rSDyQguIk";
+                    break;
+
+                case "Strange Fruits":
+                    link = "https://open.spotify.com/playlist/6xGLprv9fmlMgeAMpW0x51";
+                    break;
+
+                case "Magic Music":
+                    link = "https://www.youtube.com/watch?v=WvMc5_RbQNc&list=PLYUn4Yaogdagvwe69dczceHTNm0K_ZG3P"
+                    break;
+
+                case "Metal":
+                    link = "https://open.spotify.com/playlist/37i9dQZF1DX9qNs32fujYe";
+                    break;
+
+                case "Heavymetal":
+                    link = "https://open.spotify.com/playlist/37i9dQZF1DX9qNs32fujYe";
+                    break;
+            }
+
             await interaction.reply({
                 embeds: [new MessageEmbed()
                     .setAuthor({ name: "LOADING MUSIC MIX", iconURL: emb.disc.loading })
-                    .setDescription(`**Mix: ${args[0] ? args[0] : "DEFAULT"}**`)
+                    .setDescription(`**Mix: ${mix}**`)
                 ],
                 ephemeral: true
             });
