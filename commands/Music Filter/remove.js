@@ -4,18 +4,19 @@ const FiltersSettings = require("../../config/filters.json");
 const { check_if_dj } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "bassboost",
-    description: "Sets a custom song bassboost with gain",
-    help: "/bassboost [gain]",
+    name: "remove-filter",
+    description: "Removes a song filter",
+    help: "/remove-filter [filters]",
     cooldown: 2,
     permissions: [],
     allowedUIDs: [],
-    options: [{
-        name: "gain",
-        description: "Sets a custom song bassboost with gain",
-        type: 4,
-        required: true,
-    }
+    options: [
+        {
+            name: "filters",
+            description: "Filters to remove (Use spaces for multiple filters)",
+            type: 3,
+            required: true,
+        }
     ],
 
     run: async (client, interaction) => {
@@ -54,14 +55,15 @@ module.exports = {
                     ephemeral: true
                 });
 
-            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0) return interaction.reply({
-                embeds: [new MessageEmbed()
-                    .setColor(emb.errColor)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                    .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
-                ],
-                ephemeral: true
-            })
+            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0)
+                return interaction.reply({
+                    embeds: [new MessageEmbed()
+                        .setColor(emb.errColor)
+                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                        .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
+                    ],
+                    ephemeral: true
+                })
 
             if (check_if_dj(client, member, newQueue?.songs[0])) {
                 return interaction.reply({
@@ -76,35 +78,48 @@ module.exports = {
                 });
             }
 
-            let bass_gain = options.getInteger("gain")
-            if (bass_gain > 20 || bass_gain < 0) {
+            let filters = options.getString("filters").toLowerCase().split(" ");
+            if (!filters) filters = [options.getString("filters").toLowerCase()]
+            if (filters.some(a => !FiltersSettings[a])) {
                 return interaction.reply({
                     embeds: [new MessageEmbed()
-                        .setTimestamp()
                         .setColor(emb.errColor)
                         .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                        .setAuthor({ name: "BASSBOOST GAIN MUST BE BETWEEN 0 AND 20", iconURL: emb.disc.alert })
+                        .setAuthor({ name: "SPECIFIED FILTER IS INVALID", iconURL: emb.disc.alert })
+                        .setDescription("**Add a SPACE (` `) in between to define multiple filters**")
+                        .addField("**All Valid Filters:**", Object.keys(FiltersSettings).map(f => `\`${f}\``).join(", ") + "\n\n**Note:**\n> *All filters, starting with custom are having there own command, please use them to define what custom amount u want*")
+                    ]
+                })
+            }
+
+            let toRemove = [];
+            // Add new filters
+            filters.forEach((f) => {
+                if (newQueue.filters.includes(f)) {
+                    toRemove.push(f)
+                }
+            })
+            if (!toRemove || toRemove.length == 0) {
+                return interaction.reply({
+                    embeds: [
+                        new MessageEmbed()
+                            .setColor(emb.errColor)
+                            .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                            .setAuthor({ name: "NO FILTER SPECIFIED FILTER", iconURL: emb.disc.alert })
+                            .addField("**All current filters:**", newQueue.filters.map(f => `\`${f}\``).join(", "))
                     ],
                 })
             }
 
-            FiltersSettings.custombassboost = `bass=g=${bass_gain},dynaudnorm=f=200`;
-            client.distube.filters = FiltersSettings;
-            //add old filters so that they get removed 	
-            //if it was enabled before then add it
-            if (newQueue.filters.includes("custombassboost")) {
-                await newQueue.setFilter(["custombassboost"]);
-            }
-
-            await newQueue.setFilter(["custombassboost"]);
+            await newQueue.setFilter(toRemove);
             interaction.reply({
                 embeds: [new MessageEmbed()
                     .setTimestamp()
                     .setColor(emb.color)
                     .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-                    .setAuthor({ name: `BASSBOOST SET TO ${bass_gain}`, iconURL: emb.disc.filter.set })
+                    .setAuthor({ name: `REMOVED ${toRemove.length} ${toRemove.length == filters.length ? "FILTERS" : `OF ${filters.length} FILTERS`}`, iconURL: emb.disc.filter.remove })
                 ]
-                })
+            })
         } catch (e) {
             console.log(e.stack ? e.stack : e);
             interaction.editReply({

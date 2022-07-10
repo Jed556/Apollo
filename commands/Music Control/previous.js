@@ -3,9 +3,9 @@ const emb = require('../../config/embed.json');
 const { check_if_dj } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "stop",
-    description: "Stops playing and leaves the channel",
-    help: "/stop",
+    name: "previous-song",
+    description: "Plays the previous song",
+    help: "/previous-song",
     cooldown: 2,
     permissions: [],
     allowedUIDs: [],
@@ -13,7 +13,7 @@ module.exports = {
 
     run: async (client, interaction) => {
         try {
-            const { member, guildId } = interaction;
+            const { member, guildId, } = interaction;
             const { channel } = member.voice;
             let newQueue = client.distube.getQueue(guildId);
 
@@ -47,14 +47,15 @@ module.exports = {
                     ephemeral: true
                 });
 
-            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0) return interaction.reply({
-                embeds: [new MessageEmbed()
-                    .setColor(emb.errColor)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                    .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
-                ],
-                ephemeral: true
-            });
+            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0)
+                return interaction.reply({
+                    embeds: [new MessageEmbed()
+                        .setColor(emb.errColor)
+                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                        .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
+                    ],
+                    ephemeral: true
+                });
 
             if (check_if_dj(client, member, newQueue?.songs[0])) {
                 return interaction.reply({
@@ -69,30 +70,25 @@ module.exports = {
                 });
             }
 
-            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0) {
-                await newQueue.stop();
-                interaction.reply({
-                    embeds: [new MessageEmbed()
-                        .setTimestamp()
-                        .setColor(emb.color)
-                        .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-                        .setAuthor({ name: "STOPPED PLAYING", iconURL: emb.disc.stop })
-                        .setDescription(`**LEFT THE VOICE CHANNEL**`)
-                    ]
-                });
-            } else {
-                await newQueue.stop()
-                interaction.reply({
-                    embeds: [new MessageEmbed()
-                        .setTimestamp()
-                        .setColor(emb.color)
-                        .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-                        .setAuthor({ name: "STOPPED PLAYING", iconURL: emb.disc.stop })
-                        .setDescription(`**STOPPED THE PLAYER & LEFT THE VOICE CHANNEL**`)
-                    ]
-                });
-            }
-            return
+            if (!newQueue || !newQueue.previousSongs || newQueue.previousSongs.length == 0) return interaction.reply({
+                embeds: [new MessageEmbed()
+                    .setTimestamp()
+                    .setColor(emb.errColor)
+                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                    .setAuthor({ name: "NO PREVIOUS SONG", iconURL: emb.disc.alert })
+                ],
+                ephemeral: true
+            });
+
+            await newQueue.previous();
+            interaction.reply({
+                embeds: [new MessageEmbed()
+                    .setTimestamp()
+                    .setColor(emb.color)
+                    .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
+                    .setAuthor({ name: "PLAYING PREVIOUS SONG", iconURL: emb.disc.previous })
+                ]
+            });
         } catch (e) {
             console.log(e.stack ? e.stack : e);
             interaction.editReply({

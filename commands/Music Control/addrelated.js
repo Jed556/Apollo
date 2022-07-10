@@ -3,24 +3,17 @@ const emb = require('../../config/embed.json');
 const { check_if_dj } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "forward",
-    description: "Forwards for X Seconds",
-    help: "/forward [seconds]",
+    name: "addrelated-song",
+    description: "Adds a similar/related song to the current song",
+    help: "/addrelated-song",
     cooldown: 2,
     permissions: [],
     allowedUIDs: [],
-    options: [
-        {
-            name: "seconds",
-            description: "Number of seconds to go forward",
-            type: 4,
-            required: true,
-        }
-    ],
+    options: [],
 
     run: async (client, interaction) => {
         try {
-            const { member, guildId, options } = interaction;
+            const { member, guildId } = interaction;
             const { channel } = member.voice;
             let newQueue = client.distube.getQueue(guildId);
 
@@ -32,7 +25,7 @@ module.exports = {
                         .setAuthor({ name: "JOIN A VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
                     ],
                     ephemeral: true
-                });
+                })
             } else if (channel.guild.me.voice.channel && channel.guild.me.voice.channel.id != channel.id)
                 return interaction.reply({
                     embeds: [new MessageEmbed()
@@ -42,7 +35,7 @@ module.exports = {
                         .setDescription(`**Channel: <#${channel.guild.me.voice.channel.id}>**`)
                     ],
                     ephemeral: true
-                });
+                })
 
             if (channel.userLimit != 0 && channel.full && !channel)
                 return interaction.reply({
@@ -54,14 +47,15 @@ module.exports = {
                     ephemeral: true
                 });
 
-            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0) return interaction.reply({
-                embeds: [new MessageEmbed()
-                    .setColor(emb.errColor)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                    .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
-                ],
-                ephemeral: true
-            });
+            if (!newQueue || !newQueue.songs || newQueue.songs.length == 0)
+                return interaction.reply({
+                    embeds: [new MessageEmbed()
+                        .setColor(emb.errColor)
+                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                        .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
+                    ],
+                    ephemeral: true
+                })
 
             if (check_if_dj(client, member, newQueue?.songs[0])) {
                 return interaction.reply({
@@ -76,18 +70,24 @@ module.exports = {
                 });
             }
 
-            let seekNumber = options.getInteger("seconds");
-            let seektime = newQueue.currentTime + seekNumber;
-            if (seektime >= newQueue.songs[0].duration) seektime = newQueue.songs[0].duration - 1;
-
-            await newQueue.seek(seektime);
-            interaction.reply({
+            await interaction.reply({
                 embeds: [new MessageEmbed()
-                    .setTimestamp()
                     .setColor(emb.color)
+                    .setAuthor({ name: "SEARCHING RELATED SONGS", iconURL: emb.disc.spin })
+                    .setDescription(`For **${newQueue.songs[0].name}**`)
+                ],
+                ephemeral: true
+            });
+
+            await newQueue.addRelatedSong();
+            await interaction.editReply({
+                embeds: [new MessageEmbed()
+                    .setColor(emb.okColor)
                     .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-                    .setAuthor({ name: `FORWARDED FOR ${seekNumber} SECONDS`, iconURL: emb.disc.forward })
-                ]
+                    .setAuthor({ name: "RELATED SONG ADDED TO QUEUE", iconURL: emb.disc.song.add })
+                    .setDescription(`Song: **${newQueue.songs[newQueue.songs.length - 1].name}**`)
+                ],
+                ephemeral: true
             });
         } catch (e) {
             console.log(e.stack ? e.stack : e);
