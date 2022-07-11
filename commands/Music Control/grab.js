@@ -6,7 +6,7 @@ module.exports = {
     name: "grab-song",
     description: "Grabs the current song and sends it to your DMs",
     help: "/grab-song",
-    cooldown: 2,
+    cooldown: 1,
     permissions: [],
     allowedUIDs: [],
     options: [],

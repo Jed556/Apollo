@@ -35,7 +35,7 @@ module.exports = {
     name: "status",
     description: "Bot Status Information",
     help: "/status",
-    cooldown: 1,
+    cooldown: 5,
     permissions: [],
     allowedUIDs: [],
     options: [],

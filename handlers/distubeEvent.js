@@ -395,7 +395,7 @@ module.exports = (client) => {
                                 if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                     setTimeout(() => {
                                         try {
-                                            i.deleteReply().catch(console.log);
+                                            interaction.deleteReply().catch(console.log);
                                         } catch (e) {
                                             console.log(e)
                                         }
@@ -433,7 +433,7 @@ module.exports = (client) => {
                                 if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
                                     setTimeout(() => {
                                         try {
-                                            i.deleteReply().catch(console.log);
+                                            interaction.deleteReply().catch(console.log);
                                         } catch (e) {
                                             console.log(e)
                                         }
