@@ -26,7 +26,7 @@ module.exports = {
     name: "restart",
     description: "Perform Apollø global restart",
     help: "/restart (countdown)",
-    cooldown: 1000,
+    cooldown: 0,
     permissions: [],
     allowedUIDs: [OwnerID],
     options: [
