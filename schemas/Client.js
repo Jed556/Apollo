@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 
 module.exports = model("Client", new Schema({
-    Client: Boolean,
+    _id: Number,
     Maintenance: {type: Boolean, default: false},
     Memory: Array,
 }), "status");
