@@ -72,7 +72,7 @@ module.exports = {
 
             await newQueue.toggleAutoplay();
             if (newQueue.autoplay) {
-                i.reply({
+                interaction.reply({
                     embeds: [new MessageEmbed()
                         .setTimestamp()
                         .setColor(emb.color)
@@ -81,7 +81,7 @@ module.exports = {
                     ]
                 });
             } else {
-                i.reply({
+                interaction.reply({
                     embeds: [new MessageEmbed()
                         .setTimestamp()
                         .setColor(emb.color)
