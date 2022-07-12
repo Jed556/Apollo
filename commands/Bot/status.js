@@ -42,7 +42,7 @@ module.exports = {
 
         // Find matching database data
         const docs = await DB.findOne({
-            Client: true
+            _id: client.user.id
         });
 
         let response = new MessageEmbed()
@@ -90,16 +90,16 @@ module.exports = {
 
         // Create labels based on Memory array length
         const labels = [];
-        for (let i = MemoryUpdate; i < docs.Memory.length + MemoryUpdate; i += MemoryUpdate) {
+        for (let i = MemoryUpdate; i < docs.memory.length + MemoryUpdate; i += MemoryUpdate) {
             labels.push(i.toString());
         }
 
         // Compute for average memory usage
         var avgMem = 0;
-        for (let i = 0; i < docs.Memory.length; i++) {
-            avgMem += docs.Memory[i];
+        for (let i = 0; i < docs.memory.length; i++) {
+            avgMem += docs.memory[i];
         }
-        avgMem = avgMem / docs.Memory.length;
+        avgMem = avgMem / docs.memory.length;
 
 
         // Chart Generation
@@ -149,7 +149,7 @@ module.exports = {
                     // },
                     pointBackgroundColor: colors.green.default,
                     borderColor: colors.green.default,
-                    data: docs.Memory,
+                    data: docs.memory,
                     lineTension: 0.4,
                     borderWidth: 2,
                     pointRadius: 3

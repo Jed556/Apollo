@@ -90,7 +90,6 @@ client.distube = new DisTube(client, {
 
 // Create client collections
 client.commands = new Collection();
-cooldowns = new Collection();
 
 client.distubeSettings = new Enmap({ name: "distubeSettings", dataDir: "./localDB/settings" });
 client.infos = new Enmap({ name: "infos", dataDir: "./localDB/infos" });
