@@ -94,7 +94,7 @@ module.exports = async (client) => {
                     { body: CommandArray },
                 );
             }
-            console.log(greenBright.bold("[SUCCESS]") + " Reloaded commands");
+            console.log(blurple("[REST]") + " Reloaded commands");
         } catch (error) {
             console.log(red.bold("[ERROR]") + " Refreshing commands failed");
             console.error(error);
