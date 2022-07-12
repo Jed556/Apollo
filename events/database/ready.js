@@ -41,12 +41,12 @@ module.exports = async (client) => {
         }).then(() => {
             // console.log(`${cyanBright.bold("[INFO]")} Connected to database ` + dim.bold(`(${dbName})`));
         }).catch((err) => {
-            console.log(`${red.bold("[ERROR]")} Can't connect to database ${dim.bold(`(Client)`)}\n${err}\n`);
+            console.log(`${red.bold("[ERROR]")} Can't connect to database ${dim.bold("(Client)")}\n${err}\n`);
         });
+
         setInterval(async () => {
             /* ---------- MEMORY LOGGING ---------- */
             let memArray = [];
-
 
             memArray.push(await getMemoryUsage()); // Used Memory in GB
 

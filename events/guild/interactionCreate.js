@@ -66,48 +66,48 @@ module.exports = async (client, interaction) => {
                 console.log(`${red.bold("[ERROR]")} Can't connect to database ${dim.bold("(Cooldowns)")}\n${err}\n`);
             });
 
-                const data = await DB.findOne({
-                    userId: member.id,
-                    guildId: guildId,
-                    command: command.name
-                });
+            const data = await DB.findOne({
+                userId: member.id,
+                guildId: guildId,
+                command: command.name
+            });
 
-                const now = Date.now(); // Get the current time
-                const cooldownAmount = command.cooldown * 1000 || DefaultCooldown; // Convert default cooldown to seconds
-                const time = now + cooldownAmount; // Get the time before the cooldown expires
+            const now = Date.now(); // Get the current time
+            const cooldownAmount = command.cooldown * 1000 || DefaultCooldown; // Convert default cooldown to seconds
+            const time = now + cooldownAmount; // Get the time before the cooldown expires
 
-                if (data && data.time > now) {
-                    const timeLeft = (data.time - now) / 1000; // Get time left
-                    return interaction.reply({
-                        embeds: [new MessageEmbed()
-                            .setColor(emb.errColor)
-                            .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                            .setAuthor({ name: "IN COOLDOWN", iconURL: emb.alert })
-                            .addField("Command", `\`${command.name}\``, true)
-                            .addField("Time left", `${timeLeft.toFixed(2)} second${Math.round(timeLeft) != 1 ? "s" : ""}`)
-                        ],
-                        ephemeral: true
-                    })
-                } else {
-                    await DB.findOneAndUpdate(
+            if (data && data.time > now) {
+                const timeLeft = (data.time - now) / 1000; // Get time left
+                return interaction.reply({
+                    embeds: [new MessageEmbed()
+                        .setColor(emb.errColor)
+                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                        .setAuthor({ name: "IN COOLDOWN", iconURL: emb.alert })
+                        .addField("Command", `\`${command.name}\``, true)
+                        .addField("Time left", `${timeLeft.toFixed(2)} second${Math.round(timeLeft) != 1 ? "s" : ""}`)
+                    ],
+                    ephemeral: true
+                })
+            } else {
+                await DB.findOneAndUpdate(
+                    {
+                        userId: member.id,
+                        guildId: guildId,
+                        command: command.name
+                    },
+                    { time },
+                    { upsert: true }
+                );
+                setTimeout(() =>
+                    DB.findOneAndDelete(
                         {
                             userId: member.id,
                             guildId: guildId,
-                            command: command.name
-                        },
-                        { time },
-                        { upsert: true }
-                    );
-                    setTimeout(() =>
-                        DB.findOneAndDelete(
-                            {
-                                userId: member.id,
-                                guildId: guildId,
-                                command: command.name,
-                                time
-                            }
-                        ), cooldownAmount); // Delete the cooldown after timeout
-                }
+                            command: command.name,
+                            time
+                        }
+                    ), cooldownAmount); // Delete the cooldown after timeout
+            }
 
             if (command.permissions) {
                 if (!interaction.member.permissions.has(command.permissions)) {

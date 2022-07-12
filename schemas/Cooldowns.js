@@ -14,4 +14,4 @@ module.exports = model("Cooldowns", new Schema({
         required: true
     },
     time: Number
-}), "users");
+}), "cooldowns");
