@@ -4,7 +4,7 @@ const { check_if_dj } = require('../system/distubeFunctions');
 const emb = require('../config/embed.json');
 const emoji = require('../config/emojis.json');
 const settings = require('../config/distube.json');
-const DB = require('../schemas/Distube');
+// const DB = require('../schemas/Distube');
 const playerintervals = new Map();
 const PlayerMap = new Map();
 let songEditInterval = null;
@@ -25,34 +25,30 @@ module.exports = (client) => {
 
         // ---------------------  AUTORESUNE AND DATABASING IS NOT AVAILABLE YET  --------------------- //
 
-        // // Connect to database
-        // if (connectDB) {
-        //     if (!Database) return;
-        //     mongoose.connect(Database, {
-        //         dbName: "Distube",
-        //         useNewUrlParser: true,
-        //         useUnifiedTopology: true
-        //     }).catch((err) => {
-        //         console.log(`${red.bold("[ERROR]")} Distube is not connected to database \n${err}\n`);
-        //     });
-        // }
+        // await mongoose.connect(Database, {
+        //     dbName: "Distube",
+        //     useNewUrlParser: true,
+        //     useUnifiedTopology: true
+        // }).then(() => {
+        //     // console.log(`${cyanBright.bold("[INFO]")} Connected to database ` + dim.bold(`(${dbName})`));
+        // }).catch((err) => {
+        //     console.log(`${red.bold("[ERROR]")} Can't connect to database ${dim.bold("(Cooldowns)")}\n${err}\n`);
+        // });
 
         // /* ---------- DATABASE HANDLING ---------- */
-        // distubeSettings = []
-        // if (connectDB) {
-        //     //Used Memory in GB
-        //     distubeSettings.push(await "");
 
-        //     // Update database
-        //     await DB.findOneAndUpdate(
-        //         { Guild: "" },
-        //         { defaultvolume: 100 },
-        //         { defaultautoplay: false },
-        //         { defaultfilters: ["bassboost6", "clear"] },
-        //         { djroles: [] },
-        //         { upsert: true, }
-        //     );
-        // }
+        // await DB.findOneAndUpdate(
+        //     {
+        //         _id: queue.id
+        //     },
+        //     {
+        //         volume,
+        //         autoplay,
+        //         filters,
+        //         djroles
+        //     },
+        //     { upsert: true }
+        // );
 
         // AUTO-RESUME-FUNCTION
         const autoconnect = async () => {
