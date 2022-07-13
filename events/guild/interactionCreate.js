@@ -1,6 +1,5 @@
 const { MessageEmbed, Collection } = require('discord.js');
 const emb = require('../../config/embed.json');
-const mongoose = require('mongoose');
 const DB = require('../../schemas/Cooldowns');
 const { cyanBright, greenBright, yellow, red, dim } = require('chalk');
 
@@ -56,16 +55,6 @@ module.exports = async (client, interaction) => {
 
         // Check if command is in cooldown
         try {
-            await mongoose.connect(Database, {
-                dbName: "Cooldowns",
-                useNewUrlParser: true,
-                useUnifiedTopology: true
-            }).then(() => {
-                // console.log(`${cyanBright.bold("[INFO]")} Connected to database ` + dim.bold(`(${dbName})`));
-            }).catch((err) => {
-                console.log(`${red.bold("[ERROR]")} Can't connect to database ${dim.bold("(Cooldowns)")}\n${err}\n`);
-            });
-
             const data = await DB.findOne({
                 userId: member.id,
                 guildId: guildId,
