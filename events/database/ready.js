@@ -39,15 +39,15 @@ module.exports = async (client) => {
             useNewUrlParser: true,
             useUnifiedTopology: true
         }).then(() => {
-            // console.log(`${cyanBright.bold("[INFO]")} Connected to database ` + dim.bold(`(${dbName})`));
+            console.log(`${cyanBright.bold("[INFO]")} Connected to database`);
         }).catch((err) => {
             console.log(`${red.bold("[ERROR]")} Can't connect to database ${dim.bold("(Client)")}\n${err}\n`);
         });
 
-        setInterval(async () => {
-            /* ---------- MEMORY LOGGING ---------- */
-            let memArray = [];
+        /* ---------- MEMORY LOGGING ---------- */
+        let memArray = [];
 
+        setInterval(async () => {
             memArray.push(await getMemoryUsage()); // Used Memory in GB
 
             // Shift array if length is greater than x
@@ -59,7 +59,8 @@ module.exports = async (client) => {
             await DB.findOneAndUpdate(
                 { _id: client.user.id },
                 { memory: memArray },
-                { upsert: true });
+                { upsert: true }
+            );
         }, ms(MemoryUpdate + "s")); // Update every x seconds
     } catch (e) {
         console.log(String(e.stack))
