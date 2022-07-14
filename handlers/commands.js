@@ -43,7 +43,7 @@ module.exports = async (client) => {
         let command = require(file);
         const L = file.split("/");
         const fileName = L[L.length - 1];
-        const perms = command.permissions.map(p => `${p}`).join(', ');
+        const perms = command.permission ? command.permissions.map(p => `${p}`).join(', ') : null;
         const cooldown = command.cooldown || DefaultCooldown;
 
         // Log errors to table
