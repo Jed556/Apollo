@@ -8,17 +8,17 @@ const { cyanBright, greenBright, yellow, red, dim } = require('chalk');
 
 // Variable checks (Use .env if present)
 require('dotenv').config();
-let ConnectDB, Database, MemoryShift, MemoryUpdate;
-if (process.env.memoryUpdate && process.env.memoryShift) {
+let ConnectDB, Database, MemoryShift, UpdateInt;
+if (process.env.connectDB && process.env.database && process.env.updateInterval && process.env.memoryShift) {
     ConnectDB = process.env.connectDB
     Database = process.env.database
-    update = process.env.updateInterval;
+    UpdateInt = process.env.updateInterval;
     MemoryShift = process.env.memoryShift;
 } else {
     const { connectDB, database, updateInterval, memoryShift } = require('../../config/database.json');
     ConnectDB = connectDB;
     Database = database;
-    update = updateInterval;
+    UpdateInt = updateInterval;
     MemoryShift = memoryShift;
 }
 
@@ -69,7 +69,7 @@ module.exports = async (client) => {
                     time: { $lte: Date.now() }
                 }
             ) // Delete cooldowns in database that already finished
-        }, ms(update + "s")); // Update every x seconds
+        }, ms(UpdateInt + "s")); // Update every x seconds
     } catch (e) {
         console.log(String(e.stack))
     }
