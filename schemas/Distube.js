@@ -19,4 +19,4 @@ module.exports = model("Distube", new Schema({
         default: ["bassboost6", "clear"]
     },
     djroles: Array,
-}), "settings");
+}), "dtSettings");

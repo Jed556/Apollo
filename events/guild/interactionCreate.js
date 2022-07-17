@@ -87,15 +87,6 @@ module.exports = async (client, interaction) => {
                     { time },
                     { upsert: true }
                 );
-                setTimeout(() =>
-                    DB.findOneAndDelete(
-                        {
-                            userId: member.id,
-                            guildId: guildId,
-                            command: command.name,
-                            time
-                        }
-                    ), cooldownAmount); // Delete the cooldown after timeout
             }
 
             if (command.permissions) {
