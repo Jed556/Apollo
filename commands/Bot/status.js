@@ -2,7 +2,7 @@ const { MessageEmbed, MessageAttachment } = require('discord.js')
 const emb = require('../../config/embed.json');
 const { connection } = require('mongoose');
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
-const DB = require('../../schemas/Client');
+const DB = require('../../schemas/Status');
 const moment = require('moment');
 require('moment-duration-format');
 

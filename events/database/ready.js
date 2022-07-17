@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const os = require('os');
 const osUtils = require('os-utils');
 const ms = require('ms');
-const DB = require('../../schemas/Client');
+const statusDB = require('../../schemas/Status');
+const cooldownDB = require('../../schemas/Cooldowns');
 const { cyanBright, greenBright, yellow, red, dim } = require('chalk');
 
 // Variable checks (Use .env if present)
@@ -11,13 +12,13 @@ let ConnectDB, Database, MemoryShift, MemoryUpdate;
 if (process.env.memoryUpdate && process.env.memoryShift) {
     ConnectDB = process.env.connectDB
     Database = process.env.database
-    MemoryUpdate = process.env.memoryUpdate;
+    update = process.env.updateInterval;
     MemoryShift = process.env.memoryShift;
 } else {
-    const { connectDB, database, memoryUpdate, memoryShift } = require('../../config/database.json');
+    const { connectDB, database, updateInterval, memoryShift } = require('../../config/database.json');
     ConnectDB = connectDB;
     Database = database;
-    MemoryUpdate = memoryUpdate;
+    update = updateInterval;
     MemoryShift = memoryShift;
 }
 
@@ -44,10 +45,10 @@ module.exports = async (client) => {
             console.log(`${red.bold("[ERROR]")} Can't connect to database ${dim.bold("(Client)")}\n${err}\n`);
         });
 
-        /* ---------- MEMORY LOGGING ---------- */
-        let memArray = [];
+        let memArray = []; // Local array for memory
 
         setInterval(async () => {
+            /* ---------- MEMORY UPDATE ---------- */
             memArray.push(await getMemoryUsage()); // Used Memory in GB
 
             // Shift array if length is greater than x
@@ -56,12 +57,19 @@ module.exports = async (client) => {
             }
 
             // Store memory usage in database
-            await DB.findOneAndUpdate(
+            await statusDB.findOneAndUpdate(
                 { _id: client.user.id },
                 { memory: memArray },
                 { upsert: true }
             );
-        }, ms(MemoryUpdate + "s")); // Update every x seconds
+
+            /* --------- COOLDOWN UPDATE --------- */
+            await cooldownDB.deleteMany(
+                {
+                    time: { $lte: Date.now() }
+                }
+            ) // Delete cooldowns in database that already finished
+        }, ms(update + "s")); // Update every x seconds
     } catch (e) {
         console.log(String(e.stack))
     }
