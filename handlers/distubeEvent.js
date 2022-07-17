@@ -1,143 +1,15 @@
 const { MessageButton, MessageActionRow, MessageEmbed, Permissions, MessageSelectMenu } = require('discord.js');
-const { delay, escapeRegex } = require('../system/functions');
 const { check_if_dj } = require('../system/distubeFunctions');
 const emb = require('../config/embed.json');
 const emoji = require('../config/emojis.json');
 const settings = require('../config/distube.json');
-// const DB = require('../schemas/Distube');
 const playerintervals = new Map();
 const PlayerMap = new Map();
 let songEditInterval = null;
 let endCheck = false;
 
-// Variable checks (Use .env if present)
-require('dotenv').config();
-let Database
-if (process.env.database) {
-    Database = process.env.database;
-} else {
-    const { database } = require('../config/database.json');
-    Database = database;
-}
-
 module.exports = (client) => {
     try {
-
-        // ---------------------  AUTORESUNE AND DATABASING IS NOT AVAILABLE YET  --------------------- //
-
-        // await mongoose.connect(Database, {
-        //     dbName: "Distube",
-        //     useNewUrlParser: true,
-        //     useUnifiedTopology: true
-        // }).then(() => {
-        //     // console.log(`${cyanBright.bold("[INFO]")} Connected to database ` + dim.bold(`(${dbName})`));
-        // }).catch((err) => {
-        //     console.log(`${red.bold("[ERROR]")} Can't connect to database ${dim.bold("(Cooldowns)")}\n${err}\n`);
-        // });
-
-        // /* ---------- DATABASE HANDLING ---------- */
-
-        // await DB.findOneAndUpdate(
-        //     {
-        //         _id: queue.id
-        //     },
-        //     {
-        //         volume,
-        //         autoplay,
-        //         filters,
-        //         djroles
-        //     },
-        //     { upsert: true }
-        // );
-
-        // AUTO-RESUME-FUNCTION
-        const autoconnect = async () => {
-            let guilds = client.autoresume.keyArray();
-            console.log(`AUTORESUME` + ` - Guilds to Autoresume:`, guilds)
-            if (!guilds || guilds.length == 0) return;
-            for (const gId of guilds) {
-                try {
-                    let guild = client.guilds.cache.get(gId);
-                    if (!guild) {
-                        client.autoresume.delete(gId);
-                        console.log(`AUTORESUME` + ` - Bot was kicked from the Guild`)
-                        continue;
-                    }
-                    let data = client.autoresume.get(gId);
-
-                    let voiceChannel = guild.channels.cache.get(data.voiceChannel);
-                    if (!voiceChannel && data.voiceChannel) voiceChannel = await guild.channels.fetch(data.voiceChannel).catch(() => { }) || false;
-                    if (!voiceChannel || !voiceChannel.members || voiceChannel.members.filter(m => !m.user.bot && !m.voice.deaf && !m.voice.selfDeaf).size < 1) {
-                        client.autoresume.delete(gId);
-                        console.log(`AUTORESUME` + ` - Voice Channel is either Empty / No Listeners / Deleted`)
-                        continue;
-                    }
-
-                    let textChannel = guild.channels.cache.get(data.textChannel);
-                    if (!textChannel) textChannel = await guild.channels.fetch(data.textChannel).catch(() => { }) || false;
-                    if (!textChannel) {
-                        client.autoresume.delete(gId);
-                        console.log(`AUTORESUME` + ` - Text Channel got deleted`)
-                        continue;
-                    }
-                    let tracks = data.songs;
-                    if (!tracks || !tracks[0]) {
-                        console.log(`AUTORESUME` + ` - Destroyed the player, there are no tracks available`);
-                        continue;
-                    }
-                    const makeTrack = async track => {
-                        return new DisTube.Song(
-                            new DisTube.SearchResult({
-                                duration: track.duration,
-                                formattedDuration: track.formattedDuration,
-                                id: track.id,
-                                isLive: track.isLive,
-                                name: track.name,
-                                thumbnail: track.thumbnail,
-                                type: "video",
-                                uploader: track.uploader,
-                                url: track.url,
-                                views: track.views,
-                            }), guild.members.cache.get(track.memberId) || guild.me, track.source);
-                    };
-                    await client.distube.play(voiceChannel, tracks[0].url, {
-                        member: guild.members.cache.get(tracks[0].memberId) || guild.me,
-                        textChannel: textChannel
-                    })
-                    let newQueue = client.distube.getQueue(guild.id);
-                    //tracks = tracks.map(track => makeTrack(track));
-                    //newQueue.songs = [newQueue.songs[0], ...tracks.slice(1)]
-                    for (const track of tracks.slice(1)) {
-                        newQueue.songs.push(await makeTrack(track))
-                    }
-                    console.log(`AUTORESUME` + ` - Added ${newQueue.songs.length} Tracks on the QUEUE and started playing ${newQueue.songs[0].name} in ${guild.name}`);
-                    // ADJUST THE QUEUE SETTINGS
-                    await newQueue.setVolume(data.volume)
-                    if (data.repeatMode && data.repeatMode !== 0) {
-                        newQueue.setRepeatMode(data.repeatMode);
-                    }
-                    if (!data.playing) {
-                        newQueue.pause();
-                    }
-                    await newQueue.seek(data.currentTime);
-                    if (data.filters && data.filters.length > 0) {
-                        await newQueue.setFilter(data.filters, true);
-                    }
-                    client.autoresume.delete(newQueue.id)
-                    console.log(`AUTORESUME` + " - Changed autoresume track to queue adjustments & deleted the database entry")
-                    if (!data.playing) {
-                        newQueue.pause();
-                    }
-                    await delay(settings["auto-resume-delay"] || 1000)
-                } catch (e) {
-                    console.log(e);
-                }
-            }
-        }
-        client.on("ready", () => {
-            setTimeout(() => autoconnect(), 2 * client.ws.ping);
-        })
-
         client.distube
             .on(`playSong`, async (queue, track) => {
                 try {
@@ -1045,67 +917,6 @@ module.exports = (client) => {
                         }
                     }, settings["music-system-relevant-checker-delay"] || 60000);
                     playerintervals.set(`checkrelevantinterval-${queue.id}`, checkrelevantinterval);
-
-                    /**
-                     * AUTO-RESUME-DATABASING
-                     */
-                    var autoresumeinterval = setInterval(async () => {
-                        var newQueue = client.distube.getQueue(queue.id);
-                        if (newQueue && newQueue.id && client.distubeSettings.get(newQueue.id, `autoresume`)) {
-                            const makeTrackData = track => {
-                                return {
-                                    memberId: track.member.id,
-                                    source: track.source,
-                                    duration: track.duration,
-                                    formattedDuration: track.formattedDuration,
-                                    id: track.id,
-                                    isLive: track.isLive,
-                                    name: track.name,
-                                    thumbnail: track.thumbnail,
-                                    type: "video",
-                                    uploader: track.uploader,
-                                    url: track.url,
-                                    views: track.views,
-                                }
-                            }
-                            client.autoresume.ensure(newQueue.id, {
-                                guild: newQueue.id,
-                                voiceChannel: newQueue.voiceChannel ? newQueue.voiceChannel.id : null,
-                                textChannel: newQueue.textChannel ? newQueue.textChannel.id : null,
-                                songs: newQueue.songs && newQueue.songs.length > 0 ? [...newQueue.songs].map(track => makeTrackData(track)) : null,
-                                volume: newQueue.volume,
-                                repeatMode: newQueue.repeatMode,
-                                playing: newQueue.playing,
-                                currentTime: newQueue.currentTime,
-                                filters: [...newQueue.filters].filter(Boolean),
-                                autoplay: newQueue.autoplay,
-                            });
-                            let data = client.autoresume.get(newQueue.id);
-                            if (data.guild != newQueue.id) client.autoresume.set(newQueue.id, newQueue.id, `guild`)
-                            if (data.voiceChannel != newQueue.voiceChannel ? newQueue.voiceChannel.id : null) client.autoresume.set(newQueue.id, newQueue.voiceChannel ? newQueue.voiceChannel.id : null, `voiceChannel`)
-                            if (data.textChannel != newQueue.textChannel ? newQueue.textChannel.id : null) client.autoresume.set(newQueue.id, newQueue.textChannel ? newQueue.textChannel.id : null, `textChannel`)
-
-                            if (data.volume != newQueue.volume) client.autoresume.set(newQueue.id, newQueue.volume, `volume`)
-                            if (data.repeatMode != newQueue.repeatMode) client.autoresume.set(newQueue.id, newQueue.repeatMode, `repeatMode`)
-                            if (data.playing != newQueue.playing) client.autoresume.set(newQueue.id, newQueue.playing, `playing`)
-                            if (data.currentTime != newQueue.currentTime) client.autoresume.set(newQueue.id, newQueue.currentTime, `currentTime`)
-                            if (!arraysEqual([...data.filters].filter(Boolean), [...newQueue.filters].filter(Boolean))) client.autoresume.set(newQueue.id, [...newQueue.filters].filter(Boolean), `filters`)
-                            if (data.autoplay != newQueue.autoplay) client.autoresume.set(newQueue.id, newQueue.autoplay, `autoplay`)
-                            if (newQueue.songs && !arraysEqual(data.songs, [...newQueue.songs])) client.autoresume.set(newQueue.id, [...newQueue.songs].map(track => makeTrackData(track)), `songs`)
-
-                            function arraysEqual(a, b) {
-                                if (a === b) return true;
-                                if (a == null || b == null) return false;
-                                if (a.length !== b.length) return false;
-
-                                for (var i = 0; i < a.length; ++i) {
-                                    if (a[i] !== b[i]) return false;
-                                }
-                                return true;
-                            }
-                        }
-                    }, settings["auto-resume-save-cooldown"] || 5000);
-                    playerintervals.set(`autoresumeinterval-${queue.id}`, autoresumeinterval);
 
                     /**
                      * Music System Edit Embeds
