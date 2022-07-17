@@ -33,7 +33,7 @@ if (process.env.token && process.env.guildID && process.env.botID && process.env
 module.exports = async (client) => {
     // Create table
     const Table = new AsciiTable3("COMMANDS LOADED").setStyle('unicode-single')
-        .setAlignCenter(2).setAlignCenter(4).setAlignRight(1);
+        .setAlignCenter(2).setAlignCenter(3).setAlignCenter(4).setAlignRight(1);
     Table.setHeading("Command", "Cooldown", "Permissions", "Status", "Description");
 
     CommandArray = []; //Array for commands
@@ -48,16 +48,16 @@ module.exports = async (client) => {
 
         // Log errors to table
         if (!command.name)
-            return Table.addRow(dim(fileName), cooldown, perms, red("FAILED"), "Missinng name");
+            return Table.addRow(dim(fileName), cooldown, perms || "None", red("FAILED"), "Missinng name");
 
         if (!command.description)
-            return Table.addRow(dim(fileName), cooldown, perms, red("FAILED"), "Missinng description");
+            return Table.addRow(dim(fileName), cooldown, perms || "None", red("FAILED"), "Missinng description");
 
         if (command.permission)
             if (!Permissions.includes(command.permission)) {
                 command.defaultpermission = false;
             } else {
-                return Table.addRow(dim(fileName), cooldown, perms, red("FAILED"), "Invalid permission");
+                return Table.addRow(dim(fileName), cooldown, perms || "None", red("FAILED"), "Invalid permission");
             }
 
         // Add the category to description
@@ -68,7 +68,7 @@ module.exports = async (client) => {
         CommandArray.push(command);
 
         // Log success to table
-        await Table.addRow(command.name, cooldown, perms, greenBright("LOADED"), L[L.length - 2] + `/` + fileName);
+        await Table.addRow(command.name, cooldown, perms || "None", greenBright("LOADED"), L[L.length - 2] + `/` + fileName);
     })
 
     console.log(Table.toString()); // Log table to console
