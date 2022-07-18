@@ -5,6 +5,7 @@ const os = require('os');
 const { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk');
 const { randomNum } = require('../../system/functions');
 const emb = require('../../config/embed.json')
+const DB = require('../../schemas/Status');
 
 // Variable checks (Use .env if present)
 require('dotenv').config();
@@ -88,7 +89,12 @@ module.exports = async (client) => {
 */
 async function updateStatus(client) {
     try {
-        if (!client.maintenance) { // Check if under maintenance
+        // Find matching database data
+        const docs = await DB.findOne({
+            _id: client.user.id,
+        });
+
+        if (!docs.maintenance) { // Check if under maintenance
             client.user.setStatus("online");
             const Guilds = client.guilds.cache.size;
             const Users = client.users.cache.filter(user => !user.bot).size;
