@@ -9,5 +9,5 @@ module.exports = model("Status", new Schema({
         type: Boolean,
         default: false
     },
-    memory: Array,
+    memory: Array
 }), "status");
