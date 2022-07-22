@@ -1,6 +1,7 @@
 const { MessageEmbed, Collection } = require('discord.js');
 const emb = require('../../config/embed.json');
 const DB = require('../../schemas/Cooldowns');
+const { mainDir, PG } = require('../../system/functions');
 const { cyanBright, greenBright, yellow, red, dim } = require('chalk');
 
 // Variable checks (Use .env if present)
@@ -127,7 +128,7 @@ module.exports = async (client, interaction) => {
                         .setTimestamp()
                         .setColor(emb.errColor)
                         .setAuthor({ name: "INVALID USER", iconURL: emb.error }) // emb.invalidUser is null
-                        .addField("Allowed Users", `${(command && command.allowedUIDs) ? command.allowedUIDs.map(v => `<@${v}>`).join(",") : command.allowedUIDs}`)
+                        .addField("Allowed Users", `${(command && command.allowedUIDs) ? command.allowedUIDs.map(u => `<@${u}>`).join(",") : command.allowedUIDs}`)
                         .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                     ],
                     ephemeral: true
@@ -151,6 +152,38 @@ module.exports = async (client, interaction) => {
                 ],
                 ephemeral: true
             })
+        }
+    }
+
+    if (interaction.isSelectMenu()) {
+        if (interaction.customId === 'help-category') {
+            const category = interaction.values;
+            let data = [];
+            (await PG(`${mainDir()}/commands/${category}/*.js`)).map(async file => {
+                let command = require(file);
+                const L = file.split("/");
+                const fileName = L[L.length - 1];
+                const perms = command.permissions ? command.permissions.map(p => `\`${p}\``).join(', ') : null;
+                const users = command.allowedUIDs ? command.allowedUIDs.map(u => `<@${u}>`).join(', ') : null;
+                const cooldown = command.cooldown || DefaultCooldown;
+                const how = command.help || "No guide";
+                data.push(
+                    `**${command.name}**
+                ${command.description.split(" | ")[1] || command.description}
+                • **Usage:** \`${how}\`
+                • **Permissions:** ${perms || "None"}
+                • **Allowed Users:** ${users || "@everyone"}
+                • **Cooldown:** ${cooldown}
+                `)
+            })
+
+            const embed = new MessageEmbed()
+                .setTitle(`${category} Commands`)
+                .setDescription(`${data.join("\n")}`)
+                .setFooter({ text: `${data.length} Commands` })
+                .setColor(emb.color)
+                .setTimestamp();
+            interaction.update({ embeds: [embed], ephemeral: true })
         }
     }
 }
