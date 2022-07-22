@@ -17,7 +17,7 @@ module.exports = {
     help: "/restart [message]",
     cooldown: 1,
     permissions: [],
-    alloweduserids: [OwnerID],
+    allowedUIDs: [OwnerID],
     options: [
         {
             name: "message",

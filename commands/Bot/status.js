@@ -8,25 +8,12 @@ require('moment-duration-format');
 
 // Variable checks (Use .env if present)
 require('dotenv').config();
-let MemoryUpdate;
-if (process.env.memoryUpdate) {
-    MemoryUpdate = process.env.memoryUpdate;
+let UpdateInt;
+if (process.env.updateInterval) {
+    UpdateInt = process.env.updateInterval;
 } else {
-    const { memoryUpdate } = require('../../config/database.json');
-    MemoryUpdate = memoryUpdate;
-}
-
-// Optional, disabled by Default
-function getPBar(percent) {
-    let thick = Math.floor(percent / 5);
-    let thin = Math.ceil((100 - percent) / 10) * 2;
-    let str = " [";
-
-    for (let i = 0; i < thick; i++) str += "▰";
-    for (let i = 0; i < thin; i++) str += "▱";
-
-    str += "] ";
-    return str;
+    const { updateInterval } = require('../../config/database.json');
+    UpdateInt = updateInterval;
 }
 
 module.exports = {
@@ -90,7 +77,7 @@ module.exports = {
 
             // Create labels based on Memory array length
             const labels = [];
-            for (let i = MemoryUpdate; (i - MemoryUpdate) < (docs.memory.length * MemoryUpdate); i += MemoryUpdate) {
+            for (let i = UpdateInt; (i - UpdateInt) < (docs.memory.length * UpdateInt); i += UpdateInt) {
                 labels.push(i.toString());
             }
 
@@ -137,16 +124,16 @@ module.exports = {
                         label: 'RAM Usage',
                         fill: true,
                         backgroundColor: colors.green.low,
-                        // gradient: {
-                        //     backgroundColor: {
-                        //         axis: 'y',
-                        //         colors: {
-                        //             0: colors.green.quarter,
-                        //             50: colors.green.low,
-                        //             100: colors.green.zero
-                        //         },
-                        //     },
-                        // },
+                        gradient: {
+                            backgroundColor: {
+                                axis: 'y',
+                                colors: {
+                                    0: colors.green.quarter,
+                                    50: colors.green.low,
+                                    100: colors.green.zero
+                                },
+                            },
+                        },
                         pointBackgroundColor: colors.green.default,
                         borderColor: colors.green.default,
                         data: docs.memory,
