@@ -1,6 +1,6 @@
-const { MessageAttachment } = require("discord.js");
-const emb = require("../../config/embed.json");
-const qrc = require("qrcode")
+const { MessageAttachment } = require('discord.js');
+const emb = require('../../config/embed.json');
+const qrc = require('qrcode')
 
 module.exports = {
     name: "qrcode",

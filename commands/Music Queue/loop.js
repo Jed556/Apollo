@@ -1,5 +1,5 @@
-const { MessageEmbed } = require("discord.js");
-const emb = require("../../config/embed.json");
+const { MessageEmbed } = require('discord.js');
+const emb = require('../../config/embed.json');
 const { check_if_dj } = require('../../system/distubeFunctions');
 
 module.exports = {
