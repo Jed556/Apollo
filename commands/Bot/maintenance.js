@@ -4,10 +4,10 @@ const DB = require('../../schemas/Status');
 
 // Variable checks (Use .env if present)
 require('dotenv').config();
-let OwnerID, AdminIDs;
+let OwnerID, AdminIDs = [];
 if (process.env.ownerID) {
     OwnerID = process.env.ownerID;
-    AdminIDs = process.env.adminIDs.split(', ') || null;
+    if (process.env.adminIDs) AdminIDs = process.env.adminIDs.split(', ');
 } else {
     const { ownerID, adminIDs } = require('../../config/client.json');
     OwnerID = ownerID;
@@ -25,6 +25,8 @@ module.exports = {
 
     run: async (client, interaction) => {
         try {
+            interaction.deferReply();
+
             // Find matching database data
             const docs = await DB.findOne({
                 _id: client.user.id,
@@ -44,7 +46,7 @@ module.exports = {
                 { upsert: true }
             );
 
-            interaction.reply({
+            interaction.editReply({
                 embeds: [new MessageEmbed()
                     .setTimestamp()
                     .setColor(emb.color)
