@@ -1,5 +1,5 @@
-const { MessageEmbed } = require("discord.js");
-const emb = require("../../config/embed.json");
+const { MessageEmbed } = require('discord.js');
+const emb = require('../../config/embed.json');
 
 module.exports = {
     name: "remind",

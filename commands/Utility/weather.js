@@ -1,6 +1,6 @@
-const { MessageEmbed } = require("discord.js");
-const emb = require("../../config/embed.json");
-const weather = require("weather-js");
+const { MessageEmbed } = require('discord.js');
+const emb = require('../../config/embed.json');
+const weather = require('weather-js');
 
 module.exports = {
     name: "weather",

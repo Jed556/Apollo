@@ -1,7 +1,7 @@
 
-const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js");
-const emb = require("../../config/embed.json");
-const math = require("mathjs");
+const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
+const emb = require('../../config/embed.json');
+const math = require('mathjs');
 
 module.exports = {
     name: "calc",

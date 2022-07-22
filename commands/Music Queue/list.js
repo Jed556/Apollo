@@ -1,5 +1,5 @@
-const { MessageEmbed, MessageSelectMenu, MessageActionRow } = require("discord.js");
-const emb = require("../../config/embed.json");
+const { MessageEmbed, MessageSelectMenu, MessageActionRow } = require('discord.js');
+const emb = require('../../config/embed.json');
 
 module.exports = {
     name: "list-queue",
