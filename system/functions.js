@@ -3,6 +3,11 @@ const { MessageEmbed, Collection } = require('discord.js');
 const Discord = require('discord.js')
 const emb = require('../config/embed.json');
 
+// Promisify Glob shortcut
+ const { promisify } = require('util');
+ const { glob } = require('glob');
+ const PG = promisify(glob);
+
 // EXPORT ALL FUNCTIONS
 module.exports = {
     mainDir,
@@ -11,6 +16,7 @@ module.exports = {
     delay,
     escapeRegex,
     toTitleCase,
+    PG
 }
 
 // ---------- FUNCTIONS ---------- //
@@ -61,8 +67,7 @@ function delay(delayInms) {
             }, delayInms);
         });
     } catch (e) {
-        console.log(String(e.stack).bgRed)
-        errDM(client, e)
+        console.log(String(e.stack))
     }
 }
 

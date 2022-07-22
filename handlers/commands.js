@@ -1,12 +1,9 @@
 const { Permissions } = require('../validation/permissions');
-const { promisify } = require('util');
-const { glob } = require('glob');
-const PG = promisify(glob);
 const chalk = require('chalk')
 const blurple = chalk.bold.hex("#7289da");
 const { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk');
 const { AsciiTable3 } = require('ascii-table3');
-const { mainDir, toTitleCase } = require('../system/functions');
+const { mainDir, PG, toTitleCase } = require('../system/functions');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v10');
 
@@ -39,11 +36,11 @@ module.exports = async (client) => {
     CommandArray = []; //Array for commands
 
     // Require every file ending with .js in the commands folder
-    (await PG(`${mainDir()}/commands/*/*.js`)).map(async (file) => {
+    (await PG(`${mainDir()}/commands/*/*.js`)).map(async file => {
         let command = require(file);
         const L = file.split("/");
         const fileName = L[L.length - 1];
-        const perms = command.permission ? command.permissions.map(p => `${p}`).join(', ') : null;
+        const perms = command.permissions ? command.permissions.map(p => `${p}`).join(', ') : null;
         const cooldown = command.cooldown || DefaultCooldown;
 
         // Log errors to table
