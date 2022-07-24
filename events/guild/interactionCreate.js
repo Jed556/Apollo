@@ -1,4 +1,4 @@
-const { MessageEmbed, Collection } = require('discord.js');
+const { EmbedBuilder, Collection, InteractionType } = require('discord.js');
 const emb = require('../../config/embed.json');
 const DB = require('../../schemas/Cooldowns');
 const { mainDir, PG } = require('../../system/functions');
@@ -25,7 +25,7 @@ module.exports = async (client, interaction) => {
     // Check if under maintenance
     if (client.maintenance && interaction.user.id != OwnerID) {
         return interaction.reply({
-            embeds: [new MessageEmbed()
+            embeds: [new EmbedBuilder()
                 .setTimestamp()
                 .setColor(emb.errColor)
                 .setAuthor({ name: "UNDER MAINTENANCE", iconURL: emb.maintenance.on })
@@ -37,13 +37,13 @@ module.exports = async (client, interaction) => {
     }
 
     // Check if interaction is valid
-    if (interaction.isCommand() || interaction.isContextMenu()) {
+    if (interaction.type === InteractionType.ApplicationCommand) {
         // if (!interaction.guild) return
 
         // Check if command exists
         if (!client.commands.has(interaction.commandName))
             return interaction.reply({
-                embeds: [new MessageEmbed()
+                embeds: [new EmbedBuilder()
                     .setColor(emb.errColor)
                     .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                     .setAuthor({ name: "COMMAND ERROR", iconURL: emb.alert })
@@ -55,104 +55,101 @@ module.exports = async (client, interaction) => {
         const command = client.commands.get(interaction.commandName)
 
         // Check if command is in cooldown
-        try {
-            const data = await DB.findOne({
-                userId: member.id,
-                guildId: guildId,
-                command: command.name
-            });
+        const data = await DB.findOne({
+            userId: member.id,
+            guildId: guildId,
+            command: command.name
+        });
 
-            const now = Date.now(); // Get the current time
-            const cooldownAmount = command.cooldown * 1000 || DefaultCooldown; // Convert default cooldown to seconds
-            const time = now + cooldownAmount; // Get the time before the cooldown expires
+        const now = Date.now(); // Get the current time
+        const cooldownAmount = command.cooldown * 1000 || DefaultCooldown; // Convert default cooldown to seconds
+        const time = now + cooldownAmount; // Get the time before the cooldown expires
 
-            if (data && data.time > now) {
-                const timeLeft = (data.time - now) / 1000; // Get time left
+        if (data && data.time > now) {
+            const timeLeft = (data.time - now) / 1000; // Get time left
+            return interaction.reply({
+                embeds: [new EmbedBuilder()
+                    .setColor(emb.errColor)
+                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                    .setAuthor({ name: "IN COOLDOWN", iconURL: emb.alert })
+                    .setFields([
+                        { name: "Command", value: `\`${command.name}\``, inline: true },
+                        { name: "Time left", value: `${timeLeft.toFixed(2)} second${Math.round(timeLeft) != 1 ? "s" : ""}` }
+                    ])
+                ],
+                ephemeral: true
+            })
+        } else {
+            await DB.findOneAndUpdate(
+                {
+                    userId: member.id,
+                    guildId: guildId,
+                    command: command.name
+                },
+                { time },
+                { upsert: true }
+            );
+        }
+
+        if (command.permissions) {
+            if (!interaction.member.permissions.has(command.permissions)) {
                 return interaction.reply({
-                    embeds: [new MessageEmbed()
-                        .setColor(emb.errColor)
-                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                        .setAuthor({ name: "IN COOLDOWN", iconURL: emb.alert })
-                        .addField("Command", `\`${command.name}\``, true)
-                        .addField("Time left", `${timeLeft.toFixed(2)} second${Math.round(timeLeft) != 1 ? "s" : ""}`)
-                    ],
-                    ephemeral: true
-                })
-            } else {
-                await DB.findOneAndUpdate(
-                    {
-                        userId: member.id,
-                        guildId: guildId,
-                        command: command.name
-                    },
-                    { time },
-                    { upsert: true }
-                );
-            }
-
-            if (command.permissions) {
-                if (!interaction.member.permissions.has(command.permissions)) {
-                    return interaction.reply({
-                        embeds: [new MessageEmbed()
-                            .setTimestamp()
-                            .setColor(emb.errColor)
-                            .setAuthor({ name: "NO PERMISSION", iconURL: emb.error })
-                            .setDescription(`**An error occured while running command**`)
-                            .addField(`Permission${command.permissions.length > 1 ? "s" : ""}`, command.permissions.map(p => `\`${p}\``).join(', '))
-                            .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                        ],
-                        ephemeral: true
-                    })
-                }
-            }
-
-            // ---------- MIGHT ADD SOON ---------- //
-            // // If Command has specific needed roles return error
-            // if (command.requiredroles && command.requiredroles.length > 0 && interaction.member.roles.cache.size > 0 && !interaction.member.roles.cache.some(r => command.requiredroles.includes(r.id))) {
-            //     return interaction.reply({
-            //         embeds: [new MessageEmbed()
-            //             .setTimestamp()
-            //             .setColor(emb.errColor)
-            //             .setAuthor("Invalid Role", emb.noRole)
-            //             .addField("Required Roles", `${(command && command.requiredroles) ? command.requiredroles.map(v => `<@&${v}>`).join(",") : command.requiredroles}`)
-            //             .setFooter(client.user.username, client.user.displayAvatarURL())
-            //         ],
-            //         ephemeral: true
-            //     })
-            // }
-
-            // Return error if command has user whitelist
-            if (command.allowedUIDs && command.allowedUIDs.length > 0 && !command.allowedUIDs.includes(interaction.member.id)) {
-                return interaction.reply({
-                    embeds: [new MessageEmbed()
+                    embeds: [new EmbedBuilder()
                         .setTimestamp()
                         .setColor(emb.errColor)
-                        .setAuthor({ name: "INVALID USER", iconURL: emb.error }) // emb.invalidUser is null
-                        .addField("Allowed Users", `${(command && command.allowedUIDs) ? command.allowedUIDs.map(u => `<@${u}>`).join(",") : command.allowedUIDs}`)
+                        .setAuthor({ name: "NO PERMISSION", iconURL: emb.error })
+                        .setDescription(`**An error occured while running command**`)
+                        .setFields({ name: `Permission${command.permissions.length > 1 ? "s" : ""}`, value: command.permissions.map(p => `\`${p}\``).join(', ') })
                         .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                     ],
                     ephemeral: true
                 })
             }
+        }
 
-            // Run the command
-            command.run(client, interaction);
+        // ---------- MIGHT ADD SOON ---------- //
+        // // If Command has specific needed roles return error
+        // if (command.requiredroles && command.requiredroles.length > 0 && interaction.member.roles.cache.size > 0 && !interaction.member.roles.cache.some(r => command.requiredroles.includes(r.id))) {
+        //     return interaction.reply({
+        //         embeds: [new EmbedBuilder()
+        //             .setTimestamp()
+        //             .setColor(emb.errColor)
+        //             .setAuthor("Invalid Role", emb.noRole)
+        //             .setFields({name:"Required Roles", value: `${(command && command.requiredroles) ? command.requiredroles.map(v => `<@&${v}>`).join(",") : command.requiredroles}`})
+        //             .setFooter(client.user.username, client.user.displayAvatarURL())
+        //         ],
+        //         ephemeral: true
+        //     })
+        // }
 
-        } catch (e) {
-            // Log and return error
-            console.log(e);
-            await interaction.reply({
-                embeds: [new MessageEmbed()
+        // Return error if command has user whitelist
+        if (command.allowedUIDs && command.allowedUIDs.length > 0 && !command.allowedUIDs.includes(interaction.member.id)) {
+            return interaction.reply({
+                embeds: [new EmbedBuilder()
                     .setTimestamp()
                     .setColor(emb.errColor)
-                    .setAuthor({ name: "COMMAND ERROR", iconURL: emb.error })
-                    .setDescription(`**An error occured while running command**`)
-                    .addField("Command", command.name)
+                    .setAuthor({ name: "INVALID USER", iconURL: emb.error }) // emb.invalidUser is null
+                    .setFields("Allowed Users", `${(command && command.allowedUIDs) ? command.allowedUIDs.map(u => `<@${u}>`).join(",") : command.allowedUIDs}`)
                     .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                 ],
                 ephemeral: true
             })
         }
+
+        // Run the command
+        command.run(client, interaction).catch(e => {
+            console.log(red.bold("[ERROR]") + ` ${e.stack ? e.stack : e}`);
+            interaction.channel.send({
+                embeds: [new EmbedBuilder()
+                    .setTimestamp()
+                    .setColor(emb.errColor)
+                    .setFooter({ text: "\"/support\" to report", iconURL: client.user.displayAvatarURL() })
+                    .setAuthor({ name: "AN ERROR OCCURED", iconURL: command.category == "music" ? emb.disc.error : emb.error })
+                    .setDescription(`**An error occured while running command: \`${command.name}\`**\`\`\`${e.stack ? e.stack : e}\`\`\``)
+                ],
+                ephemeral: true
+            });
+        });
     }
 
     if (interaction.isSelectMenu()) {
@@ -177,7 +174,7 @@ module.exports = async (client, interaction) => {
                 `)
             })
 
-            const embed = new MessageEmbed()
+            const embed = new EmbedBuilder()
                 .setTitle(`${category} Commands`)
                 .setDescription(`${data.join("\n")}`)
                 .setFooter({ text: `${data.length} Commands` })

@@ -1,4 +1,4 @@
-const { Client, Collection } = require('discord.js');
+const { Client, Collection, IntentsBitField, Partials } = require('discord.js');
 const filters = require('./config/filters.json');
 const { spotify_api, youtubeCookie, nsfwMusic } = require('./config/distube.json');
 const DisTube = require('distube').default;
@@ -26,7 +26,7 @@ const client = new Client({
         repliedUser: false,
     },
     failIfNotExists: false,
-    intents: 131071,
+    intents: [new IntentsBitField(98303)],
     presence: {
         activities: [{
             name: "Deployment",
@@ -77,7 +77,6 @@ client.distube = new DisTube(client, {
         liveBuffer: 75000,
         dlChunkSize: 1024 * 1024 * 4,
     },
-    youtubeDL: false,
     customFilters: filters,
     plugins: [
         new SpotifyPlugin(spotifyoptions),

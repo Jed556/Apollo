@@ -1,5 +1,5 @@
 // REQUIRE DEPENDENCIES
-const { MessageEmbed, Collection } = require('discord.js');
+const { EmbedBuilder, Collection } = require('discord.js');
 const Discord = require('discord.js')
 const emb = require('../config/embed.json');
 
