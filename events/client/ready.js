@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, ActivityType } = require('discord.js');
 const { readdirSync, lstatSync } = require('fs');
 const os = require('os');
 const { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk');
@@ -106,11 +106,11 @@ async function updateStatus(client) {
             if (display == 0) {
                 if (Guilds > 1 || Guilds < 1) {
                     client.user.setActivity(`${Guilds} Servers`, {
-                        type: "LISTENING",
+                        type: ActivityType.Listening,
                     });
                 } else {
                     client.user.setActivity(`${Guilds} Server`, {
-                        type: "LISTENING",
+                        type: ActivityType.Listening,
                     });
                 }
             }
@@ -119,15 +119,15 @@ async function updateStatus(client) {
             if (display == 1) {
                 if (Users > 999) {
                     client.user.setActivity(`${Math.ceil(Users / 1000)}K Members`, {
-                        type: "LISTENING",
+                        type: ActivityType.Listening,
                     });
                 } else if (Users > 1 || Users < 1) {
                     client.user.setActivity(`${Math.ceil(Users)} Members`, {
-                        type: "LISTENING",
+                        type: ActivityType.Listening,
                     });
                 } else {
                     client.user.setActivity(`${Math.ceil(Users)} Member `, {
-                        type: "LISTENING",
+                        type: ActivityType.Listening,
                     });
                 }
             }
@@ -135,14 +135,14 @@ async function updateStatus(client) {
             // Set status as random 1
             if (display == 2) {
                 client.user.setActivity(`Slash Commands`, {
-                    type: "WATCHING",
+                    type: ActivityType.Watching,
                 });
             }
 
             // Set status as random 2
             if (display == 3) {
                 client.user.setActivity(`my DMs ✉`, {
-                    type: "LISTENING",
+                    type: ActivityType.Watching,
                 });
             }
 
@@ -152,7 +152,7 @@ async function updateStatus(client) {
                 const memPerc = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1);
 
                 client.user.setActivity(`RAM: ${memPerc}%`, {
-                    type: "WATCHING",
+                    type: ActivityType.Watching,
                 });
             }
 
@@ -172,14 +172,14 @@ async function updateStatus(client) {
                 const cpuPerc = currentCPUUsage / total * 100;
 
                 client.user.setActivity(`CPU: ${(cpuPerc / 1000).toFixed(1)}%`, {
-                    type: "WATCHING",
+                    type: ActivityType.Watching,
                 });
             }
 
         } else {
             // Set status as under maintenance
             client.user.setStatus("dnd");
-            client.user.setActivity(`MAINTENANCE`, { type: "WATCHING" });
+            client.user.setActivity(`MAINTENANCE`, { type: ActivityType.Watching });
         }
     } catch (e) {
         console.log(String(e.stack))
