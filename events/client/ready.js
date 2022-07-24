@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const { readdirSync, lstatSync } = require('fs');
 const os = require('os');
 const { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk');
@@ -29,14 +29,16 @@ module.exports = async (client) => {
         })
 
         // Create log template
-        let log = new MessageEmbed()
+        let log = new EmbedBuilder()
             .setTimestamp()
-            .addField("👾 Discord.js", `\`v${Discord.version}\``, true)
-            .addField("🤖 Node", `\`${process.version}\``, true)
-            .addField("\u200b", `\u200b`, true)
-            .addField("💻 Platform", `\`${os.platform()}\` \`${os.arch()}\``, true)
-            .addField(`⚙ Loaded`, `\`${client.commands.size}/${check.length} Commands\``, true)
-            .addField("\u200b", `\u200b`, true)
+            .setFields([
+                { name: "👾 Discord.js", value: `\`v${Discord.version}\``, inline: true },
+                { name: "🤖 Node", value: `\`${process.version}\``, inline: true },
+                { name: "\u200b", value: "\u200b", inline: true },
+                { name: "💻 Platform", value: `\`${os.platform()}\` \`${os.arch()}\``, inline: true },
+                { name: "⚙ Loaded", value: `\`${client.commands.size}/${check.length} Commands\``, inline: true },
+                { name: "\u200b", value: "\u200b", inline: true }
+            ])
             .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
 
         // Send log to admin/s

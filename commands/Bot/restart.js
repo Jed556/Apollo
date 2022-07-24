@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const chalk = require('chalk')
 const blurple = chalk.bold.hex("#7289da");
@@ -39,11 +39,10 @@ module.exports = {
     ],
 
     run: async (client, interaction) => {
-        try {
             const cd = interaction.options.getInteger("countdown");
             if (os.hostname().length != 36)
                 return interaction.reply({
-                    embeds: [new MessageEmbed()
+                    embeds: [new EmbedBuilder()
                         .setTimestamp()
                         .setColor(emb.errColor)
                         .setAuthor({ name: "HEROKU | restart.js", iconURL: emb.heroku })
@@ -54,7 +53,7 @@ module.exports = {
                 });
 
             interaction.reply({
-                embeds: [new MessageEmbed()
+                embeds: [new EmbedBuilder()
                     .setTimestamp()
                     .setColor(emb.color)
                     .setAuthor({ name: "HEROKU | restart.js", iconURL: emb.heroku })
@@ -71,7 +70,7 @@ module.exports = {
                         .then(x => console.log(x));
                 }, cd * 1000);
             else interaction.reply({
-                embeds: [new MessageEmbed()
+                embeds: [new EmbedBuilder()
                     .setTimestamp()
                     .setColor(emb.errColor)
                     .setAuthor({ name: "HEROKU | restart.js", iconURL: emb.heroku })
@@ -80,9 +79,6 @@ module.exports = {
                 ],
                 ephemeral: true
             });
-            console.log(blurple("[HEROKU]") + ` Restarting ${AppName}: ${DynoName}`)
-        } catch (e) {
-            console.log(String(e.stack));
-        }
+            console.log(blurple("[HEROKU]") + ` Restarting ${AppName}: ${DynoName}`);
     }
 }

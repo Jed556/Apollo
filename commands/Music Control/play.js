@@ -1,6 +1,6 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
-const { check_if_dj } = require('../../system/distubeFunctions');
+const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
     name: "play",
@@ -27,133 +27,57 @@ module.exports = {
             ]
         }
     ],
+    category: "music",
 
     run: async (client, interaction) => {
-        try {
-            const { member, channelId, guildId, options } = interaction;
-            const { guild } = member;
-            const { channel } = member.voice;
-            let newQueue = client.distube.getQueue(guildId);
-            const mode = interaction.options.getString("mode");
+        const { member, channelId, guildId, options } = interaction;
+        const { guild } = member;
+        const { channel } = member.voice;
+        let newQueue = client.distube.getQueue(guildId);
+        const mode = interaction.options.getString("mode") || false;
 
-            if (!channel) {
-                return interaction.reply({
-                    embeds: [new MessageEmbed()
-                        .setColor(emb.errColor)
-                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                        .setAuthor({ name: "JOIN A VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
-                    ],
-                    ephemeral: true
-                });
-            } else if (channel.guild.me.voice.channel && channel.guild.me.voice.channel.id != channel.id)
-                return interaction.reply({
-                    embeds: [new MessageEmbed()
-                        .setColor(emb.errColor)
-                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                        .setAuthor({ name: "JOIN MY VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
-                        .setDescription(`**Channel: <#${channel.guild.me.voice.channel.id}>**`)
-                    ],
-                    ephemeral: true
-                });
+        const validate = await distubeValidate(interaction, newQueue, ["channel", "userLimit", "playing", "DJ"], [{ name: "playing", value: mode }]);
+        if (validate) return;
 
-            if ((!newQueue || !newQueue.songs || newQueue.songs.length == 0) && mode) return interaction.reply({
-                embeds: [new MessageEmbed()
-                    .setColor(emb.errColor)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                    .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
-                ],
-                ephemeral: true
-            });
+        const Text = options.getString("song");
+        await interaction.reply({
+            embeds: [new EmbedBuilder()
+                .setAuthor({ name: "SEARCHING", iconURL: emb.disc.spin })
+                .setDescription(`Song: **${Text}**`)
+            ],
+            ephemeral: true
+        });
 
-            if (channel.userLimit != 0 && channel.full && !channel)
-                return interaction.reply({
-                    embeds: [new MessageEmbed()
-                        .setColor(emb.errColor)
-                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                        .setAuthor({ name: "YOUR VOICE CHANNEL IS FULL", iconURL: emb.disc.alert })
-                    ],
-                    ephemeral: true
-                });
+        let queue = client.distube.getQueue(guildId);
+        let response, icon, playOptions = {};
+        switch (mode) {
+            case "skip":
+                response = "SKIPPED TO SONG"
+                icon = emb.disc.skip;
+                playOptions = { member: member, skip: true };
+                break;
 
-            if (check_if_dj(client, member, newQueue?.songs[0])) {
-                return interaction.reply({
-                    embeds: [new MessageEmbed()
-                        .setTimestamp()
-                        .setColor(emb.errColor)
-                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                        .setAuthor({ name: "YOU ARE NOT A DJ OR THE SONG REQUESTER", iconURL: emb.disc.alert })
-                        .setDescription(`**DJ-ROLES:**\n> ${check_if_dj(client, member, newQueue.songs[0])}`)
-                    ],
-                    ephemeral: true
-                });
-            }
+            case "top":
+                response = "SONG ADDED TO TOP";
+                icon = emb.disc.song.add;
+                playOptions = { member: member, position: 1 };
+                break;
 
-            const Text = options.getString("song");
-            await interaction.reply({
-                embeds: [new MessageEmbed()
-                    .setAuthor({ name: "SEARCHING", iconURL: emb.disc.spin })
-                    .setDescription(`Song: **${Text}**`)
-                ],
-                ephemeral: true
-            });
-
-            try {
-                let queue = client.distube.getQueue(guildId);
-                let response, icon, options = {};
-                switch (mode) {
-                    case "skip":
-                        response = "SKIPPED TO SONG"
-                        icon = emb.disc.skip;
-                        options = { member: member, skip: true };
-                        break;
-
-                    case "top":
-                        response = "SONG ADDED TO TOP";
-                        icon = emb.disc.song.add;
-                        options = { member: member, position: 1 };
-                        break;
-
-                    default:
-                        response = "ADDED TO QUEUE";
-                        icon = emb.disc.song.add;
-                        options = { member: member };
-                }
-                if (!queue) options.textChannel = guild.channels.cache.get(channelId);
-                await client.distube.play(channel, Text, options);
-
-                // Edit the reply
-                interaction.editReply({
-                    embeds: [new MessageEmbed()
-                        .setAuthor({ name: response, iconURL: icon })
-                        .setDescription(`Song: **${Text}**`)
-                    ],
-                    ephemeral: true
-                });
-            } catch (e) {
-                console.log(e.stack ? e.stack : e);
-                interaction.editReply({
-                    embeds: [new MessageEmbed()
-                        .setTimestamp()
-                        .setColor(emb.errColor)
-                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                        .setAuthor({ name: "AN ERROR OCCURED", iconURL: emb.disc.error })
-                        .setDescription(`\`/info support\` for support or DM me \`${client.user.tag}\` \`\`\`${e}\`\`\``)
-                    ],
-                    ephemeral: true
-                });
-            }
-        } catch (e) {
-            console.log(e.stack ? e.stack : e);
-            interaction.editReply({
-                embeds: [new MessageEmbed()
-                    .setTimestamp()
-                    .setColor(emb.errColor)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                    .setAuthor({ name: "AN ERROR OCCURED", iconURL: emb.disc.error })
-                    .setDescription(`\`/info support\` for support or DM me \`${client.user.tag}\` \`\`\`${e}\`\`\``)
-                ],
-                ephemeral: true
-            });
+            default:
+                response = "ADDED TO QUEUE";
+                icon = emb.disc.song.add;
+                playOptions = { member: member };
         }
+        if (!queue) playOptions.textChannel = guild.channels.cache.get(channelId);
+        await client.distube.play(channel, Text, playOptions);
+
+        // Edit the reply
+        interaction.editReply({
+            embeds: [new EmbedBuilder()
+                .setAuthor({ name: response, iconURL: icon })
+                .setDescription(`Song: **${Text}**`)
+            ],
+            ephemeral: true
+        });
     }
 }

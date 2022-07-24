@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const DB = require('../../schemas/Status');
 
@@ -24,40 +24,36 @@ module.exports = {
     options: [],
 
     run: async (client, interaction) => {
-        try {
-            interaction.deferReply();
+        await interaction.deferReply();
 
-            // Find matching database data
-            const docs = await DB.findOne({
-                _id: client.user.id,
-            });
+        // Find matching database data
+        const docs = await DB.findOne({
+            _id: client.user.id,
+        });
 
-            let maintenance;
-            if (docs.maintenance) {
-                maintenance = false;
-            } else {
-                maintenance = true;
-            }
-
-            // Store memory usage in database
-            await DB.findOneAndUpdate(
-                { _id: client.user.id },
-                { maintenance },
-                { upsert: true }
-            );
-
-            interaction.editReply({
-                embeds: [new MessageEmbed()
-                    .setTimestamp()
-                    .setColor(emb.color)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                    .setAuthor({ name: "MAINTENANCE", iconURL: client.user.displayAvatarURL() })
-                    .setDescription(`**   Status** \`${maintenance ? "ON" : "OFF"}\``)
-                ],
-                ephemeral: true
-            })
-        } catch (e) {
-            console.log(String(e.stack))
+        let maintenance;
+        if (docs.maintenance) {
+            maintenance = false;
+        } else {
+            maintenance = true;
         }
+
+        // Store memory usage in database
+        await DB.findOneAndUpdate(
+            { _id: client.user.id },
+            { maintenance },
+            { upsert: true }
+        );
+
+        interaction.editReply({
+            embeds: [new EmbedBuilder()
+                .setTimestamp()
+                .setColor(emb.color)
+                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                .setAuthor({ name: "MAINTENANCE", iconURL: client.user.displayAvatarURL() })
+                .setDescription(`**   Status** \`${maintenance ? "ON" : "OFF"}\``)
+            ],
+            ephemeral: true
+        });
     }
 }
