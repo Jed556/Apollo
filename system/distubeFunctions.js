@@ -12,11 +12,11 @@ module.exports = {
  * 
  * @param {*} interaction Command interaction
  * @param {*} newQueue Music queue
- * @param {Array} checks Checks to run ("channel", "userLimit", "playing", "previous", "DJ", "all")
+ * @param {Array} checks Checks to run ("channel", "userLimit", "playing", "previous", "DJ", "skip", "all")
  * @returns response to interaction
  */
 function distubeValidate(interaction, newQueue, checks, args) {
-    const checksArray = ["channel", "userLimit", "playing", "previous", "DJ", "all"]
+    const checksArray = ["channel", "userLimit", "playing", "previous", "DJ", "skip", "all"]
     if (!checksArray.some(c => checks.includes(c)))
         return console.log(red.bold("[ERROR]") + ` Variable ${bold("checks")} doesn't include any of ${checksArray.map(c => `\"${c}\"`).join(", ")}`);
 
@@ -45,22 +45,23 @@ function distubeValidate(interaction, newQueue, checks, args) {
                 ephemeral: true
             });
 
-    if (channel.userLimit != 0 && channel.full && !channel && checks.includes("userLimit" || "all"))
-        return interaction.reply({
-            embeds: [new EmbedBuilder()
-                .setColor(emb.errColor)
-                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                .setAuthor({ name: "YOUR VOICE CHANNEL IS FULL", iconURL: emb.disc.alert })
-            ],
-            ephemeral: true
-        });
+    if (channel && checks.includes("userLimit" || "all"))
+        if (channel.userLimit != 0 && channel.full)
+            return interaction.reply({
+                embeds: [new EmbedBuilder()
+                    .setColor(emb.errColor)
+                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                    .setAuthor({ name: "YOUR VOICE CHANNEL IS FULL", iconURL: emb.disc.alert })
+                ],
+                ephemeral: true
+            });
 
     if (!newQueue || !newQueue.songs || newQueue.songs.length == 0 && checks.includes("playing" || "all")) {
         let argVal;
         args.forEach((a) => {
             if (["playing"].includes(a.name)) argVal = a.value;
         });
-        if (!argVal) return
+        if (!argVal) return;
 
         return interaction.reply({
             embeds: [new EmbedBuilder()
@@ -82,6 +83,19 @@ function distubeValidate(interaction, newQueue, checks, args) {
             ],
             ephemeral: true
         });
+
+    if (newQueue.songs.length <= 1 && !newQueue.autoplay && checks.includes("skip" || "all")) {
+        client.distube.stop(guild.id);
+        return interaction.reply({
+            embeds: [new EmbedBuilder()
+                .setTimestamp()
+                .setColor(emb.color)
+                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                .setAuthor({ name: "NO MORE SONGS IN QUEUE", iconURL: emb.disc.skip })
+                .setDescription(`**STOPPED THE PLAYER & LEFT THE VOICE CHANNEL**`)
+            ]
+        });
+    }
 
     if (check_if_dj(client, member, newQueue?.songs[0]) && checks.includes("DJ" || "all")) {
         return interaction.reply({

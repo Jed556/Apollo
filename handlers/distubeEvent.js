@@ -105,24 +105,9 @@ module.exports = (client) => {
                         // ---------------------------------------- SKIP ---------------------------------------- //
                         if (i.customId == `2`) {
                             // Validate if user can execute the command
-                            const validate = await distubeValidate(i, newQueue, ["channel", "playing"]);
-                            if (validate) return;
+                            const validate = await distubeValidate(i, newQueue, ["channel", "playing", "skip"]);
+                            if (validate) return clearInterval(songEditInterval);
 
-                            // If there is nothing more to skip then stop music and leave the Channel
-                            if (newQueue.songs.length <= 1) {
-                                // If its on autoplay mode, then do autoplay before leaving...
-                                i.reply({
-                                    embeds: [successEmb
-                                        .setAuthor({ name: "NO MORE SONGS IN QUEUE", iconURL: emb.disc.skip })
-                                        .setDescription(`**STOPPED THE PLAYER & LEFT THE VOICE CHANNEL**`)
-                                    ]
-                                });
-                                clearInterval(songEditInterval);
-                                // Edit the current song message
-                                await client.distube.stop(i.guild.id);
-                                setTimeout(() => i.deleteReply().catch(e => console.log(e)), 5000);
-                                return;
-                            }
                             // Skip the track
                             await client.distube.skip(i.guild.id);
                             i.reply({
@@ -582,9 +567,9 @@ module.exports = (client) => {
             .setFooter({ text: newTrack.user.tag, iconURL: newTrack.user.displayAvatarURL({ dynamic: true }) });
 
         let filterList = []
-        for ( var f in FiltersSettings ) {
+        for (var f in FiltersSettings) {
             if (newQueue.filters.has(f)) filterList.push(f);
-          }
+        }
 
         var embed = new EmbedBuilder().setColor(emb.color).setTimestamp()
             .setDescription(`**[${newTrack.name}](${newTrack.url})**`)

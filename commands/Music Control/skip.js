@@ -17,7 +17,7 @@ module.exports = {
         const { channel } = member.voice;
         let newQueue = client.distube.getQueue(guildId);
 
-        const validate = await distubeValidate(interaction, newQueue, ["channel", "userLimit", "playing", "DJ"]);
+        const validate = await distubeValidate(interaction, newQueue, ["channel", "userLimit", "playing", "DJ", "skip"]);
         if (validate) return;
 
         await newQueue.skip();
