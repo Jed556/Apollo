@@ -2,10 +2,10 @@ const { ButtonBuilder, ActionRowBuilder, EmbedBuilder, Permissions } = require('
 const { distubeValidate } = require('../system/distubeFunctions');
 const emb = require('../config/embed.json');
 const emoji = require('../config/emojis.json');
+const FiltersSettings = require('../config/filters.json')
 const settings = require('../config/distube.json');
 const playerintervals = new Map();
 const PlayerMap = new Map();
-const DB = require('../schemas/Distube');
 let songEditInterval = null;
 let endCheck = false;
 
@@ -580,6 +580,12 @@ module.exports = (client) => {
             .setColor(emb.errColor)
             .setAuthor({ name: "NO SONG FOUND", iconURL: emb.disc.error })
             .setFooter({ text: newTrack.user.tag, iconURL: newTrack.user.displayAvatarURL({ dynamic: true }) });
+
+        let filterList = []
+        for ( var f in FiltersSettings ) {
+            if (newQueue.filters.has(f)) filterList.push(f);
+          }
+
         var embed = new EmbedBuilder().setColor(emb.color).setTimestamp()
             .setDescription(`**[${newTrack.name}](${newTrack.url})**`)
             .setFields([
@@ -590,7 +596,7 @@ module.exports = (client) => {
                 { name: `♾ Loop:`, value: `>>> ${newQueue.repeatMode ? newQueue.repeatMode === 2 ? `${emoji.check}\` Queue\`` : `${emoji.check} \`Song\`` : `${emoji.x}`}`, inline: true },
                 { name: `↪️ Autoplay:`, value: `>>> ${newQueue.autoplay ? `${emoji.check}` : `${emoji.x}`}`, inline: true },
                 { name: `⬇ Download:`, value: `>>> [\`File Link\`](${newTrack.streamURL})`, inline: true },
-                { name: `🎙 Filter${newQueue.filters.length != 1 ? "s" : ""}:`, value: `>>> ${newQueue.filters && newQueue.filters.length > 0 ? `${newQueue.filters.map(f => `\`${f}\``).join(`, `)}` : `${emoji.x}`}`, inline: newQueue.filters.length > 2 ? false : true },
+                { name: `🎙 Filter${filterList.length != 1 ? "s" : ""}:`, value: `>>> ${filterList && filterList.length > 0 ? `${filterList.map(f => `\`${f}\``).join(`, `)}` : `${emoji.x}`}`, inline: filterList.length > 2 ? false : true },
                 { name: `💿 DJ-Role${client.distubeSettings.get(newQueue.id, "djroles").length > 1 ? "s" : ""}:`, value: `>>> ${djs}`, inline: (client.distubeSettings.get(newQueue.id, "djroles").length > 2 || djs != "`Not Set`") ? false : true }
             ])
             .setAuthor({ name: "DASHBOARD | NOW PLAYING", iconURL: emb.disc.spin })

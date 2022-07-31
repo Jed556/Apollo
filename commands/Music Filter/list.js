@@ -20,13 +20,18 @@ module.exports = {
         const validate = await distubeValidate(interaction, newQueue, ["playing"]);
         if (validate) return;
 
+        let filterList = []
+        for (var f in FiltersSettings) {
+            if (newQueue.filters.has(f)) filterList.push(f);
+        }
+
         return interaction.reply({
             embeds: [new EmbedBuilder()
                 .setColor(emb.color)
                 .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                 .setFields([
                     { name: "**All Valid Filters:**", value: Object.keys(FiltersSettings).map(f => `\`${f}\``).join(", ") + "\n\n**Note:**\n> *All filters, starting with custom have their own command to define a custom amount*" },
-                    { name: "**All __current__ Filters:**", value: newQueue.filters && newQueue.filters.length > 0 ? newQueue.filters.map(f => `\`${f}\``).join(", ") : `None` }
+                    { name: "**All __current__ Filters:**", value: filterList && filterList.length > 0 ? filterList.map(f => `\`${f}\``).join(", ") : `None` }
                 ])
             ],
         });
