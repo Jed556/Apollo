@@ -29,7 +29,6 @@ module.exports = {
         if (validate) return;
 
         let filters = options.getString("filters").toLowerCase().split(" ");
-        if (!filters) filters = [options.getString("filters").toLowerCase()];
         if (filters.some(a => !FiltersSettings[a])) {
             return interaction.reply({
                 embeds: [new EmbedBuilder()
@@ -42,15 +41,7 @@ module.exports = {
             })
         }
 
-        let amount = filters.length;
-        let toAdded = filters;
-        //add old filters so that they get removed 	
-        newQueue.filters.forEach((f) => {
-            if (!filters.includes(f)) {
-                toAdded.push(f);
-            }
-        });
-        if (!toAdded || toAdded.length == 0) {
+        if (!filters || filters.length == 0) {
             return interaction.reply({
                 embeds: [new EmbedBuilder()
                     .setColor(emb.errColor)
@@ -61,13 +52,13 @@ module.exports = {
             });
         }
 
-        await newQueue.setFilter(filters);
+        await newQueue.filters.set(filters);
         interaction.reply({
             embeds: [new EmbedBuilder()
                 .setTimestamp()
                 .setColor(emb.color)
                 .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-                .setAuthor({ name: `SET ${amount} FILTERS`, iconURL: emb.disc.set })
+                .setAuthor({ name: `SET ${filters.length} FILTERS`, iconURL: emb.disc.set })
             ]
         });
     }

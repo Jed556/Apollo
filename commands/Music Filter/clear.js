@@ -20,7 +20,7 @@ module.exports = {
         const validate = await distubeValidate(interaction, newQueue, ["channel", "userLimit", "playing", "DJ"]);
         if (validate) return;
 
-        await newQueue.setFilter(false);
+        await newQueue.filters.clear();
         interaction.reply({
             embeds: [new EmbedBuilder()
                 .setTimestamp()

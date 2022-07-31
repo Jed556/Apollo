@@ -44,10 +44,10 @@ module.exports = {
         client.distube.filters = FiltersSettings;
 
         if (newQueue.filters.includes("custombassboost")) {
-            await newQueue.setFilter(["custombassboost"]);
+            await newQueue.filters.set(["custombassboost"]);
         }
 
-        await newQueue.setFilter(["custombassboost"]);
+        await newQueue.filters.set(["custombassboost"]);
         interaction.reply({
             embeds: [new EmbedBuilder()
                 .setTimestamp()

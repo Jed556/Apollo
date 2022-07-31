@@ -61,13 +61,13 @@ module.exports = {
             })
         }
 
-        await newQueue.setFilter(toAdded);
+        await newQueue.filters.add(toAdded);
         interaction.reply({
             embeds: [new EmbedBuilder()
                 .setTimestamp()
                 .setColor(emb.color)
                 .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-                .setAuthor({ name: `ADDED ${toAdded.length} ${toAdded.length == filters.length ? "FILTERS" : `OF ${filters.length} FILTERS`}`, iconURL: emb.disc.filter.add })
+                .setAuthor({ name: `ADDED ${filters.length} FILTER${filters.length != 1 ? "S" : ""}`, iconURL: emb.disc.filter.add })
             ]
         })
     }

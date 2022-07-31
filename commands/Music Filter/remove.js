@@ -29,7 +29,6 @@ module.exports = {
         if (validate) return;
 
         let filters = options.getString("filters").toLowerCase().split(" ");
-        if (!filters) filters = [options.getString("filters").toLowerCase()];
         if (filters.some(a => !FiltersSettings[a])) {
             return interaction.reply({
                 embeds: [new EmbedBuilder()
@@ -42,14 +41,7 @@ module.exports = {
             });
         }
 
-        let toRemove = [];
-        // Add new filters
-        filters.forEach((f) => {
-            if (newQueue.filters.includes(f)) {
-                toRemove.push(f);
-            }
-        });
-        if (!toRemove || toRemove.length == 0) {
+        if (!filters || filters.length == 0) {
             return interaction.reply({
                 embeds: [
                     new EmbedBuilder()
@@ -61,13 +53,13 @@ module.exports = {
             });
         }
 
-        await newQueue.setFilter(toRemove);
+        await newQueue.filters.remove(filters);
         interaction.reply({
             embeds: [new EmbedBuilder()
                 .setTimestamp()
                 .setColor(emb.color)
                 .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-                .setAuthor({ name: `REMOVED ${toRemove.length} ${toRemove.length == filters.length ? "FILTERS" : `OF ${filters.length} FILTERS`}`, iconURL: emb.disc.filter.remove })
+                .setAuthor({ name: `REMOVED ${filters.length} FILTER${filters.length != 1 ? "S" : ""}`, iconURL: emb.disc.filter.remove })
             ]
         });
     }

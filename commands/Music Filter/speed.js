@@ -45,10 +45,10 @@ module.exports = {
         //add old filters so that they get removed 	
         //if it was enabled before then add it
         if (newQueue.filters.includes("customspeed")) {
-            await newQueue.setFilter(["customspeed"]);
+            await newQueue.filters.set(["customspeed"]);
         }
 
-        await newQueue.setFilter(["customspeed"]);
+        await newQueue.filters.set(["customspeed"]);
         interaction.reply({
             embeds: [new EmbedBuilder()
                 .setTimestamp()
