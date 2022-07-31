@@ -1,18 +1,28 @@
 const { Client, Collection, IntentsBitField, Partials } = require('discord.js');
 const filters = require('./config/filters.json');
-const { spotify_api, youtubeCookie, nsfwMusic } = require('./config/distube.json');
 const DisTube = require('distube').default;
 const https = require('https-proxy-agent');
 const Enmap = require('enmap');
 
 // Variable checks (Use .env if present)
-let Token;
+let Token, spotifyAPI, nsfw, youtubeCookie;
 require('dotenv').config();
-if (process.env.token) {
+if (process.env.token && process.env.spotifyEnabled && process.env.spotifySecret && process.env.spotifyID && process.env.nsfwMusic && process.env.youtubeCookie) {
     Token = process.env.token;
+    nsfw = process.env.nsfwMusic;
+    youtubeCookie = process.env.youtubeCookie;
+    spotifyAPI = {
+        enabled: process.env.spotifyEnabled,
+        clientSecret: process.env.spotifySecret,
+        clientId: process.env.spotifyID
+    };
 } else {
     const { token } = require('./config/client.json');
+    const { spotify_api, ytCookie, nsfwMusic } = require('./config/distube.json');
     Token = token;
+    youtubeCookie = ytCookie;
+    nsfw = nsfwMusic;
+    spotifyAPI = spotify_api;
 }
 
 const client = new Client({
@@ -48,10 +58,10 @@ let spotifyoptions = {
     emitEventsAfterFetching: true,
 }
 
-if (spotify_api.enabled) {
+if (spotifyAPI.enabled) {
     spotifyoptions.api = {
-        clientId: spotify_api.clientId,
-        clientSecret: spotify_api.clientSecret,
+        clientId: spotifyAPI.clientId,
+        clientSecret: spotifyAPI.clientSecret,
     }
 }
 
@@ -64,8 +74,8 @@ client.distube = new DisTube(client, {
     emitAddSongWhenCreatingQueue: false,
     //emitAddListWhenCreatingQueue: false,
     searchSongs: 0,
-    youtubeCookie: youtubeCookie,
-    nsfw: nsfwMusic,
+    youtubeCookie,
+    nsfw,
     emptyCooldown: 25,
     ytdlOptions: {
         // requestOptions: {
