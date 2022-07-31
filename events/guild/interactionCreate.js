@@ -6,21 +6,24 @@ const { cyanBright, greenBright, yellow, red, dim } = require('chalk');
 
 // Variable checks (Use .env if present)
 require('dotenv').config();
-let DefaultCooldown
-if (process.env.connectDB, process.env.database, process.env.defaultCooldown) {
+let DefaultCooldown, OwnerID;
+if (process.env.connectDB, process.env.database, process.env.defaultCooldown, process.env.ownerID) {
+    OwnerID = process.env.ownerID;
     ConnectDB = process.env.connectDB;
     Database = process.env.database;
     DefaultCooldown = process.env.defaultCooldown * 1000;
 } else {
-    const { defaultCooldown } = require('../../config/client.json');
+    const { defaultCooldown, ownerID } = require('../../config/client.json');
     const { connectDB, database } = require('../../config/database.json');
+    OwnerID = ownerID;
     ConnectDB = connectDB;
     Database = database;
     DefaultCooldown = defaultCooldown * 1000;
 }
 
 module.exports = async (client, interaction) => {
-    const { member, guildId } = interaction;
+    const { member, guildId, channel } = interaction;
+    const { guild } = member;
 
     // Check if under maintenance
     if (client.maintenance && interaction.user.id != OwnerID) {
@@ -143,11 +146,22 @@ module.exports = async (client, interaction) => {
                 embeds: [new EmbedBuilder()
                     .setTimestamp()
                     .setColor(emb.errColor)
-                    .setFooter({ text: "\"/support\" to report", iconURL: client.user.displayAvatarURL() })
+                    .setFooter({ text: "/" + command.name, iconURL: client.user.displayAvatarURL() })
                     .setAuthor({ name: "AN ERROR OCCURED", iconURL: command.category == "music" ? emb.disc.error : emb.error })
-                    .setDescription(`**An error occured while running command: \`${command.name}\`**\`\`\`${e.stack ? e.stack : e}\`\`\``)
+                    .setDescription(`**An error occured while running command \`${command.name}\`**\`\`\`${e.stack ? e.stack : e}\`\`\``)
                 ],
                 ephemeral: true
+            });
+            client.users.fetch(OwnerID, false).then((user) => {
+                user.send({
+                    embeds: [new EmbedBuilder()
+                        .setTimestamp()
+                        .setColor(emb.errColor)
+                        .setFooter({ text: `${guild.name} : ${channel.name}`, iconURL: guild.iconURL({ dynamic: true }) })
+                        .setAuthor({ name: "AN ERROR OCCURED", iconURL: command.category == "music" ? emb.disc.error : emb.error })
+                        .setDescription(`**An error occured while running command \`${command.name}\`\nat ${guild.name} (\`${guildId}\`) - ${channel.name} (\`${channel.id}\`) **\`\`\`${e.stack ? e.stack : e}\`\`\``)
+                    ]
+                });
             });
         });
     }
