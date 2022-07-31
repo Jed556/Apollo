@@ -192,15 +192,15 @@ module.exports = {
         };
 
         const image = await canvas.renderToBuffer(chartConfig);
-        const attachment = new AttachmentBuilder(image, 'chart.png');
+        const attachment = new AttachmentBuilder(image, { name: 'chart.png' });
 
         interaction.editReply({
             embeds: [response
-                .addFields(
-                    `<:icon_reply:962547429914337300> HARDWARE`,
-                    `**• Average RAM Usage**: ${avgMem.toFixed(2)}MB`,
-                    false
-                )
+                .addFields({
+                    name: `<:icon_reply:962547429914337300> HARDWARE`,
+                    value: `**• Average RAM Usage**: ${avgMem.toFixed(2)}MB`,
+                    inline: false
+                })
                 .setImage('attachment://chart.png')],
             files: [attachment],
         });

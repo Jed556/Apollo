@@ -58,8 +58,7 @@ function distubeValidate(interaction, newQueue, checks, args) {
     if (!newQueue || !newQueue.songs || newQueue.songs.length == 0 && checks.includes("playing" || "all")) {
         let argVal;
         args.forEach((a) => {
-            if (checksArray.includes(a.name)) argVal = a.value;
-
+            if (["playing"].includes(a.name)) argVal = a.value;
         });
         if (!argVal) return
 
