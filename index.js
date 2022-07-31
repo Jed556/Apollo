@@ -9,7 +9,7 @@ let Token, spotifyAPI, nsfw, youtubeCookie;
 require('dotenv').config();
 if (process.env.token && process.env.spotifyEnabled && process.env.spotifySecret && process.env.spotifyID && process.env.nsfwMusic && process.env.youtubeCookie) {
     Token = process.env.token;
-    nsfw = process.env.nsfwMusic;
+    nsfw = process.env.nsfwMusic === 'true' || false;
     youtubeCookie = process.env.youtubeCookie;
     spotifyAPI = {
         enabled: process.env.spotifyEnabled,
