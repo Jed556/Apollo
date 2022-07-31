@@ -1,10 +1,11 @@
 const { ButtonBuilder, ActionRowBuilder, EmbedBuilder, Permissions } = require('discord.js');
-const { check_if_dj } = require('../system/distubeFunctions');
+const { distubeValidate } = require('../system/distubeFunctions');
 const emb = require('../config/embed.json');
 const emoji = require('../config/emojis.json');
 const settings = require('../config/distube.json');
 const playerintervals = new Map();
 const PlayerMap = new Map();
+const DB = require('../schemas/Distube');
 let songEditInterval = null;
 let endCheck = false;
 
@@ -65,34 +66,6 @@ module.exports = (client) => {
 
                         // ---------------------------------------- GLOBAL EMBEDS ---------------------------------------- //
 
-                        let joinAlert;
-                        if (!channel) {
-                            joinAlert = new EmbedBuilder()
-                                .setTimestamp()
-                                .setColor(emb.errColor)
-                                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                                .setAuthor({ name: "JOIN A VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
-                        } else if (channel.guild.members.me.voice.channel && channel.guild.members.me.voice.channel.id != channel.id) {
-                            joinAlert = new EmbedBuilder()
-                                .setTimestamp()
-                                .setColor(emb.errColor)
-                                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                                .setAuthor({ name: "JOIN MY VOICE CHANNEL FIRST", iconURL: emb.disc.alert })
-                                .setDescription(`**Channel: <#${channel.guild.members.me.voice.channel.id}>**`)
-                        }
-
-                        const djAlert = new EmbedBuilder()
-                            .setTimestamp()
-                            .setColor(emb.errColor)
-                            .setAuthor({ name: "YOU ARE NOT A DJ OR THE SONG REQUESTER", iconURL: emb.disc.alert })
-                            .setDescription(`**DJ-ROLES:**\n${check_if_dj(client, member, client.distube.getQueue(i.guild.id).songs[0])}`)
-
-                        const noPLayerAlert = new EmbedBuilder()
-                            .setTimestamp()
-                            .setColor(emb.errColor)
-                            .setAuthor({ name: "NOTHING PLAYING YET", iconURL: emb.disc.alert })
-                            .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-
                         const errorEmb = new EmbedBuilder()
                             .setTimestamp()
                             .setColor(emb.errColor)
@@ -103,22 +76,12 @@ module.exports = (client) => {
                             .setColor(emb.color)
                             .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
 
-                        if (i.customId != `10` && check_if_dj(client, i.member, client.distube.getQueue(i.guild.id).songs[0])) {
-                            return i.reply({
-                                embeds: [djAlert],
-                                ephemeral: true
-                            }).then(interaction => {
-                                if (newQueue.textChannel.id === client.distubeSettings.get(newQueue.id, `music.channel`)) {
-                                    setTimeout(() => {
-                                        try {
-                                            interaction.deleteReply().catch(console.log);
-                                        } catch (e) {
-                                            console.log(e)
-                                        }
-                                    }, 3000)
-                                }
-                            })
+                        // Validate if user can execute the command
+                        if (i.customId != `10`) {
+                            const validate = await distubeValidate(i, newQueue, ["DJ"]);
+                            if (validate) return;
                         }
+
                         lastEdited = true;
                         setTimeout(() => {
                             lastEdited = false
@@ -126,33 +89,9 @@ module.exports = (client) => {
 
                         // ---------------------------------------- PREVIOUS ---------------------------------------- //
                         if (i.customId == `1`) {
-                            // If there are no previous songs then return error
-                            if (!newQueue.previousSongs || newQueue.previousSongs.length == 0) {
-                                return i.reply({
-                                    embeds: [errorEmb
-                                        .setAuthor({ name: "NO PREVIOUS SONG", iconURL: emb.disc.alert })
-                                    ],
-                                    ephemeral: true
-                                })
-                            }
-
-                            // Get the player instance
-                            const queue = client.distube.getQueue(i.guild.id);
-
-                            // If no player available return aka not playing anything
-                            if (!queue || !newQueue.songs || newQueue.songs.length == 0) {
-                                return i.reply({
-                                    embeds: [noPLayerAlert],
-                                    ephemeral: true
-                                });
-                            }
-
-                            // If the member is not in a channel or in the same channel, return
-                            if (!channel || channel.id !== newQueue.voiceChannel.id)
-                                return i.reply({
-                                    embeds: [joinAlert],
-                                    ephemeral: true
-                                });
+                            // Validate if user can execute the command
+                            const validate = await distubeValidate(i, newQueue, ["channel", "playing", "previous"]);
+                            if (validate) return;
 
                             await newQueue.previous();
                             i.reply({
@@ -160,28 +99,14 @@ module.exports = (client) => {
                                     .setAuthor({ name: "PLAYING PREVIOUS SONG", iconURL: emb.disc.previous })
                                 ]
                             })
-                            setTimeout(() => i.deleteReply().catch(e => console.log(e)), 5000);
                         }
 
 
                         // ---------------------------------------- SKIP ---------------------------------------- //
                         if (i.customId == `2`) {
-                            // Get the player instance
-                            const queue = client.distube.getQueue(i.guild.id);
-                            // If no player available return aka not playing anything
-                            if (!queue || !newQueue.songs || newQueue.songs.length == 0)
-                                return i.reply({
-                                    embeds: [noPLayerAlert],
-                                    ephemeral: true
-                                });
-
-
-                            // If the member is not in a channel or in the same channel, return
-                            if (!channel || channel.id !== newQueue.voiceChannel.id)
-                                return i.reply({
-                                    embeds: [joinAlert],
-                                    ephemeral: true
-                                });
+                            // Validate if user can execute the command
+                            const validate = await distubeValidate(i, newQueue, ["channel", "playing"]);
+                            if (validate) return;
 
                             // If there is nothing more to skip then stop music and leave the Channel
                             if (newQueue.songs.length <= 1) {
@@ -205,17 +130,13 @@ module.exports = (client) => {
                                     .setAuthor({ name: "SKIPPED TO NEXT SONG", iconURL: emb.disc.skip })
                                 ]
                             });
-                            setTimeout(() => i.deleteReply().catch(e => console.log(e)), 5000);
                         }
 
                         // ---------------------------------------- STOP ---------------------------------------- //
                         if (i.customId == `3`) {
-                            // If the member is not in a channel or in the same channel, return
-                            if (!channel || channel.id !== newQueue.voiceChannel.id)
-                                return i.reply({
-                                    embeds: [joinAlert],
-                                    ephemeral: true
-                                });
+                            // Validate if user can execute the command
+                            const validate = await distubeValidate(i, newQueue, ["channel"]);
+                            if (validate) return;
 
                             // Stop the track
                             i.reply({
@@ -228,17 +149,13 @@ module.exports = (client) => {
                             // Edit the current song message
                             stopCheck = true;
                             await client.distube.stop(i.guild.id);
-                            setTimeout(() => i.deleteReply().catch(e => console.log(e)), 5000);
                         }
 
                         // ---------------------------------------- PAUSE & RESUME ---------------------------------------- //
                         if (i.customId == `4`) {
-                            // If the member is not in a channel or in the same channel, return
-                            if (!channel || channel.id !== newQueue.voiceChannel.id)
-                                return i.reply({
-                                    embeds: [joinAlert],
-                                    ephemeral: true
-                                });
+                            // Validate if user can execute the command
+                            const validate = await distubeValidate(i, newQueue, ["channel"]);
+                            if (validate) return;
 
                             if (newQueue.playing) {
                                 await client.distube.pause(i.guild.id);
@@ -251,7 +168,6 @@ module.exports = (client) => {
                                         .setAuthor({ name: "PAUSED", iconURL: emb.disc.pause })
                                     ]
                                 });
-                                setTimeout(() => i.deleteReply().catch(e => console.log(e)), 5000);
                             } else {
                                 // Pause the player
                                 await client.distube.resume(i.guild.id);
@@ -264,18 +180,14 @@ module.exports = (client) => {
                                         .setAuthor({ name: "RESUMED", iconURL: emb.disc.resume })
                                     ]
                                 });
-                                setTimeout(() => i.deleteReply().catch(e => console.log(e)), 5000);
                             }
                         }
 
                         // ---------------------------------------- SHUFFLE ---------------------------------------- //
                         if (i.customId == `5`) {
-                            // If the member is not in a channel or in the same channel, return
-                            if (!channel || channel.id !== newQueue.voiceChannel.id)
-                                return i.reply({
-                                    embeds: [joinAlert],
-                                    ephemeral: true
-                                });
+                            // Validate if user can execute the command
+                            const validate = await distubeValidate(i, newQueue, ["channel"]);
+                            if (validate) return;
 
                             client.maps.set(`beforeshuffle-${newQueue.id}`, newQueue.songs.map(track => track).slice(1));
                             // Pause the player
@@ -286,18 +198,14 @@ module.exports = (client) => {
                                     .setAuthor({ name: `SHUFFELED  ${newQueue.songs.length} SONGS`, iconURL: emb.disc.shuffle })
                                 ]
                             });
-                            setTimeout(() => i.deleteReply().catch(e => console.log(e)), 5000);
                         }
 
 
                         // ---------------------------------------- AUTOPLAY ---------------------------------------- //
                         if (i.customId == `6`) {
-                            // If the member is not in a channel or in the same channel, return
-                            if (!channel || channel.id !== newQueue.voiceChannel.id)
-                                return i.reply({
-                                    embeds: [joinAlert],
-                                    ephemeral: true
-                                });
+                            // Validate if user can execute the command
+                            const validate = await distubeValidate(i, newQueue, ["channel"]);
+                            if (validate) return;
 
                             // Pause the player
                             await newQueue.toggleAutoplay()
@@ -326,17 +234,13 @@ module.exports = (client) => {
                                     ]
                                 });
                             }
-                            setTimeout(() => i.deleteReply().catch(e => console.log(e)), 5000);
                         }
 
                         // ---------------------------------------- SONG LOOP ---------------------------------------- //
                         if (i.customId == `7`) {
-                            // If the member is not in a channel or in the same channel, return
-                            if (!channel || channel.id !== newQueue.voiceChannel.id)
-                                return i.reply({
-                                    embeds: [joinAlert],
-                                    ephemeral: true
-                                })
+                            // Validate if user can execute the command
+                            const validate = await distubeValidate(i, newQueue, ["channel"]);
+                            if (validate) return;
 
                             // Disable the Repeatmode
                             if (newQueue.repeatMode == 1) {
@@ -359,17 +263,13 @@ module.exports = (client) => {
 
                             var data = receiveQueueData(client.distube.getQueue(newQueue.id), newQueue.songs[0])
                             currentSongPlayMsg.edit(data).catch((e) => { /*console.log(e.stack ? String(e.stack): String(e))*/ })
-                            setTimeout(() => i.deleteReply().catch(e => console.log(e)), 5000);
                         }
 
                         // ---------------------------------------- QUEUE LOOP ---------------------------------------- //
                         if (i.customId == `8`) {
-                            // If the member is not in a channel or in the same channel, return
-                            if (!channel || channel.id !== newQueue.voiceChannel.id)
-                                return i.reply({
-                                    embeds: [joinAlert],
-                                    ephemeral: true
-                                })
+                            // Validate if user can execute the command
+                            const validate = await distubeValidate(i, newQueue, ["channel"]);
+                            if (validate) return;
 
                             //Disable the Repeatmode
                             if (newQueue.repeatMode == 2) {
@@ -392,17 +292,13 @@ module.exports = (client) => {
 
                             var data = receiveQueueData(client.distube.getQueue(newQueue.id), newQueue.songs[0])
                             currentSongPlayMsg.edit(data).catch((e) => { /*console.log(e.stack ? String(e.stack): String(e))*/ })
-                            setTimeout(() => i.deleteReply().catch(e => console.log(e)), 5000);
                         }
 
                         // ---------------------------------------- REWIND ---------------------------------------- //
                         if (i.customId == `9`) {
-                            // If the member is not in a channel or in the same channel, return
-                            if (!channel || channel.id !== newQueue.voiceChannel.id)
-                                return i.reply({
-                                    embeds: [joinAlert],
-                                    ephemeral: true
-                                })
+                            // Validate if user can execute the command
+                            const validate = await distubeValidate(i, newQueue, ["channel"]);
+                            if (validate) return;
 
                             let seektime = newQueue.currentTime - 10;
                             if (seektime < 0) seektime = 0;
@@ -417,17 +313,13 @@ module.exports = (client) => {
 
                             var data = receiveQueueData(client.distube.getQueue(newQueue.id), newQueue.songs[0])
                             currentSongPlayMsg.edit(data).catch((e) => {/*console.log(e.stack ? String(e.stack): String(e))*/ })
-                            setTimeout(() => i.deleteReply().catch(e => console.log(e)), 5000);
                         }
 
                         // ---------------------------------------- FORWARD ---------------------------------------- //
                         if (i.customId == `10`) {
-                            // If the member is not in a channel or in the same channel, return
-                            if (!channel || channel.id !== newQueue.voiceChannel.id)
-                                return i.reply({
-                                    embeds: [joinAlert],
-                                    ephemeral: true
-                                })
+                            // Validate if user can execute the command
+                            const validate = await distubeValidate(i, newQueue, ["channel"]);
+                            if (validate) return;
 
                             let seektime = newQueue.currentTime + 10;
                             if (seektime >= newQueue.songs[0].duration) seektime = newQueue.songs[0].duration - 1;
@@ -441,8 +333,8 @@ module.exports = (client) => {
 
                             var data = receiveQueueData(client.distube.getQueue(newQueue.id), newQueue.songs[0])
                             currentSongPlayMsg.edit(data).catch((e) => { /*console.log(e.stack ? String(e.stack) : String(e))*/ })
-                            setTimeout(() => i.deleteReply().catch(e => console.log(e)), 5000);
                         }
+                        setTimeout(() => i.deleteReply().catch(e => console.log(e)), 5000);
                     });
                 } catch (error) {
                     console.log(error)
@@ -610,12 +502,12 @@ module.exports = (client) => {
                     // Check-Relevant-Messages inside of the Music System Request Channel
                     var checkrelevantinterval = setInterval(async () => {
                         if (client.distubeSettings.get(queue.id, `music.channel`) && client.distubeSettings.get(queue.id, `music.channel`).length > 5) {
-                            console.log(`Music System - Relevant Checker`.brightCyan + ` - Checkingfor unrelevant Messages`)
+                            console.log(`Music System - Relevant Checker` + ` - Checkingfor unrelevant Messages`)
                             let messageId = client.distubeSettings.get(queue.id, `music.message`);
 
                             // Try to get the guild
                             let guild = client.guilds.cache.get(queue.id);
-                            if (!guild) return console.log(`Music System - Relevant Checker`.brightCyan + ` - Guild not found!`)
+                            if (!guild) return console.log(`Music System - Relevant Checker` + ` - Guild not found!`)
 
                             // Try to get the channel
                             let channel = guild.channels.cache.get(client.distubeSettings.get(queue.id, `music.channel`));
@@ -627,9 +519,9 @@ module.exports = (client) => {
                             let messages = await channel.messages.fetch();
                             if (messages.filter(m => m.id != messageId).size > 0) {
                                 channel.bulkDelete(messages.filter(m => m.id != messageId)).catch(() => { })
-                                    .then(messages => console.log(`Music System - Relevant Checker`.brightCyan + ` - Bulk deleted ${messages.size} messages`))
+                                    .then(messages => console.log(`Music System - Relevant Checker` + ` - Bulk deleted ${messages.size} messages`))
                             } else {
-                                console.log(`Music System - Relevant Checker`.brightCyan + ` - No Relevant Messages`)
+                                console.log(`Music System - Relevant Checker` + ` - No Relevant Messages`)
                             }
                         }
                     }, settings["music-system-relevant-checker-delay"] || 60000);
