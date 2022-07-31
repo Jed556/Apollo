@@ -20,7 +20,7 @@
   "homepage": "https://github.com/Jed556/Apollo#readme",
   "description": "A cool Javascript based Discord bot",
   "engines": {
-    "node": "^18.x",
+    "node": "^17.x",
     "npm": "^8.x"
   },
   "dependencies": {

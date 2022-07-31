@@ -42,14 +42,7 @@ module.exports = {
             })
         }
 
-        let toAdded = [];
-        // Add new filters
-        filters.forEach((f) => {
-            if (!newQueue.filters.includes(f)) {
-                toAdded.push(f)
-            }
-        })
-        if (!toAdded || toAdded.length == 0) {
+        if (!filters || filters.length == 0) {
             return interaction.reply({
                 embeds: [
                     new EmbedBuilder()
@@ -61,7 +54,7 @@ module.exports = {
             })
         }
 
-        await newQueue.filters.add(toAdded);
+        await newQueue.filters.add(filters);
         interaction.reply({
             embeds: [new EmbedBuilder()
                 .setTimestamp()
