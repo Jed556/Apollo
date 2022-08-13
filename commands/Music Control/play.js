@@ -36,7 +36,7 @@ module.exports = {
         let newQueue = client.distube.getQueue(guildId);
         const mode = interaction.options.getString("mode") || false;
 
-        const validate = await distubeValidate(interaction, newQueue, ["channel", "userLimit", "playing", "DJ"], [{ name: "playing", value: mode }]);
+        const validate = await distubeValidate(interaction, newQueue, ["channel", "userLimit", "playing", "DJ"], [{ name: "playing", value: mode }, { name: "userLimit", value: mode }]);
         if (validate) return;
 
         const Text = options.getString("song");

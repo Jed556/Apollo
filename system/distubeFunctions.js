@@ -24,6 +24,13 @@ function distubeValidate(interaction, newQueue, checks, args) {
     const { guild } = member;
     const { channel } = member.voice;
 
+    // Leave if the bot is still in a voice channel after restart
+    // console.log(client.firstSong + " | " + channel.guild.members.me.voice.channel)
+    // if (client.firstSong && channel.guild.members.me.voice.channel) {
+    //     client.distube.voices.leave(channel);
+    //     client.firstSong = false;
+    // }
+
     if (checks.includes("channel" || "all"))
         if (!channel) {
             return interaction.reply({
@@ -45,22 +52,34 @@ function distubeValidate(interaction, newQueue, checks, args) {
                 ephemeral: true
             });
 
-    if (channel && checks.includes("userLimit" || "all"))
-        if (channel.userLimit != 0 && channel.full)
-            return interaction.reply({
-                embeds: [new EmbedBuilder()
-                    .setColor(emb.errColor)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                    .setAuthor({ name: "YOUR VOICE CHANNEL IS FULL", iconURL: emb.disc.alert })
-                ],
-                ephemeral: true
+    if (channel && checks.includes("userLimit" || "all")) {
+        // Return if a mode is specified
+        let argVal;
+        if (args)
+            args.forEach((a) => {
+                if (["userLimit"].includes(a.name)) argVal = a.value;
             });
+        if (argVal) return;
+
+        if (!channel.guild.members.me.voice.channel)
+            if (channel.userLimit != 0 && channel.full)
+                return interaction.reply({
+                    embeds: [new EmbedBuilder()
+                        .setColor(emb.errColor)
+                        .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+                        .setAuthor({ name: "YOUR VOICE CHANNEL IS FULL", iconURL: emb.disc.alert })
+                    ],
+                    ephemeral: true
+                });
+    }
 
     if (!newQueue || !newQueue.songs || newQueue.songs.length == 0 && checks.includes("playing" || "all")) {
+        // Return if a mode is specified
         let argVal;
-        args.forEach((a) => {
-            if (["playing"].includes(a.name)) argVal = a.value;
-        });
+        if (args)
+            args.forEach((a) => {
+                if (["playing"].includes(a.name)) argVal = a.value;
+            });
         if (!argVal) return;
 
         return interaction.reply({
