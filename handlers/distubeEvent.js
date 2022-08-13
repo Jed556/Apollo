@@ -3,11 +3,21 @@ const { distubeValidate } = require('../system/distubeFunctions');
 const emb = require('../config/embed.json');
 const emoji = require('../config/emojis.json');
 const FiltersSettings = require('../config/filters.json')
-const settings = require('../config/distube.json');
 const playerintervals = new Map();
 const PlayerMap = new Map();
 let songEditInterval = null;
 let endCheck = false;
+
+// Variable checks (Use .env if present)
+require('dotenv').config();
+let settings;
+if (process.env.musicRequestEditDelay) {
+    settings = {
+        "music-request-edit-delay": process.env.musicRequestEditDelay
+    };
+} else {
+    settings = require('../config/distube.json');
+}
 
 module.exports = (client) => {
     try {
