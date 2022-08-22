@@ -1,4 +1,4 @@
-module.exports = async (client, oldState, newState) => {
+module.exports = async ( oldState, newState) => {
     if (
         (!oldState.streaming && newState.streaming) ||
         (oldState.streaming && !newState.streaming) ||

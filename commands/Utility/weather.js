@@ -39,7 +39,7 @@ module.exports = {
         const country = interaction.options.getString("country");
         const degree = interaction.options.getString("degree") || "C";
 
-        embed = new EmbedBuilder()
+        let embed = new EmbedBuilder()
             .setTimestamp()
             .setColor(emb.color)
             .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() });

@@ -142,23 +142,22 @@ module.exports = async (client, interaction) => {
         // Run the command
         command.run(client, interaction).catch(e => {
             console.log(red.bold("[ERROR]") + ` ${e.stack ? e.stack : e}`);
+            const errorEmb = new EmbedBuilder()
+                .setTimestamp()
+                .setColor(emb.errColor)
+                .setAuthor({ name: "AN ERROR OCCURED", iconURL: command.category == "music" ? emb.disc.error : emb.error })
+
             interaction.channel.send({
-                embeds: [new EmbedBuilder()
-                    .setTimestamp()
-                    .setColor(emb.errColor)
+                embeds: [errorEmb
                     .setFooter({ text: "/" + command.name, iconURL: client.user.displayAvatarURL() })
-                    .setAuthor({ name: "AN ERROR OCCURED", iconURL: command.category == "music" ? emb.disc.error : emb.error })
                     .setDescription(`**An error occured while running command \`${command.name}\`**\`\`\`${e.stack ? e.stack : e}\`\`\``)
                 ],
                 ephemeral: true
             });
             client.users.fetch(OwnerID, false).then((user) => {
                 user.send({
-                    embeds: [new EmbedBuilder()
-                        .setTimestamp()
-                        .setColor(emb.errColor)
+                    embeds: [errorEmb
                         .setFooter({ text: `${guild.name} : ${channel.name}`, iconURL: guild.iconURL({ dynamic: true }) })
-                        .setAuthor({ name: "AN ERROR OCCURED", iconURL: command.category == "music" ? emb.disc.error : emb.error })
                         .setDescription(`**An error occured while running command \`${command.name}\`\nat ${guild.name} (\`${guildId}\`) - ${channel.name} (\`${channel.id}\`) **\`\`\`${e.stack ? e.stack : e}\`\`\``)
                     ]
                 });

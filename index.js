@@ -101,7 +101,6 @@ client.distube = new DisTube(client, {
 client.commands = new Collection();
 
 client.distubeSettings = new Enmap({ name: "distubeSettings", dataDir: "./localDB/settings" });
-// client.firstSong = true;
 client.infos = new Enmap({ name: "infos", dataDir: "./localDB/infos" });
 client.autoresume = new Enmap({ name: "autoresume", dataDir: "./localDB/infos" });
 client.maps = new Map();

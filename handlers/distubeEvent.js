@@ -1,4 +1,4 @@
-const { ButtonBuilder, ActionRowBuilder, EmbedBuilder, Permissions } = require('discord.js');
+const { ButtonBuilder, ActionRowBuilder, EmbedBuilder } = require('discord.js');
 const { distubeValidate } = require('../system/distubeFunctions');
 const emb = require('../config/embed.json');
 const emoji = require('../config/emojis.json');

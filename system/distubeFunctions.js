@@ -24,13 +24,6 @@ function distubeValidate(interaction, newQueue, checks, args) {
     const { guild } = member;
     const { channel } = member.voice;
 
-    // Leave if the bot is still in a voice channel after restart
-    // console.log(client.firstSong + " | " + channel.guild.members.me.voice.channel)
-    // if (client.firstSong && channel.guild.members.me.voice.channel) {
-    //     client.distube.voices.leave(channel);
-    //     client.firstSong = false;
-    // }
-
     if (checks.includes("channel" || "all"))
         if (!channel) {
             return interaction.reply({
