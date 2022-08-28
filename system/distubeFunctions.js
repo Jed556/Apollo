@@ -48,11 +48,12 @@ function distubeValidate(interaction, newQueue, checks, args) {
     if (channel && checks.includes("userLimit" || "all")) {
         // Return if a mode is specified
         let argVal;
-        if (args)
+        if (args) {
             args.forEach((a) => {
                 if (["userLimit"].includes(a.name)) argVal = a.value;
             });
-        if (argVal) return;
+            if (argVal) return;
+        }
 
         if (!channel.guild.members.me.voice.channel)
             if (channel.userLimit != 0 && channel.full)
@@ -69,11 +70,12 @@ function distubeValidate(interaction, newQueue, checks, args) {
     if (!newQueue || !newQueue.songs || newQueue.songs.length == 0 && checks.includes("playing" || "all")) {
         // Return if a mode is specified
         let argVal;
-        if (args)
+        if (args) {
             args.forEach((a) => {
                 if (["playing"].includes(a.name)) argVal = a.value;
             });
-        if (!argVal) return;
+            if (!argVal) return;
+        }
 
         return interaction.reply({
             embeds: [new EmbedBuilder()
