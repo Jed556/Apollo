@@ -26,6 +26,36 @@ if (process.env.token && process.env.guildID && process.env.botID && process.env
  * @param {*} client Discord client
  */
 async function loadCommands(client) {
+    // Load commands
+    let err = "", check = [];
+    await commandHandler(client).catch(e => {
+        const
+            { stack } = e,
+            splitErr = stack.split("\n");
+
+        if (stack.split(" ").includes("InstanceValidator.handle"))
+            err = ", Please complete entering command data" + "\n    " + splitErr[6];
+        else if (stack.split("\n").includes("Error: Invalid string format"))
+            err = ", Please check your capitalization" + "\n    " + splitErr[7];
+        else if (stack)
+            err = "\n        " + stack.split("\n").map(l => `${l}\n    `).join("");
+    })
+
+    // Check the total number of commands
+    const Files = await loadFiles("commands");
+    Files.forEach((file) => { check.push(file) });
+
+    if (client.commands.size < check.length)
+        console.log(toError(null, "Refreshing commands failed") + err);
+    else
+        console.log(cyanBright.bold("[INFO]") + " Reloaded commands");
+}
+
+/**
+ * 
+ * @param {*} client Discord client
+ */
+async function commandHandler(client) {
     // Create table
     const Table = new AsciiTable3("COMMANDS LOADED").setStyle('unicode-single')
         .setAlignCenter(2).setAlignCenter(3).setAlignCenter(4).setAlignRight(1);
@@ -73,4 +103,4 @@ async function loadCommands(client) {
     return Table.toString();
 }
 
-module.exports = { loadCommands };
+module.exports = { loadCommands, commandHandler };

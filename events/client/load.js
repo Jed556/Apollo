@@ -24,29 +24,12 @@ module.exports = {
     run: async (client) => {
         try {
             // Load commands
-            let err = "", check = [];
-            await loadCommands(client).catch(e => {
-                const
-                    { stack } = e,
-                    splitErr = stack.split("\n");
-
-                if (stack.split(" ").includes("InstanceValidator.handle"))
-                    err = ", Please complete entering command data" + "\n    " + splitErr[6];
-                else if (stack.split("\n").includes("Error: Invalid string format"))
-                    err = ", Please check your capitalization" + "\n    " + splitErr[7];
-                else if (stack)
-                    err = "\n        " + stack.split("\n").map(l => `${l}\n    `).join("");
-            })
+            await loadCommands(client)
 
             // Check the total number of commands
+            let check = [];
             const Files = await loadFiles("commands");
             Files.forEach((file) => { check.push(file) });
-
-            if (client.commands.size < check.length)
-                console.log(toError(null, "Refreshing commands failed") + err);
-            else
-                console.log(cyanBright.bold("[INFO]") + " Reloaded commands");
-
 
             // Login Log
             console.log(`${cyanBright.bold("[INFO]")} Logged in as ${bold(client.user.username) + dim("#" + client.user.tag.split("#")[1])}`);
