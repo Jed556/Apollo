@@ -22,10 +22,11 @@ module.exports = {
     allowedUIDs: [],
 
     run: async (client, interaction) => {
-        const { channel, options } = interaction;
-        const Amount = options.getInteger("amount");
-        const Target = options.getUser("user") || null;
-        const Messages = channel.messages.fetch();
+        const
+            { channel, options } = interaction,
+            Amount = options.getInteger("amount"),
+            Target = options.getUser("user") || null,
+            Messages = channel.messages.fetch();
 
         var embed = new EmbedBuilder()
             .setTimestamp()

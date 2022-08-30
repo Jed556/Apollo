@@ -14,18 +14,19 @@ module.exports = {
     category: "music",
 
     run: async (client, interaction) => {
-        const { member, guildId } = interaction;
-        const { guild } = member;
-        const { channel } = member.voice;
+        const
+            { member, guildId } = interaction,
+            { guild } = member;
         let newQueue = client.distube.getQueue(guildId);
 
         const validate = await distubeValidate(interaction, newQueue, ["channel", "userLimit", "playing"]);
         if (validate) return;
 
-        let embeds = [];
-        let k = 10;
-        let theSongs = newQueue.songs;
-        //defining each Pages
+        let embeds = [],
+            k = 10,
+            theSongs = newQueue.songs;
+        
+        // Defining each page
         for (let i = 0; i < theSongs.length; i += 10) {
             let qus = theSongs;
             const current = qus.slice(i, k);

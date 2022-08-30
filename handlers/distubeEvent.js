@@ -36,8 +36,8 @@ async function distubeEvent(client) {
                     console.log(error);
                 }
                 try {
-                    var newQueue = client.distube.getQueue(queue.id);
-                    var oldLoop = newQueue.repeatMode;
+                    var newQueue = client.distube.getQueue(queue.id),
+                        oldLoop = newQueue.repeatMode;
                     updateMusicSystem(newQueue);
                     var data = receiveQueueData(newQueue, track);
                     if (queue.textChannel.id === client.distubeSettings.get(queue.id, `music.channel`)) return;
@@ -80,15 +80,16 @@ async function distubeEvent(client) {
 
                         // ---------------------------------------- GLOBAL EMBEDS ---------------------------------------- //
 
-                        const errorEmb = new EmbedBuilder()
-                            .setTimestamp()
-                            .setColor(emb.errColor)
-                            .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
+                        const
+                            errorEmb = new EmbedBuilder()
+                                .setTimestamp()
+                                .setColor(emb.errColor)
+                                .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) }),
 
-                        const successEmb = new EmbedBuilder()
-                            .setTimestamp()
-                            .setColor(emb.color)
-                            .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
+                            successEmb = new EmbedBuilder()
+                                .setTimestamp()
+                                .setColor(emb.color)
+                                .setFooter({ text: `Action by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
 
                         // Validate if user can execute the command
                         if (i.customId != `10`) {

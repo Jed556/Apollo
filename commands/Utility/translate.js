@@ -31,13 +31,15 @@ module.exports = {
     run: async (client, interaction) => {
         await interaction.deferReply({ content: "Translating", ephemeral: true });
 
-        const text = interaction.options.getString("text");
-        const fromlanguage = interaction.options.getString("from");
-        const tolanguage = interaction.options.getString("to");
-        const Embed = new EmbedBuilder()
+        const
+            text = interaction.options.getString("text"),
+            fromlanguage = interaction.options.getString("from"),
+            tolanguage = interaction.options.getString("to"),
+            Embed = new EmbedBuilder()
 
-        const fromlanguageName = ISO6391.getName(fromlanguage) || fromlanguage || "Automatic Language Search";
-        const tolanguageName = ISO6391.getName(tolanguage) || tolanguage;
+        const
+            fromlanguageName = ISO6391.getName(fromlanguage) || fromlanguage || "Automatic Language Search",
+            tolanguageName = ISO6391.getName(tolanguage) || tolanguage;
 
         await translate(text, { from: fromlanguage, to: tolanguage }).then((result) => {
             interaction.editReply({

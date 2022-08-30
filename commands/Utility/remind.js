@@ -22,9 +22,10 @@ module.exports = {
     allowedUIDs: [],
 
     run: async (client, interaction) => {
-        const { member } = interaction;
-        const time = interaction.options.getInteger("time");
-        const desc = interaction.options.getString("description") || "No Description";
+        const
+            { member } = interaction,
+            time = interaction.options.getInteger("time"),
+            desc = interaction.options.getString("description") || "No Description";
 
         interaction.reply({
             embeds: [new EmbedBuilder()

@@ -37,7 +37,7 @@ async function loadCommands(client) {
     // Require every file ending with .js in the commands folder
     const Files = await loadFiles("commands");
 
-    Files.forEach((file) => {
+    Files.forEach(file => {
         let command = require(file);
         const L = file.split("/");
         const fileName = L[L.length - 1];
@@ -47,9 +47,8 @@ async function loadCommands(client) {
         const cooldown = command.cooldown || DefaultCooldown;
 
         // Log errors to table
-        if (!command.data) {
-            return Table.addRow(dim(commandName), cooldown, "None", red("FAILED"), "No data < " + fileDir)
-        };
+        if (!command.data)
+            return Table.addRow(dim(commandName), cooldown, "None", red("FAILED"), "No data < " + fileDir);
 
         const { name, description, default_member_permissions } = command.data;
         const perms = default_member_permissions //? default_member_permissions.map(p => `${p}`).join(', ') : null;
@@ -60,7 +59,7 @@ async function loadCommands(client) {
         if (!name)
             return Table.addRow(dim(commandName), cooldown, perms || "None", red("FAILED"), "Missinng name < " + fileDir);
 
-        if (/\s/g.test(command.data.name))
+        if (/\s/g.test(name))
             return Table.addRow(dim(name), cooldown, perms || "None", red("FAILED"), "Spaces are not allowed in names < " + fileDir);
 
         if (upperN || (upperN && lowerN))
@@ -69,19 +68,18 @@ async function loadCommands(client) {
         if (!description)
             return Table.addRow(dim(name), cooldown, perms || "None", red("FAILED"), "Missing description < " + fileDir);
 
+        Table.addRow(name, cooldown, perms || "None", greenBright("LOADED"), fileDir);
         // Add the category to description
         command.data.description = `[${toTitleCase(category) || ""}]  ` + description;
 
         // Push the command to client
         client.commands.set(name, command);
         commandArray.push(command.data.toJSON());
-
-        // Log success to table
-        Table.addRow(name, cooldown, perms || "None", greenBright("LOADED"), fileDir);
     });
 
     client.application.commands.set(commandArray); // Load the slash commands
     console.log(Table.toString()); // Log table to console
+    return Table.toString();
 }
 
 module.exports = { loadCommands };

@@ -32,9 +32,10 @@ module.exports = {
     allowedUIDs: [],
 
     run: async (client, interaction) => {
-        const city = interaction.options.getString("city");
-        const country = interaction.options.getString("country");
-        const degree = interaction.options.getString("degree") || "C";
+        const
+            city = interaction.options.getString("city"),
+            country = interaction.options.getString("country"),
+            degree = interaction.options.getString("degree") || "C";
 
         let embed = new EmbedBuilder()
             .setTimestamp()

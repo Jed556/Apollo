@@ -15,7 +15,6 @@ module.exports = {
 
     run: async (client, interaction) => {
         const { member, guildId } = interaction;
-        const { channel } = member.voice;
         let newQueue = client.distube.getQueue(guildId);
 
         const validate = await distubeValidate(interaction, newQueue, ["channel", "userLimit", "playing", "DJ"]);

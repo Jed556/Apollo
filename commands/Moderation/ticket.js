@@ -53,11 +53,12 @@ module.exports = {
         });
 
         if (interaction.options.getSubcommand() === "setup") {
-            const channel = interaction.options.getChannel("channel");
-            const category = interaction.options.getChannel("category");
-            const ticketlog = interaction.options.getChannel("logging");
-            const supportRole = interaction.options.getRole("support");
-            const description = interaction.options.getString("description") || "Click the `Create Ticket` button below to create a ticket.";
+            const
+                channel = interaction.options.getChannel("channel"),
+                category = interaction.options.getChannel("category"),
+                ticketlog = interaction.options.getChannel("logging"),
+                supportRole = interaction.options.getRole("support"),
+                description = interaction.options.getString("description") || "Click the `Create Ticket` button below to create a ticket.";
 
             if (ticketSystem) {
                 ticketSystem.categoryId = category.id;

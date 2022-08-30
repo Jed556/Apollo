@@ -28,11 +28,12 @@ module.exports = {
     category: "music",
 
     run: async (client, interaction) => {
-        const { member, channelId, guildId, options } = interaction;
-        const { guild } = member;
-        const { channel } = member.voice;
+        const
+            { member, channelId, guildId, options } = interaction,
+            { guild } = member,
+            { channel } = member.voice,
+            mode = interaction.options.getString("mode") || false;
         let newQueue = client.distube.getQueue(guildId);
-        const mode = interaction.options.getString("mode") || false;
 
         const validate = await distubeValidate(interaction, newQueue, ["channel", "userLimit", "playing", "DJ"], [{ name: "playing", value: mode }, { name: "userLimit", value: mode }]);
         if (validate) return;

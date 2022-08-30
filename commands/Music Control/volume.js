@@ -22,14 +22,13 @@ module.exports = {
 
     run: async (client, interaction) => {
         const { member, guildId, options } = interaction;
-        const { channel } = member.voice;
         let newQueue = client.distube.getQueue(guildId);
 
         const validate = await distubeValidate(interaction, newQueue, ["channel", "userLimit", "DJ"]);
         if (validate) return;
 
-        let volume = options.getNumber("percent") || Math.round(options.getInteger("percent"));
-        let oldVolume = newQueue.volume;
+        let volume = options.getNumber("percent") || Math.round(options.getInteger("percent")),
+            oldVolume = newQueue.volume;
 
         if (volume == oldVolume) return interaction.reply({
             embeds: [new EmbedBuilder()

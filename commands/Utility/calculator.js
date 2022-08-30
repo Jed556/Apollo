@@ -14,16 +14,16 @@ module.exports = {
     allowedUIDs: [],
 
     run: async (client, interaction) => {
-        let button = new Array([], [], [], [], []);
-        let row = [];
-        let text = [
-            "Clear", "(", ")", "/", "⌫",
-            "7", "8", "9", "*", "!",
-            "4", "5", "6", "-", "^",
-            "1", "2", "3", "+", "π",
-            ".", "0", "00", "=", "Delete"
-        ];
-        let current = 0;
+        let button = new Array([], [], [], [], []),
+            row = [],
+            text = [
+                "Clear", "(", ")", "/", "⌫",
+                "7", "8", "9", "*", "!",
+                "4", "5", "6", "-", "^",
+                "1", "2", "3", "+", "π",
+                ".", "0", "00", "=", "Delete"
+            ],
+            current = 0;
 
         for (let i = 0; i < text.length; i++) {
             if (button[current].length === 5) current++;
@@ -33,8 +33,8 @@ module.exports = {
             }
         }
 
-        let value = 0;
-        let valueFill = 40;
+        let value = 0,
+            valueFill = 40;
 
         const display = new EmbedBuilder()
             .setColor(emb.color)
@@ -46,10 +46,10 @@ module.exports = {
         }).then(async () => {
             const msg = await interaction.fetchReply();
 
-            let isWrong = false;
-            let time = 600000;
-            let calEmb = new EmbedBuilder()
-                .setColor(emb.color);
+            let isWrong = false,
+                time = 600000,
+                calEmb = new EmbedBuilder()
+                    .setColor(emb.color);
 
             function createCollector(val, result = false) {
                 const filter = (button) =>

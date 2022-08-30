@@ -24,15 +24,14 @@ module.exports = {
 
     run: async (client, interaction) => {
         const { member, guildId, options } = interaction;
-        const { channel } = member.voice;
         let newQueue = client.distube.getQueue(guildId);
 
         const validate = await distubeValidate(interaction, newQueue, ["channel", "userLimit", "playing", "DJ"]);
         if (validate) return;
 
         // Get selected loop and current loop
-        let oldLoop = newQueue.repeatMode;
-        let loop = options.getNumber("loop");
+        let oldLoop = newQueue.repeatMode,
+            loop = options.getNumber("loop");
 
         // Set embed template
         let embed = new EmbedBuilder()

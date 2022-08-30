@@ -25,14 +25,13 @@ module.exports = {
 
     run: async (client, interaction) => {
         const { member, guildId, options } = interaction;
-        const { channel } = member.voice;
         let newQueue = client.distube.getQueue(guildId);
 
         const validate = await distubeValidate(interaction, newQueue, ["channel", "userLimit", "playing", "DJ"]);
         if (validate) return;
 
-        let songIndex = options.getInteger("song");
-        let position = options.getInteger("where");
+        let songIndex = options.getInteger("song"),
+            position = options.getInteger("where");
         if (position >= newQueue.songs.length || position < 0) position = -1;
         if (songIndex > newQueue.songs.length - 1) return interaction.reply({
             embeds: [new EmbedBuilder()

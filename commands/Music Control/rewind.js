@@ -20,14 +20,13 @@ module.exports = {
 
     run: async (client, interaction) => {
         const { member, guildId, options } = interaction;
-        const { channel } = member.voice;
         let newQueue = client.distube.getQueue(guildId);
 
         const validate = await distubeValidate(interaction, newQueue, ["channel", "userLimit", "playing", "DJ"]);
         if (validate) return;
 
-        let seekNumber = options.getInteger("seconds");
-        let seektime = newQueue.currentTime - seekNumber;
+        let seekNumber = options.getInteger("seconds"),
+            seektime = newQueue.currentTime - seekNumber;
         if (seektime < 0) seektime = 0;
         if (seektime >= newQueue.songs[0].duration - newQueue.currentTime) seektime = 0;
 

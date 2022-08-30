@@ -36,16 +36,17 @@ module.exports = {
     category: "music",
 
     run: async (client, interaction) => {
-        const { member, channelId, guildId } = interaction;
-        const { guild } = member;
-        const { channel } = member.voice;
+        const
+            { member, channelId, guildId } = interaction,
+            { guild } = member,
+            { channel } = member.voice;
         let newQueue = client.distube.getQueue(guildId);
 
         const validate = await distubeValidate(interaction, newQueue, ["channel", "userLimit", "playing", "DJ"]);
         if (validate) return;
 
-        let link, mixName;
-        let mix = interaction.options.getString("playlist");
+        let mix = interaction.options.getString("playlist"),
+            link, mixName;
         switch (mix) {
             case "NCS":
                 mixName = "NCS";
@@ -118,8 +119,8 @@ module.exports = {
         });
 
         try {
-            let queue = client.distube.getQueue(guildId);
-            let options = { member: member, };
+            let queue = client.distube.getQueue(guildId),
+                options = { member: member, };
             if (!queue) options.textChannel = guild.channels.cache.get(channelId);
             await client.distube.play(channel, link, options);
         } catch (e) {
