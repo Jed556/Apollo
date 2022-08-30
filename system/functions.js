@@ -1,31 +1,20 @@
 // REQUIRE DEPENDENCIES
-const { EmbedBuilder, Collection } = require('discord.js');
-const Discord = require('discord.js')
-const emb = require('../config/embed.json');
-
-// Promisify Glob shortcut
- const { promisify } = require('util');
- const { glob } = require('glob');
- const PG = promisify(glob);
-
-// EXPORT ALL FUNCTIONS
-module.exports = {
-    mainDir,
-    reSlash,
-    randomNum,
-    delay,
-    escapeRegex,
-    toTitleCase,
-    PG
-}
+const { cyanBright, greenBright, yellow, red, dim } = require('chalk');
+const { promisify } = require('util');
+const { glob } = require('glob');
 
 // ---------- FUNCTIONS ---------- //
+
+/**
+ * @returns promisify(glob) shortcut
+ */
+const PG = promisify(glob);
 
 /**
  * @returns Client's root directory
  */
 function mainDir() {
-    return process.cwd().replace(/\\/g, '/')
+    return reSlash(process.cwd())
 }
 
 /**
@@ -97,4 +86,38 @@ function toTitleCase(str) {
     return str.toLowerCase().split(' ').map(function (word) {
         return (word.charAt(0).toUpperCase() + word.slice(1));
     }).join(' ');
+}
+
+/**
+ * 
+ * @param {*} error Thrown error
+ * @param {String} message Message to display before the error
+ * @param {Number} lines Number of lines to display
+ * @returns Formatted console error string
+ */
+function toError(error, message, lines) {
+    const alert = red.bold("[ERROR] ");
+    const err = error ? error.stack ? error.stack : error : "";
+
+    if (message && lines && err)
+        return alert + message + err.split("\n", lines).map(l => `\n        ${l}`).join("");
+    else if (message && err)
+        return alert + message + err.split("\n").map(l => `\n        ${l}`).join("");
+    else if (lines && err)
+        return alert + err.split("\n", lines).map(l => `${l}\n        `).join("");
+    else if (message)
+        return alert + message;
+    else return alert + "Unknown Error";
+}
+
+// EXPORT ALL FUNCTIONS
+module.exports = {
+    mainDir,
+    reSlash,
+    randomNum,
+    delay,
+    escapeRegex,
+    toTitleCase,
+    toError,
+    PG
 }

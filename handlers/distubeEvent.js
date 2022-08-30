@@ -19,7 +19,11 @@ if (process.env.musicRequestEditDelay) {
     settings = require('../config/distube.json');
 }
 
-module.exports = (client) => {
+/**
+ * 
+ * @param {*} client Discord client
+ */
+async function distubeEvent(client) {
     try {
         client.distube
             .on(`playSong`, async (queue, track) => {
@@ -695,3 +699,5 @@ module.exports = (client) => {
         }
     }
 };
+
+module.exports = { distubeEvent };

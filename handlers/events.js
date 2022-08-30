@@ -1,42 +1,61 @@
 const { Events } = require('../validation/eventNames');
-const { promisify } = require('util');
-const { glob } = require('glob');
-const PG = promisify(glob);
+const { loadFiles } = require('../system/fileLoader.js');
 const { cyanBright, greenBright, yellow, red, dim } = require('chalk');
 const { AsciiTable3 } = require('ascii-table3');
-const { mainDir } = require('../system/functions');
 
-module.exports = async (client) => {
+/**
+ * 
+ * @param {*} client Discord client
+ */
+async function loadEvents(client) {
     // Create table
     const Table = new AsciiTable3("EVENTS LOADED").setStyle('unicode-single')
-    .setAlignCenter(3).setAlignRight(1);
-    Table.setHeading("Category", "Name", "Status", "Description");
+        .setAlignCenter(3).setAlignRight(1);
+    Table.setHeading("Category", "Type", "Status", "Description");
+
+    await client.events.clear();
 
     // Require every file ending with .js in the events folder
-    (await PG(`${mainDir()}/events/*/*.js`)).map(async (file) => {
+    const Files = await loadFiles("events")
+
+    Files.forEach((file) => {
         const event = require(file);
         const L = file.split("/");
         const fileName = L[L.length - 1];
         const eventName = fileName.split(".")[0];
-        const eventCategory = L[L.length - 2];
-        const fileDir = eventCategory + `/` + fileName;
+        const category = L[L.length - 2];
+        const fileDir = category + `/` + fileName;
 
         // Log errors to table
-        if (!Events.includes(eventName)) {
-            await Table.addRow(dim(eventCategory), dim(eventName), red("MISSING"), `Invalid event name or missing: ${fileDir}`);
+        if (!Events.includes(event.name)) {
+            Table.addRow(dim(category), dim(event.name), red("MISSING"), `Invalid event name or missing: ${fileDir}`);
             return;
         }
 
         // Load the events
-        if (event.once) {
-            client.once(eventName, event.bind(null, client));
+        const execute = (...args) => event.run(client, ...args);
+        client.events.set(event.name, execute)
+
+        if (event.rest) {
+            if (event.once) {
+                client.rest.once(event.name, execute);
+            } else {
+                client.rest.on(event.name, execute);
+            }
         } else {
-            client.on(eventName, event.bind(null, client));
+            if (event.once) {
+                client.once(event.name, execute);
+            } else {
+                client.on(event.name, execute);
+            }
         }
 
         // Log success to table
-        await Table.addRow(eventCategory, eventName, greenBright("LOADED"), fileDir);
+        Table.addRow(category, event.name, greenBright("LOADED"), fileDir);
     });
+
 
     console.log(Table.toString()); // Log table to console
 }
+
+module.exports = { loadEvents };

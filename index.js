@@ -99,6 +99,7 @@ client.distube = new DisTube(client, {
 
 // Create client collections
 client.commands = new Collection();
+client.events = new Collection();
 
 client.distubeSettings = new Enmap({ name: "distubeSettings", dataDir: "./localDB/settings" });
 client.infos = new Enmap({ name: "infos", dataDir: "./localDB/infos" });
@@ -106,9 +107,12 @@ client.autoresume = new Enmap({ name: "autoresume", dataDir: "./localDB/infos" }
 client.maps = new Map();
 
 // Load the Handlers
-["events", "commands", "distubeEvent"].forEach(h => {
-    require(`./handlers/${h}`)(client);
-})
+const { loadEvents } = require('./handlers/events');
+const { distubeEvent } = require('./handlers/distubeEvent');
+const handlers = [loadEvents, distubeEvent]
 
 // Start the Bot
+handlers.forEach(handler => {
+    handler(client);
+});
 client.login(Token);
