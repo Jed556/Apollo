@@ -94,8 +94,6 @@ module.exports = {
             );
         }
 
-        // !! v14 has its own permission safeguard !! //
-
         // ---------- MIGHT ADD SOON ---------- //
         // // If Command has specific needed roles return error
         // if (command.requiredroles && command.requiredroles.length > 0 && interaction.member.roles.cache.size > 0 && !interaction.member.roles.cache.some(r => command.requiredroles.includes(r.id))) {
@@ -135,8 +133,8 @@ module.exports = {
 
             interaction.channel.send({
                 embeds: [errorEmb
-                    .setFooter({ text: "/" + command.name, iconURL: client.user.displayAvatarURL() })
-                    .setDescription(`**An error occured while running command \`${command.name}\`**\`\`\`${e.stack ? e.stack : e}\`\`\``)
+                    .setFooter({ text: "/" + command.data.name, iconURL: client.user.displayAvatarURL() })
+                    .setDescription(`**An error occured while running command \`${command.data.name}\`**\`\`\`${e.stack ? e.stack : e}\`\`\``)
                 ],
                 ephemeral: true
             });
@@ -144,7 +142,7 @@ module.exports = {
                 user.send({
                     embeds: [errorEmb
                         .setFooter({ text: `${guild.name} : ${channel.name}`, iconURL: guild.iconURL({ dynamic: true }) })
-                        .setDescription(`**An error occured while running command \`${command.name}\`\nat ${guild.name} (\`${guildId}\`) - ${channel.name} (\`${channel.id}\`) **\`\`\`${e.stack ? e.stack : e}\`\`\``)
+                        .setDescription(`**An error occured while running command \`${command.data.name}\`\nat ${guild.name} (\`${guildId}\`) - ${channel.name} (\`${channel.id}\`) **\`\`\`${e.stack ? e.stack : e}\`\`\``)
                     ]
                 });
             });
