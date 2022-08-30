@@ -1,15 +1,16 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "addend-song",
-    description: "Adds current song back to the end of the queue",
+    data: new SlashCommandBuilder()
+        .setName("addend-song")
+        .setDescription("Adds current song back to the end of the queue")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false),
     help: "/addend-song",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [],
     category: "music",
 
     run: async (client, interaction) => {

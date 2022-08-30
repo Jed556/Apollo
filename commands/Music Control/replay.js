@@ -1,15 +1,16 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "replay-song",
-    description: "Replays the current song",
+    data: new SlashCommandBuilder()
+        .setName("replay-song")
+        .setDescription("Replays the current song")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false),
     help: "/replay-song",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [],
     category: "music",
 
     run: async (client, interaction) => {

@@ -1,60 +1,51 @@
-const { SlashCommandBuilder, PermissionFlagsBits, ChannelType, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, } = require("discord.js");
+const { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, } = require("discord.js");
 const ticketSchema = require("../../schemas/Ticket");
 
 module.exports = {
-    name: "ticket",
-    description: "Configure ticket system",
-    help: "/ticket setup [channel] [category] [logging_channel] [support_role] (description) | /ticket delete",
+    data: new SlashCommandBuilder()
+        .setName("ticket")
+        .setDescription("Configure the ticket system")
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
+        .setDMPermission(false)
+        .addSubcommand(subcommand => subcommand
+            .setName("setup")
+            .setDescription("Setup the ticket system")
+            .addChannelOption(option => option
+                .setName("channel")
+                .setDescription("Channel to setup ticket")
+                .setRequired(true)
+                .addChannelTypes(ChannelType.GuildText)
+            )
+            .addChannelOption(option => option
+                .setName("category")
+                .setDescription("Channel's category")
+                .setRequired(true)
+                .addChannelTypes(ChannelType.GuildCategory)
+            )
+            .addChannelOption(option => option
+                .setName("logging")
+                .setDescription("Logs a ticket after its been closed")
+                .setRequired(true)
+                .addChannelTypes(ChannelType.GuildText)
+            )
+            .addRoleOption(option => option
+                .setName("support")
+                .setDescription("The role to assign to support tickets.")
+                .setRequired(true)
+            )
+            .addStringOption(option => option
+                .setName("description")
+                .setDescription("Ticket's description")
+                .setRequired(false)
+            )
+        )
+        .addSubcommand(subcommand => subcommand
+            .setName("delete")
+            .setDescription("Deletes ticket configurtion")
+        ),
+    help: "/ticket setup [channel] [category] [logging] [support] (description) | /ticket delete",
     cooldown: 2,
-    permissions: ["MANAGE_CHANNELS"],
     allowedUIDs: [],
-    options: [
-        {
-            name: "setup",
-            description: "Setup the ticket system",
-            type: 1,
-            options: [
-                {
-                    name: "channel",
-                    description: "Channel to setup ticket",
-                    type: 7,
-                    channelTypes: [0],
-                    required: true
-                },
-                {
-                    name: "category",
-                    description: "Channel's category",
-                    type: 7,
-                    channelTypes: [4],
-                    required: true
-                },
-                {
-                    name: "logging",
-                    description: "Channel to log tickets",
-                    type: 7,
-                    channelTypes: [0],
-                    required: true
-                },
-                {
-                    name: "support",
-                    description: "Role for ticket support",
-                    type: 8,
-                    required: true
-                },
-                {
-                    name: "description",
-                    description: "Ticket's description",
-                    type: 3,
-                    required: false
-                },
-            ]
-        },
-        {
-            name: "delete",
-            description: "Deletes ticket configurtion",
-            type: 1,
-        }
-    ],
 
     run: async (client, interaction) => {
         const ticketSystem = await ticketSchema.findOne({
@@ -66,7 +57,7 @@ module.exports = {
             const category = interaction.options.getChannel("category");
             const ticketlog = interaction.options.getChannel("logging");
             const supportRole = interaction.options.getRole("support");
-            const description = interaction.options.getString("description") || "Click the `Create Ticket` button below to create a ticket and out support team will be right with you!";
+            const description = interaction.options.getString("description") || "Click the `Create Ticket` button below to create a ticket.";
 
             if (ticketSystem) {
                 ticketSystem.categoryId = category.id;

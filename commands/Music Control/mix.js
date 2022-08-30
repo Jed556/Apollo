@@ -1,21 +1,18 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "mix",
-    description: "Plays a defined mix",
-    help: "/mix [playlist]",
-    cooldown: 2,
-    permissions: [],
-    allowedUIDs: [],
-    options: [
-        {
-            name: "playlist",
-            description: "Music mix",
-            type: 3,
-            required: true,
-            choices: [
+    data: new SlashCommandBuilder()
+        .setName("mix")
+        .setDescription("Plays a defined mix")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName("playlist")
+            .setDescription("Music mix")
+            .setRequired(true)
+            .addChoices(
                 { name: "Blues Mix", value: "Blues" },
                 { name: "Charts Mix", value: "Charts" },
                 { name: "Chill Mix", value: "Chill" },
@@ -30,10 +27,12 @@ module.exports = {
                 { name: "Pop Mix", value: "Pop" },
                 { name: "Remixes Mix", value: "Remixes" },
                 { name: "Rock Mix", value: "Rock" },
-                { name: "Strange-Fruits Mix", value: "Strange Fruits" },
-            ]
-        }
-    ],
+                { name: "Strange-Fruits Mix", value: "Strange Fruits" }
+            )
+        ),
+    help: "/mix [playlist]",
+    cooldown: 2,
+    allowedUIDs: [],
     category: "music",
 
     run: async (client, interaction) => {

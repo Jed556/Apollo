@@ -1,32 +1,30 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const emb = require('../../config/embed.json');
 
 module.exports = {
-    name: "clear",
-    description: "Bulk deletes messages",
+    data: new SlashCommandBuilder()
+        .setName("clear")
+        .setDescription("Bulk deletes messages in the past 2 weeks")
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
+        .setDMPermission(false)
+        .addIntegerOption(option => option
+            .setName("amount")
+            .setDescription("Amount of messages to delete")
+            .setRequired(true)
+        )
+        .addUserOption(option => option
+            .setName("user")
+            .setDescription("Clear mentioned user's messages")
+            .setRequired(false)
+        ),
     help: "/clear [amount] (user)",
     cooldown: 5,
-    permissions: ["MANAGE_MESSAGES"],
     allowedUIDs: [],
-    options: [
-        {
-            name: "amount",
-            description: "Amount of messages to delete",
-            type: 4,
-            required: false,
-        },
-        {
-            name: "user",
-            description: "Clear mentioned user's messages",
-            type: 6,
-            required: false
-        }
-    ],
 
     run: async (client, interaction) => {
         const { channel, options } = interaction;
         const Amount = options.getInteger("amount");
-        const Target = options.getUser("user");
+        const Target = options.getUser("user") || null;
         const Messages = channel.messages.fetch();
 
         var embed = new EmbedBuilder()

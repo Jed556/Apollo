@@ -1,4 +1,4 @@
-const { EmbedBuilder, AttachmentBuilder } = require('discord.js')
+const { EmbedBuilder, SlashCommandBuilder, AttachmentBuilder } = require('discord.js')
 const emb = require('../../config/embed.json');
 const { connection } = require('mongoose');
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
@@ -17,13 +17,14 @@ if (process.env.updateInterval) {
 }
 
 module.exports = {
-    name: "status",
-    description: "Bot Status Information",
-    help: "/status",
+    data: new SlashCommandBuilder()
+        .setName("status")
+        .setDescription("Bot Status Information")
+        .setDefaultMemberPermissions()
+        .setDMPermission(true),
+    help: "/status [message]",
     cooldown: 10,
-    permissions: [],
     allowedUIDs: [],
-    options: [],
 
     run: async (client, interaction) => {
         // Find matching database data

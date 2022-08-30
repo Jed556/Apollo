@@ -1,15 +1,16 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "addrelated-song",
-    description: "Adds a similar/related song to the current song",
+    data: new SlashCommandBuilder()
+        .setName("addrelated-song")
+        .setDescription("Adds a similar/related song to the current song")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false),
     help: "/addrelated-song",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [],
     category: "music",
 
     run: async (client, interaction) => {

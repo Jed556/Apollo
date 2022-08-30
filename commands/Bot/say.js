@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 
 // Variable checks (Use .env if present)
@@ -12,20 +12,19 @@ if (process.env.ownerID) {
 }
 
 module.exports = {
-    name: "say",
-    description: "Says something to the current channel",
-    help: "/restart [message]",
+    data: new SlashCommandBuilder()
+        .setName("say")
+        .setDescription("Says something to the current channel")
+        .setDefaultMemberPermissions()
+        .setDMPermission(true)
+        .addStringOption(option => option
+            .setName("message")
+            .setDescription("Message to say")
+            .setRequired(true)
+        ),
+    help: "/say [message]",
     cooldown: 1,
-    permissions: [],
     allowedUIDs: [OwnerID],
-    options: [
-        {
-            name: "message",
-            description: "Message to say",
-            type: 3,
-            required: true,
-        }
-    ],
 
     run: async (client, interaction) => {
         const message = interaction.options.getString("message");

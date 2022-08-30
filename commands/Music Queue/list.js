@@ -1,15 +1,16 @@
-const { EmbedBuilder, SelectMenuBuilder, ActionRowBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, SelectMenuBuilder, ActionRowBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "list-queue",
-    description: "Lists the current music queue",
-    help: "list-queue",
-    cooldown: 2,
-    permissions: [],
+    data: new SlashCommandBuilder()
+        .setName("list-queue")
+        .setDescription("Lists the current music queue")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false),
+    help: "/list-queue",
+    cooldown: 5,
     allowedUIDs: [],
-    options: [],
     category: "music",
 
     run: async (client, interaction) => {

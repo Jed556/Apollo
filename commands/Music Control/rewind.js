@@ -1,22 +1,21 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "rewind-song",
-    description: "Rewinds for X seconds",
+    data: new SlashCommandBuilder()
+        .setName("rewind-song")
+        .setDescription("Rewinds for X seconds")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false)
+        .addNumberOption(option => option
+            .setName("seconds")
+            .setDescription("Number of seconds to rewind")
+            .setRequired(true)
+        ),
     help: "/rewind-song [seconds]",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [
-        {
-            name: "seconds",
-            description: "Number of seconds to rewind",
-            type: 4,
-            required: true,
-        }
-    ],
     category: "music",
 
     run: async (client, interaction) => {

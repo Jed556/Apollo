@@ -1,15 +1,16 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "autoplay-song",
-    description: "Plays a song related to current track after it finishes (Toggles autoplay)",
+    data: new SlashCommandBuilder()
+        .setName("autoplay-song")
+        .setDescription("Plays a song related to current track after it finishes (Toggles autoplay)")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false),
     help: "/autoplay-song",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [],
     category: "music",
 
     run: async (client, interaction) => {

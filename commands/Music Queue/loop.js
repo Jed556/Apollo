@@ -1,27 +1,25 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "loop-queue",
-    description: "Set or disable a loop",
-    help: "loop-queue [loop]",
+    data: new SlashCommandBuilder()
+        .setName("loop-queue")
+        .setDescription("Set or disable a loop")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false)
+        .addNumberOption(option => option
+            .setName("loop")
+            .setDescription("Toggle between loops")
+            .addChoices(
+                { name: "Disable", value: 0 },
+                { name: "Song Loop", value: 1 },
+                { name: "Queue Loop", value: 2 }
+            )
+        ),
+    help: "/loop-queue",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [
-        {
-            name: "loop",
-            description: "Loop to disable or enable",
-            type: 3,
-            required: true,
-            choices: [
-                { name: "Disable", value: "0" },
-                { name: "Song Loop", value: "1" },
-                { name: "Queue Loop", value: "2" },
-            ]
-        }
-    ],
     category: "music",
 
     run: async (client, interaction) => {
@@ -34,7 +32,7 @@ module.exports = {
 
         // Get selected loop and current loop
         let oldLoop = newQueue.repeatMode;
-        let loop = Number(options.getString("loop"));
+        let loop = options.getNumber("loop");
 
         // Set embed template
         let embed = new EmbedBuilder()

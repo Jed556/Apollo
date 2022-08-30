@@ -1,27 +1,25 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 
 module.exports = {
-    name: "remind",
-    description: "Display mentioned user or command user's information",
+    data: new SlashCommandBuilder()
+        .setName("remind")
+        .setDescription("Reminds user when timer finishes")
+        .setDefaultMemberPermissions()
+        .setDMPermission(true)
+        .addIntegerOption(option => option
+            .setName("time")
+            .setDescription("Remind after x mins")
+            .setRequired(true)
+        )
+        .addStringOption(option => option
+            .setName("description")
+            .setDescription("Description of reminder")
+            .setRequired(false)
+        ),
     help: "/remind [time] (description)",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [
-        {
-            name: "time",
-            description: "Remind after x mins",
-            type: 4,
-            required: true
-        },
-        {
-            name: "description",
-            description: "Description of reminder",
-            type: 3,
-            required: false
-        }
-    ],
 
     run: async (client, interaction) => {
         const { member } = interaction;

@@ -1,22 +1,21 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "seek-song",
-    description: "Jumps to a specific position of the song",
+    data: new SlashCommandBuilder()
+        .setName("seek-song")
+        .setDescription("Jumps to a specific position of the song")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false)
+        .addNumberOption(option => option
+            .setName("seconds")
+            .setDescription("Position to seek in seconds")
+            .setRequired(true)
+        ),
     help: "/seek-song [seconds]",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [
-        {
-            name: "seconds",
-            description: "Position to seek in seconds",
-            type: 4,
-            required: true,
-        }
-    ],
     category: "music",
 
     run: async (client, interaction) => {

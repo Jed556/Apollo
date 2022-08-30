@@ -1,16 +1,17 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const emoji = require('../../config/emojis.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "grab-song",
-    description: "Grabs the current song and sends it to your DMs",
+    data: new SlashCommandBuilder()
+        .setName("grab-song")
+        .setDescription("Grabs the current song and sends it to your DMs")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false),
     help: "/grab-song",
-    cooldown: 1,
-    permissions: [],
+    cooldown: 2,
     allowedUIDs: [],
-    options: [],
     category: "music",
 
     run: async (client, interaction) => {

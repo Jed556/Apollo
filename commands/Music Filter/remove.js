@@ -1,23 +1,22 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const FiltersSettings = require('../../config/filters.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "remove-filter",
-    description: "Removes a song filter",
+    data: new SlashCommandBuilder()
+        .setName("remove-filter")
+        .setDescription("Removes song filter/s")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName("filters")
+            .setDescription("Filters to remove (Use spaces for multiple filters)")
+            .setRequired(true)
+        ),
     help: "/remove-filter [filters]",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [
-        {
-            name: "filters",
-            description: "Filters to remove (Use spaces for multiple filters)",
-            type: 3,
-            required: true,
-        }
-    ],
     category: "music",
 
     run: async (client, interaction) => {

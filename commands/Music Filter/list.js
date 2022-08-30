@@ -1,16 +1,17 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const FiltersSettings = require('../../config/filters.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "list-filter",
-    description: "Lists all active and possible filters",
+    data: new SlashCommandBuilder()
+        .setName("list-filter")
+        .setDescription("Lists all active and possible filters")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false),
     help: "/list-filter",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [],
     category: "music",
 
     run: async (client, interaction) => {

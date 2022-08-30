@@ -1,15 +1,16 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "previous-song",
-    description: "Plays the previous song",
+    data: new SlashCommandBuilder()
+        .setName("previous-song")
+        .setDescription("Plays the previous song")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false),
     help: "/previous-song",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [],
     category: "music",
 
     run: async (client, interaction) => {

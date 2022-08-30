@@ -1,23 +1,22 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const emoji = require('../../config/emojis.json');
 const moment = require('moment');
 
 module.exports = {
-    name: "info-user",
-    description: "Display mentioned user or command user's information",
-    help: "/info-user (user)",
+    data: new SlashCommandBuilder()
+        .setName("user-info")
+        .setDescription("Displays mentioned user or your information")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false)
+        .addUserOption(option => option
+            .setName("user")
+            .setDescription("User to check")
+            .setRequired(false)
+        ),
+    help: "/user-info (user)",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [
-        {
-            name: "user",
-            description: "User to check",
-            type: 6,
-            required: false
-        }
-    ],
 
     run: async (client, interaction) => {
         const { member } = interaction;

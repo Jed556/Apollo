@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const DB = require('../../schemas/Status');
 
@@ -15,13 +15,14 @@ if (process.env.ownerID) {
 }
 
 module.exports = {
-    name: "maintenance",
-    description: "Toggles maintenance mode",
+    data: new SlashCommandBuilder()
+        .setName("maintenance")
+        .setDescription("Toggles maintenance mode")
+        .setDefaultMemberPermissions()
+        .setDMPermission(true),
     help: "/maintenance",
     cooldown: 3,
-    permissions: [],
     allowedUIDs: [OwnerID, ...AdminIDs],
-    options: [],
 
     run: async (client, interaction) => {
         await interaction.deferReply();

@@ -1,22 +1,21 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "forward-song",
-    description: "Forwards for X Seconds",
+    data: new SlashCommandBuilder()
+        .setName("forward-song")
+        .setDescription("Forwards for X Seconds")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false)
+        .addNumberOption(option => option
+            .setName("seconds")
+            .setDescription("Number of seconds to go forward")
+            .setRequired(true)
+        ),
     help: "/forward-song [seconds]",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [
-        {
-            name: "seconds",
-            description: "Number of seconds to go forward",
-            type: 4,
-            required: true,
-        }
-    ],
     category: "music",
 
     run: async (client, interaction) => {

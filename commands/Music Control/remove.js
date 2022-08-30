@@ -1,28 +1,26 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "remove-song",
-    description: "Removes song(s)",
+    data: new SlashCommandBuilder()
+        .setName("remove-song")
+        .setDescription("Removes song(s)")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false)
+        .addNumberOption(option => option
+            .setName("song")
+            .setDescription("Song index to remove")
+            .setRequired(true)
+        )
+        .addNumberOption(option => option
+            .setName("amount")
+            .setDescription("Number of songs to remove from given index (Default: 1)")
+            .setRequired(true)
+        ),
     help: "/remove-song [song] (amount)",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [
-        {
-            name: "song",
-            description: "Song index to remove",
-            type: 4,
-            required: true
-        },
-        {
-            name: "amount",
-            description: "Number of songs to remove from given index (Default: 1)",
-            type: 4,
-            required: false
-        }
-    ],
     category: "music",
 
     run: async (client, interaction) => {

@@ -1,28 +1,26 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "move-song",
-    description: "Moves one Song to another Place",
+    data: new SlashCommandBuilder()
+        .setName("move-song")
+        .setDescription("Moves one Song to another Place")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false)
+        .addIntegerOption(option => option
+            .setName("index")
+            .setDescription("Song index to move")
+            .setRequired(true)
+        )
+        .addIntegerOption(option => option
+            .setName("position")
+            .setDescription("Position to move the song (1 == after current, -1 == Top)")
+            .setRequired(true)
+        ),
     help: "/move-song [index] [position]",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [
-        {
-            name: "index",
-            description: "Song index to remove",
-            type: 4,
-            required: true,
-        },
-        {
-            name: "position",
-            description: "Position to move the song (1 == after current, -1 == Top)",
-            type: 4,
-            required: true,
-        }
-    ],
     category: "music",
 
     run: async (client, interaction) => {

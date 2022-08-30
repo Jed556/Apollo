@@ -1,32 +1,30 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "play",
-    description: "Plays a song/playlist in your voice channel",
-    help: "/play [song]",
-    cooldown: 2,
-    permissions: [],
-    allowedUIDs: [],
-    options: [
-        {
-            name: "song",
-            description: "Song to play",
-            type: 3,
-            required: true,
-        },
-        {
-            name: "mode",
-            description: "Skip: Skips the current song | Top: Adds the song to the top",
-            type: 3,
-            required: false,
-            choices: [
+    data: new SlashCommandBuilder()
+        .setName("play")
+        .setDescription("Plays a song/playlist in your voice channel")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName("song")
+            .setDescription("Song to play")
+            .setRequired(true)
+        )
+        .addStringOption(option => option
+            .setName("mode")
+            .setDescription("Skip: Skips the current song | Top: Adds the song to the top")
+            .setRequired(false)
+            .addChoices(
                 { name: "Skip", value: "skip" },
-                { name: "Top", value: "top" },
-            ]
-        }
-    ],
+                { name: "Top", value: "top" }
+            )
+        ),
+    help: "/play [song] (mode)",
+    cooldown: 2,
+    allowedUIDs: [],
     category: "music",
 
     run: async (client, interaction) => {

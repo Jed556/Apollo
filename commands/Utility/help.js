@@ -1,15 +1,16 @@
-const { EmbedBuilder, ActionRowBuilder, SelectMenuBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, ActionRowBuilder, SelectMenuBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const fs = require('fs');
 
 module.exports = {
-    name: "help",
-    description: "Lists all commands",
+    data: new SlashCommandBuilder()
+        .setName("help")
+        .setDescription("Lists all commands")
+        .setDefaultMemberPermissions()
+        .setDMPermission(true),
     help: "/help",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [],
 
     run: async (client, interaction) => {
         const directories = await fs.readdirSync('commands');

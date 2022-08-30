@@ -1,16 +1,17 @@
 
-const { EmbedBuilder, ButtonBuilder, ActionRowBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder, ButtonBuilder, ActionRowBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const math = require('mathjs');
 
 module.exports = {
-    name: "calc",
-    description: "Runs an interactive calculator",
+    data: new SlashCommandBuilder()
+        .setName("calc")
+        .setDescription("Runs an interactive calculator")
+        .setDefaultMemberPermissions()
+        .setDMPermission(true),
     help: "/calc",
     cooldown: 60,
-    permissions: [],
     allowedUIDs: [],
-    options: [],
 
     run: async (client, interaction) => {
         let button = new Array([], [], [], [], []);

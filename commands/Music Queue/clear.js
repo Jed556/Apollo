@@ -1,15 +1,16 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "clear-queue",
-    description: "Clears the music queue",
+    data: new SlashCommandBuilder()
+        .setName("clear-queue")
+        .setDescription("Clears the music queue")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false),
     help: "/clear-queue",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [],
     category: "music",
 
     run: async (client, interaction) => {

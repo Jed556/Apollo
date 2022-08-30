@@ -1,15 +1,16 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "shuffle-queue",
-    description: "Shuffles (Mixes) the queue",
+    data: new SlashCommandBuilder()
+        .setName("shuffle-queue")
+        .setDescription("Shuffles (Mixes) the queue")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false),
     help: "/shuffle-queue",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [],
     category: "music",
 
     run: async (client, interaction) => {

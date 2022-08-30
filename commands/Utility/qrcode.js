@@ -1,22 +1,21 @@
-const { AttachmentBuilder } = require('discord.js');
+const { AttachmentBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const qrc = require('qrcode')
 
 module.exports = {
-    name: "qrcode",
-    description: "Create a QR code.",
+    data: new SlashCommandBuilder()
+        .setName("qrcode")
+        .setDescription("Creates QR code from string")
+        .setDefaultMemberPermissions()
+        .setDMPermission(true)
+        .addStringOption(option => option
+            .setName("text")
+            .setDescription("Link/text to convert into QR code")
+            .setRequired(true)
+        ),
     help: "/qrcode [text]",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [
-        {
-            name: "text",
-            description: "Link/text to convert into QR code",
-            type: 3,
-            required: true
-        }
-    ],
 
     run: async (client, interaction) => {
         const convert = interaction.options.getString("text");

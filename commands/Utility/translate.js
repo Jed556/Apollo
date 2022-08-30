@@ -1,35 +1,32 @@
-const { EmbedBuilder, } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const translate = require('translate-google');
 const ISO6391 = require('iso-639-1');
 
 module.exports = {
-    name: "translate",
-    description: "Translates a text",
+    data: new SlashCommandBuilder()
+        .setName("translate")
+        .setDescription("Translates a text")
+        .setDefaultMemberPermissions()
+        .setDMPermission(true)
+        .addStringOption(option => option
+            .setName("text")
+            .setDescription("Text to translate")
+            .setRequired(true)
+        )
+        .addStringOption(option => option
+            .setName("to")
+            .setDescription("Language to translate the text into")
+            .setRequired(true)
+        )
+        .addStringOption(option => option
+            .setName("from")
+            .setDescription("Language to translate the text from")
+            .setRequired(true)
+        ),
     help: "/translate [text] [to] (from)",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [
-        {
-            name: "text",
-            description: "Text to translate",
-            type: 3,
-            required: true,
-        },
-        {
-            name: "to",
-            description: "Language to translate the text into",
-            type: 3,
-            required: true,
-        },
-        {
-            name: "from",
-            description: "Language to translate the text from",
-            type: 3,
-            required: false,
-        }
-    ],
 
     run: async (client, interaction) => {
         await interaction.deferReply({ content: "Translating", ephemeral: true });

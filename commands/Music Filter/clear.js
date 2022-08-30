@@ -1,15 +1,16 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "clear-filter",
-    description: "Clears all song filters",
+    data: new SlashCommandBuilder()
+        .setName("clear-filter")
+        .setDescription("Clears all song filters")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false),
     help: "/clear-filter",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [],
     category: "music",
 
     run: async (client, interaction) => {

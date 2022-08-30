@@ -1,15 +1,16 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "skip-song",
-    description: "Skips the current song",
+    data: new SlashCommandBuilder()
+        .setName("skip-song")
+        .setDescription("Skips the current song")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false),
     help: "/skip-song",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [],
     category: "music",
 
     run: async (client, interaction) => {

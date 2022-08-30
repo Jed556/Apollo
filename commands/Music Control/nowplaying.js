@@ -1,16 +1,17 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const emoji = require('../../config/emojis.json');
 const { distubeValidate } = require('../../system/distubeFunctions');
 
 module.exports = {
-    name: "now-playing",
-    description: "Displays the current playing song's info",
-    help: "/now-playing",
+    data: new SlashCommandBuilder()
+        .setName("now-playing")
+        .setDescription("Displays the current playing song's info")
+        .setDefaultMemberPermissions()
+        .setDMPermission(false),
+    help: "/grab-song",
     cooldown: 2,
-    permissions: [],
     allowedUIDs: [],
-    options: [],
     category: "music",
 
     run: async (client, interaction) => {

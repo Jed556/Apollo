@@ -1,38 +1,35 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const emb = require('../../config/embed.json');
 const weather = require('weather-js');
 
 module.exports = {
-    name: "weather",
-    description: "Get weather info",
-    help: "/weather",
-    cooldown: 5,
-    permissions: [],
-    allowedUIDs: [],
-    options: [
-        {
-            name: "city",
-            description: "City to check weather status",
-            type: 3,
-            required: true
-        },
-        {
-            name: "country",
-            description: "City to check weather status",
-            type: 3,
-            required: true
-        },
-        {
-            name: "degree",
-            description: "Temperature value",
-            type: 3,
-            required: false,
-            choices: [
+    data: new SlashCommandBuilder()
+        .setName("weather")
+        .setDescription("Get weather info")
+        .setDefaultMemberPermissions()
+        .setDMPermission(true)
+        .addStringOption(option => option
+            .setName("city")
+            .setDescription("City to check weather status")
+            .setRequired(true)
+        )
+        .addStringOption(option => option
+            .setName("country")
+            .setDescription("Country to check weather status")
+            .setRequired(true)
+        )
+        .addStringOption(option => option
+            .setName("degree")
+            .setDescription("Temperature value")
+            .setRequired(true)
+            .addChoices(
                 { name: "C", value: "C" },
                 { name: "F", value: "F" }
-            ]
-        }
-    ],
+            )
+        ),
+    help: "/weather [city] [country] (degree)",
+    cooldown: 5,
+    allowedUIDs: [],
 
     run: async (client, interaction) => {
         const city = interaction.options.getString("city");
