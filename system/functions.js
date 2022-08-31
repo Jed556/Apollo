@@ -96,8 +96,9 @@ function toTitleCase(str) {
  * @returns Formatted console error string
  */
 function toError(error, message, lines) {
-    const alert = red.bold("[ERROR] ");
-    const err = error ? error.stack ? error.stack : error : "";
+    const
+        alert = red.bold("[ERROR] "),
+        err = error ? error.stack ? error.stack : error : "";
 
     if (message && lines && err)
         return alert + message + err.split("\n", lines).map(l => `\n        ${l}`).join("");

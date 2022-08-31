@@ -29,7 +29,7 @@ if (!Database)
 
 // Get the process memory usage (in MB)
 async function getMemoryUsage() {
-    return process.memoryUsage().heapUsed / (1024 * 1024).toFixed(2);
+    return (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
 }
 
 module.exports = {

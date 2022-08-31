@@ -20,7 +20,7 @@ module.exports = {
                         client.user.setStatus("online");
                         const Guilds = client.guilds.cache.size;
                         const Users = client.users.cache.filter(user => !user.bot).size;
-                        let display = randomNum(1, 5)
+                        let display = 4
 
                         switch (display) {
                             // Set status as guild count
@@ -63,9 +63,9 @@ module.exports = {
                             // Set status as RAM usage
                             case 4:
                                 // Calculate memory usage
-                                const memPerc = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1);
+                                const memUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1);
 
-                                client.user.setActivity(`RAM: ${memPerc}%`,
+                                client.user.setActivity(`RAM: ${memUsage}MB`,
                                     { type: ActivityType.Watching });
                                 break;
 

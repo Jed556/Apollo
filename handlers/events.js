@@ -34,7 +34,7 @@ async function loadEvents(client) {
 
         // Load the events
         const execute = (...args) => event.run(client, ...args);
-        client.events.set(event.name, execute)
+        client.events.set(event.name, execute);
 
         if (event.rest) {
             if (event.once) {

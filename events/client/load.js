@@ -24,7 +24,7 @@ module.exports = {
     run: async (client) => {
         try {
             // Load commands
-            await loadCommands(client)
+            await loadCommands(client);
 
             // Check the total number of commands
             let check = [];

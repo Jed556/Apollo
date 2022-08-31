@@ -1,4 +1,4 @@
-const { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, } = require("discord.js");
+const { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, } = require('discord.js');
 const ticketSchema = require("../../schemas/Ticket");
 
 try {

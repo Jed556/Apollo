@@ -107,9 +107,10 @@ client.autoresume = new Enmap({ name: "autoresume", dataDir: "./localDB/infos" }
 client.maps = new Map();
 
 // Load the Handlers
-const { loadEvents } = require('./handlers/events');
-const { distubeEvent } = require('./handlers/distubeEvent');
-const handlers = [loadEvents, distubeEvent]
+const
+    { loadEvents } = require('./handlers/events'),
+    { distubeEvent } = require('./handlers/distubeEvent'),
+    handlers = [loadEvents, distubeEvent];
 
 // Start the Bot
 handlers.forEach(handler => {

@@ -3,7 +3,7 @@ const { PG, mainDir } = require('./functions');
 /**
  * 
  * @param {String} dirName Name of directory to load files
- * @returns Files in directory (JavaScript)
+ * @returns JavaScript files in directory
  */
 async function loadFiles(dirName) {
     const Files = await PG(`${mainDir()}/${dirName}/**/*.js`);
@@ -11,4 +11,4 @@ async function loadFiles(dirName) {
     return Files
 }
 
-module.exports = { loadFiles }
+module.exports = { loadFiles };

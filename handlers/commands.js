@@ -5,19 +5,17 @@ const { loadFiles } = require('../system/fileLoader');
 
 // Variable checks (Use .env if present)
 require('dotenv').config();
-let Token, BotID, GuildID, LoadGlobal, DefaultCooldown;
-if (process.env.token && process.env.guildID && process.env.botID && process.env.loadGlobal && process.env.defaultCooldown) {
+let Token, BotID, GuildID, DefaultCooldown;
+if (process.env.token && process.env.guildID && process.env.botID && process.env.defaultCooldown) {
     Token = process.env.token;
     BotID = process.env.botID;
     GuildID = process.env.guildID;
-    LoadGlobal = process.env.loadGlobal;
     DefaultCooldown = process.env.defaultCooldown;
 } else {
-    const { token, botID, guildID, loadGlobal, defaultCooldown } = require('../config/client.json');
+    const { token, botID, guildID, defaultCooldown } = require('../config/client.json');
     Token = token;
     BotID = botID;
     GuildID = guildID;
-    LoadGlobal = loadGlobal;
     DefaultCooldown = defaultCooldown;
 }
 

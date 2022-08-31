@@ -2,27 +2,22 @@ const { EmbedBuilder } = require('discord.js');
 const emb = require('../config/embed.json');
 const { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk');
 
-// EXPORT ALL FUNCTIONS
-module.exports = {
-    check_if_dj,
-    distubeValidate
-}
-
 /**
  * 
  * @param {*} interaction Command interaction
  * @param {*} newQueue Music queue
  * @param {Array} checks Checks to run ("channel", "userLimit", "playing", "previous", "DJ", "skip", "all")
- * @returns response to interaction
+ * @returns Response to interaction
  */
 function distubeValidate(interaction, newQueue, checks, args) {
     const checksArray = ["channel", "userLimit", "playing", "previous", "DJ", "skip", "all"]
     if (!checksArray.some(c => checks.includes(c)))
         return console.log(red.bold("[ERROR]") + ` Variable ${bold("checks")} doesn't include any of ${checksArray.map(c => `\"${c}\"`).join(", ")}`);
 
-    const { client, member, channelId, guildId } = interaction;
-    const { guild } = member;
-    const { channel } = member.voice;
+    const
+        { client, member, channelId, guildId } = interaction,
+        { guild } = member,
+        { channel } = member.voice;
 
     if (checks.includes("channel" || "all"))
         if (!channel) {
@@ -160,4 +155,10 @@ function check_if_dj(client, member, song) {
     //if he is a dj or admin, then return false, which will continue the cmd
     else
         return false;
+}
+
+// EXPORT ALL FUNCTIONS
+module.exports = {
+    check_if_dj,
+    distubeValidate
 }

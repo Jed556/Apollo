@@ -1,5 +1,4 @@
 const { Schema, model } = require('mongoose');
-const { } = require('../config/distube.json')
 
 module.exports = model("Distube", new Schema({
     _id: {
