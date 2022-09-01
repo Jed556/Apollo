@@ -1,9 +1,11 @@
-const { EmbedBuilder, SlashCommandBuilder, AttachmentBuilder } = require('discord.js')
-const emb = require('../../config/embed.json');
-const { connection } = require('mongoose');
-const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
-const DB = require('../../schemas/Status');
-const moment = require('moment');
+const
+    { EmbedBuilder, SlashCommandBuilder, AttachmentBuilder } = require('discord.js'),
+    { toError } = require('../../system/functions'),
+    { ChartJSNodeCanvas } = require('chartjs-node-canvas'),
+    { connection } = require('mongoose'),
+    moment = require('moment'),
+    DB = require('../../schemas/Status'),
+    emb = require('../../config/embed.json');
 require('moment-duration-format');
 
 // Variable checks (Use .env if present)
@@ -208,7 +210,7 @@ try {
             });
         }
     }
-} catch (e) { return e }
+} catch (e) { toError(e) }
 
 function switchTo(val) {
     var status = " ";

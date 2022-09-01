@@ -1,5 +1,7 @@
-const { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const emb = require('../../config/embed.json');
+const
+    { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits } = require('discord.js'),
+    { toError } = require('../../system/functions'),
+    emb = require('../../config/embed.json');
 
 try {
     module.exports = {
@@ -110,4 +112,4 @@ try {
             }
         }
     }
-} catch (e) { }
+} catch (e) { toError(e) }

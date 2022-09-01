@@ -1,7 +1,9 @@
-const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
-const emb = require('../../config/embed.json');
-const FiltersSettings = require('../../config/filters.json');
-const { distubeValidate } = require('../../system/distubeFunctions');
+const
+    { EmbedBuilder, SlashCommandBuilder } = require('discord.js'),
+    { distubeValidate } = require('../../system/distubeFunctions'),
+    { toError } = require('../../system/functions'),
+    FiltersSettings = require('../../config/filters.json'),
+    emb = require('../../config/embed.json');
 
 try {
     module.exports = {
@@ -62,4 +64,4 @@ try {
             });
         }
     }
-} catch (e) { }
+} catch (e) { toError(e) }

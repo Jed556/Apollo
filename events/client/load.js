@@ -1,11 +1,12 @@
-const Discord = require('discord.js');
-const { EmbedBuilder } = require('discord.js');
-const { toError } = require('../../system/functions');
-const { loadFiles } = require('../../system/fileLoader');
-const { loadCommands } = require('../../handlers/commands');
-const { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk');
-const emb = require('../../config/embed.json');
-const os = require('os');
+const
+    Discord = require('discord.js'),
+    { EmbedBuilder } = require('discord.js'),
+    { toError } = require('../../system/functions'),
+    { loadFiles } = require('../../system/fileLoader'),
+    { loadCommands } = require('../../handlers/commands'),
+    { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk'),
+    emb = require('../../config/embed.json'),
+    os = require('os');
 
 // Variable checks (Use .env if present)
 require('dotenv').config();

@@ -1,8 +1,9 @@
-const { Client, Collection, IntentsBitField, Partials } = require('discord.js');
-const filters = require('./config/filters.json');
-const DisTube = require('distube').default;
-const https = require('https-proxy-agent');
-const Enmap = require('enmap');
+const
+    { Client, Collection, IntentsBitField, Partials } = require('discord.js'),
+    filters = require('./config/filters.json'),
+    DisTube = require('distube').default,
+    https = require('https-proxy-agent'),
+    Enmap = require('enmap');
 
 // Variable checks (Use .env if present)
 let Token, spotifyAPI, nsfw, youtubeCookie;
@@ -17,8 +18,9 @@ if (process.env.token && process.env.spotifyEnabled && process.env.spotifySecret
         clientId: process.env.spotifyID
     };
 } else {
-    const { token } = require('./config/client.json');
-    const { spotify_api, ytCookie, nsfwMusic } = require('./config/distube.json');
+    const
+        { token } = require('./config/client.json'),
+        { spotify_api, ytCookie, nsfwMusic } = require('./config/distube.json');
     Token = token;
     youtubeCookie = ytCookie;
     nsfw = nsfwMusic;
@@ -49,9 +51,10 @@ const client = new Client({
 // DISTUBE
 //const proxy = 'http://123.123.123.123:8080';
 //const agent = https(proxy);
-const { SpotifyPlugin } = require('@distube/spotify');
-const { SoundCloudPlugin } = require('@distube/soundcloud');
-const { YtDlpPlugin } = require('@distube/yt-dlp');
+const
+    { SpotifyPlugin } = require('@distube/spotify'),
+    { SoundCloudPlugin } = require('@distube/soundcloud'),
+    { YtDlpPlugin } = require('@distube/yt-dlp');
 
 let spotifyoptions = {
     parallel: true,

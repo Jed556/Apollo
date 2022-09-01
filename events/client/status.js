@@ -1,7 +1,8 @@
-const { ActivityType } = require('discord.js');
-const { randomNum } = require('../../system/functions');
-const DB = require('../../schemas/Status');
-const os = require('os');
+const
+    { ActivityType } = require('discord.js'),
+    { randomNum } = require('../../system/functions'),
+    DB = require('../../schemas/Status'),
+    os = require('os');
 
 module.exports = {
     name: "ready",

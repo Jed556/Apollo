@@ -1,7 +1,8 @@
-
-const { EmbedBuilder, SlashCommandBuilder, ButtonBuilder, ActionRowBuilder } = require('discord.js');
-const emb = require('../../config/embed.json');
-const math = require('mathjs');
+const
+    { EmbedBuilder, SlashCommandBuilder, ButtonBuilder, ActionRowBuilder } = require('discord.js'),
+    { toError } = require('../../system/functions'),
+    emb = require('../../config/embed.json'),
+    math = require('mathjs');
 
 try {
     module.exports = {
@@ -149,4 +150,4 @@ try {
             }
         }
     }
-} catch (e) { }
+} catch (e) { toError(e) }

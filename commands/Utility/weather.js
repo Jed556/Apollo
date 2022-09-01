@@ -1,6 +1,8 @@
-const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
-const emb = require('../../config/embed.json');
-const weather = require('weather-js');
+const
+    { EmbedBuilder, SlashCommandBuilder } = require('discord.js'),
+    { toError } = require('../../system/functions'),
+    emb = require('../../config/embed.json'),
+    weather = require('weather-js');
 
 try {
     module.exports = {
@@ -64,4 +66,4 @@ try {
             });
         }
     };
-} catch (e) { }
+} catch (e) { toError(e) }

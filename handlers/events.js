@@ -1,7 +1,8 @@
-const { Events } = require('../validation/eventNames');
-const { loadFiles } = require('../system/fileLoader.js');
-const { cyanBright, greenBright, yellow, red, dim } = require('chalk');
-const { AsciiTable3 } = require('ascii-table3');
+const
+    { cyanBright, greenBright, yellow, red, dim } = require('chalk'),
+    { loadFiles } = require('../system/fileLoader.js'),
+    { Events } = require('../validation/eventNames'),
+    { AsciiTable3 } = require('ascii-table3');
 
 /**
  * 

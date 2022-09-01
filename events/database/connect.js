@@ -1,9 +1,10 @@
-const mongoose = require('mongoose');
-const ms = require('ms');
-const statusDB = require('../../schemas/Status');
-const cooldownDB = require('../../schemas/Cooldowns');
-const { toError } = require('../../system/functions');
-const { cyanBright, greenBright, yellow, red, dim } = require('chalk');
+const
+    { cyanBright, greenBright, yellow, red, dim } = require('chalk'),
+    { toError } = require('../../system/functions'),
+    cooldownDB = require('../../schemas/Cooldowns'),
+    statusDB = require('../../schemas/Status'),
+    mongoose = require('mongoose'),
+    ms = require('ms');
 
 // Variable checks (Use .env if present)
 require('dotenv').config();
@@ -74,7 +75,7 @@ module.exports = {
                 ) // Delete cooldowns in database that already finished
             }, ms(UpdateInt + "s")); // Update every x seconds
         } catch (e) {
-            console.log(String(e.stack))
+            console.log(toError(e, "Database Error"))
         }
     }
 }

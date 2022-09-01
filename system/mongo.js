@@ -1,6 +1,7 @@
 
-const mongoose = require('mongoose');
-const { cyanBright, greenBright, yellow, red } = require('chalk');
+const
+    mongoose = require('mongoose'),
+    { cyanBright, greenBright, yellow, red } = require('chalk');
 
 // Variable checks (Use .env if present)
 require('dotenv').config();
@@ -25,7 +26,7 @@ if (!mongoPath)
  * @param {String} dbName Database name
  * @returns mongoose
  */
-module.exports.mongo = async function(dbName) {
+module.exports.mongo = async function (dbName) {
     await mongoose.connect(mongoPath, {
         dbName,
         useNewUrlParser: true,

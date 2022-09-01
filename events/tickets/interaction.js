@@ -1,6 +1,7 @@
-const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, ChannelType, PermissionFlagsBits } = require("discord.js");
-const { createTranscript } = require("discord-html-transcripts");
-const ticketSchema = require("../../schemas/Ticket");
+const
+    { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, ChannelType, PermissionFlagsBits } = require("discord.js"),
+    { createTranscript } = require("discord-html-transcripts"),
+    ticketSchema = require("../../schemas/Ticket");
 
 module.exports = {
     name: "interactionCreate",
@@ -15,14 +16,14 @@ module.exports = {
             guildID: interaction.guild.id,
         });
 
-        // check if the user clicked the "create ticket" button
+        // Check if the user clicked the "create ticket" button
         if (interaction.customId == "createTicket") {
             await interaction.deferReply({
                 content: "Creating your ticket...",
                 ephemeral: true,
             });
 
-            // Check if config does not exist, if it does it will create one.
+            // Check if config config exists
             if (!config) {
                 const Reply = new EmbedBuilder()
                     .setTitle("Ticket System")
@@ -77,7 +78,7 @@ module.exports = {
                 ],
             });
 
-            // send the "ticket created" message
+            // Send "ticket created" message
             const TicketActions = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId("ticket-close")
@@ -114,7 +115,8 @@ module.exports = {
                 ephemeral: true,
             });
         }
-        // checks if user clicked the "close ticket" button
+
+        // Check if user clicked "close ticket" button
         else if (interaction.customId == "ticket-close") {
             if (!interaction.member.roles.cache.has(config.supportRole))
                 return interaction.reply({

@@ -1,9 +1,11 @@
-const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
-const { loadCommands } = require('../../handlers/commands');
-const { loadEvents } = require('../../handlers/events');
-const emb = require('../../config/embed.json');
-const chalk = require('chalk')
-const blurple = chalk.bold.hex("#7289da");
+const
+    { EmbedBuilder, SlashCommandBuilder } = require('discord.js'),
+    { loadCommands } = require('../../handlers/commands'),
+    { loadEvents } = require('../../handlers/events'),
+    { toError } = require('../../system/functions'),
+    emb = require('../../config/embed.json'),
+    chalk = require('chalk'),
+    blurple = chalk.bold.hex("#7289da");
 
 // Variable checks (Use .env if present)
 require('dotenv').config();
@@ -80,7 +82,7 @@ try {
             });
         }
     }
-} catch (e) { }
+} catch (e) { toError(e) }
 
 /**
  * 

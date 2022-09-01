@@ -1,12 +1,14 @@
-const { ButtonBuilder, ActionRowBuilder, EmbedBuilder } = require('discord.js');
-const { distubeValidate } = require('../system/distubeFunctions');
-const emb = require('../config/embed.json');
-const emoji = require('../config/emojis.json');
-const FiltersSettings = require('../config/filters.json')
-const playerintervals = new Map();
-const PlayerMap = new Map();
-let songEditInterval = null;
-let endCheck = false;
+const
+    { ButtonBuilder, ActionRowBuilder, EmbedBuilder } = require('discord.js'),
+    { distubeValidate } = require('../system/distubeFunctions'),
+    emb = require('../config/embed.json'),
+    emoji = require('../config/emojis.json'),
+    FiltersSettings = require('../config/filters.json'),
+    playerintervals = new Map(),
+    PlayerMap = new Map();
+let
+    songEditInterval = null,
+    endCheck = false;
 
 // Variable checks (Use .env if present)
 require('dotenv').config();

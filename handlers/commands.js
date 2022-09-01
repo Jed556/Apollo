@@ -1,7 +1,8 @@
-const { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk');
-const { AsciiTable3 } = require('ascii-table3');
-const { toTitleCase } = require('../system/functions');
-const { loadFiles } = require('../system/fileLoader');
+const
+    { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk'),
+    { toTitleCase, toError } = require('../system/functions'),
+    { loadFiles } = require('../system/fileLoader'),
+    { AsciiTable3 } = require('ascii-table3');
 
 // Variable checks (Use .env if present)
 require('dotenv').config();
@@ -66,37 +67,43 @@ async function commandHandler(client) {
     const Files = await loadFiles("commands");
 
     Files.forEach(file => {
-        let command = require(file);
-        const L = file.split("/");
-        const fileName = L[L.length - 1];
-        const commandName = fileName.split(".")[0];
-        const category = L[L.length - 2];
-        const fileDir = category + `/` + fileName;
-        const cooldown = command.cooldown || DefaultCooldown;
+        try {
+            let command = require(file);
+            const
+                L = file.split("/"),
+                fileName = L[L.length - 1],
+                commandName = fileName.split(".")[0],
+                category = L[L.length - 2],
+                fileDir = category + `/` + fileName,
+                cooldown = command.cooldown || DefaultCooldown;
 
-        // Log errors to table
-        if (!command.data)
-            return Table.addRow(dim(commandName), cooldown, "None", red("FAILED"), "Invalid data or empty < " + fileDir);
+            // Log errors to table
+            if (!command.data)
+                return Table.addRow(dim(commandName), cooldown, "None", red("FAILED"), "Invalid data or empty < " + fileDir);
 
-        const { name, description, default_member_permissions } = command.data;
-        const perms = default_member_permissions //? default_member_permissions.map(p => `${p}`).join(', ') : null;
+            const { name, description, default_member_permissions } = command.data;
+            const perms = default_member_permissions //? default_member_permissions.map(p => `${p}`).join(', ') : null;
 
-        if (!name)
-            return Table.addRow(dim(commandName), cooldown, perms || "None", red("FAILED"), "Missinng name < " + fileDir);
+            if (!name)
+                return Table.addRow(dim(commandName), cooldown, perms || "None", red("FAILED"), "Missinng name < " + fileDir);
 
-        if (!description)
-            return Table.addRow(dim(name), cooldown, perms || "None", red("FAILED"), "Missing description < " + fileDir);
+            if (!description)
+                return Table.addRow(dim(name), cooldown, perms || "None", red("FAILED"), "Missing description < " + fileDir);
 
-        Table.addRow(name, cooldown, perms || "None", greenBright("LOADED"), fileDir);
-        // Add the category to description
-        command.data.description = `[${toTitleCase(category) || ""}]  ` + description;
+            Table.addRow(name, cooldown, perms || "None", greenBright("LOADED"), fileDir);
 
-        // Push the command to client
-        client.commands.set(name, command);
-        commandArray.push(command.data.toJSON());
+            // Add the category to description
+            command.data.description = `[${toTitleCase(category) || ""}]  ` + description;
+
+            // Push the command to client
+            client.commands.set(name, command);
+            commandArray.push(command.data.toJSON());
+        } catch (e) {
+            console.log(toError(e, e.stack.split("\n")[4], 3));
+        }
     });
 
-    client.application.commands.set(commandArray); // Load the slash commands
+    client.application.commands.set(commandArray).catch(e => { }); // Load the slash commands
     console.log(Table.toString()); // Log table to console
     return Table.toString();
 }

@@ -1,7 +1,8 @@
 // REQUIRE DEPENDENCIES
-const { cyanBright, greenBright, yellow, red, dim } = require('chalk');
-const { promisify } = require('util');
-const { glob } = require('glob');
+const
+    { cyanBright, greenBright, yellow, red, dim } = require('chalk'),
+    { promisify } = require('util'),
+    { glob } = require('glob');
 
 // ---------- FUNCTIONS ---------- //
 
@@ -105,6 +106,8 @@ function toError(error, message, lines) {
     else if (message && err)
         return alert + message + err.split("\n").map(l => `\n        ${l}`).join("");
     else if (lines && err)
+        return alert + err.split("\n", lines).map(l => `${l}\n        `).join("");
+    else if (err)
         return alert + err.split("\n", lines).map(l => `${l}\n        `).join("");
     else if (message)
         return alert + message;

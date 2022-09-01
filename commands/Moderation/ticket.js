@@ -1,5 +1,8 @@
-const { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, } = require('discord.js');
-const ticketSchema = require("../../schemas/Ticket");
+const
+    { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, } = require('discord.js'),
+    { toError } = require('../../system/functions'),
+    emb = require('../../config/embed.json'),
+    ticketSchema = require("../../schemas/Ticket");
 
 try {
     module.exports = {
@@ -83,7 +86,7 @@ try {
                         new EmbedBuilder()
                             .setTitle("Create a ticket!")
                             .setDescription(description)
-                            .setColor("Blurple"),
+                            .setColor(emb.color),
                     ],
                     components: [
                         new ActionRowBuilder().setComponents(
@@ -140,4 +143,4 @@ try {
             }
         },
     }
-} catch (e) { }
+} catch (e) { toError(e) }

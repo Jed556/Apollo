@@ -1,6 +1,7 @@
-const { EmbedBuilder } = require('discord.js');
-const emb = require('../config/embed.json');
-const { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk');
+const
+    { EmbedBuilder } = require('discord.js'),
+    emb = require('../config/embed.json'),
+    { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk');
 
 /**
  * 

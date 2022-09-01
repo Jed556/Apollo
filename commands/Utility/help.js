@@ -1,6 +1,8 @@
-const { EmbedBuilder, SlashCommandBuilder, ActionRowBuilder, SelectMenuBuilder } = require('discord.js');
-const emb = require('../../config/embed.json');
-const fs = require('fs');
+const
+    { EmbedBuilder, SlashCommandBuilder, ActionRowBuilder, SelectMenuBuilder } = require('discord.js'),
+    { toError } = require('../../system/functions'),
+    emb = require('../../config/embed.json'),
+    fs = require('fs');
 
 try {
     module.exports = {
@@ -39,4 +41,4 @@ try {
             interaction.reply({ embed: embed, components: [row], ephemeral: true });
         }
     }
-} catch (e) { }
+} catch (e) { toError(e) }

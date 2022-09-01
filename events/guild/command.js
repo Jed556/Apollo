@@ -1,8 +1,9 @@
-const { EmbedBuilder, InteractionType } = require('discord.js');
-const emb = require('../../config/embed.json');
-const DB = require('../../schemas/Cooldowns');
-const { toError } = require('../../system/functions');
-const { cyanBright, greenBright, yellow, red, dim } = require('chalk');
+const
+    { cyanBright, greenBright, yellow, red, dim } = require('chalk'),
+    { EmbedBuilder, InteractionType } = require('discord.js'),
+    { toError } = require('../../system/functions'),
+    emb = require('../../config/embed.json'),
+    DB = require('../../schemas/Cooldowns');
 
 // Variable checks (Use .env if present)
 require('dotenv').config();

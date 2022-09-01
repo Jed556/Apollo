@@ -1,7 +1,9 @@
-const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
-const emb = require('../../config/embed.json');
-const emoji = require('../../config/emojis.json');
-const moment = require('moment');
+const
+    { EmbedBuilder, SlashCommandBuilder } = require('discord.js'),
+    { toError } = require('../../system/functions'),
+    moment = require('moment'),
+    emoji = require('../../config/emojis.json'),
+    emb = require('../../config/embed.json');
 
 try {
     module.exports = {
@@ -56,4 +58,4 @@ try {
             await interaction.reply({ embeds: [embed], ephemeral: true });
         }
     }
-} catch (e) { }
+} catch (e) { toError(e) }

@@ -1,6 +1,7 @@
-const { EmbedBuilder } = require('discord.js');
-const emb = require('../../config/embed.json');
-const { mainDir, PG } = require('../../system/functions');
+const
+    { EmbedBuilder } = require('discord.js'),
+    { mainDir, PG } = require('../../system/functions'),
+    emb = require('../../config/embed.json');
 
 // Variable checks (Use .env if present)
 require('dotenv').config();

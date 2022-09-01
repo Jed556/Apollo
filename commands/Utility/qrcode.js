@@ -1,6 +1,8 @@
-const { AttachmentBuilder, SlashCommandBuilder } = require('discord.js');
-const emb = require('../../config/embed.json');
-const qrc = require('qrcode')
+const
+    { AttachmentBuilder, SlashCommandBuilder } = require('discord.js'),
+    { toError } = require('../../system/functions'),
+    emb = require('../../config/embed.json'),
+    qrc = require('qrcode');
 
 try {
     module.exports = {
@@ -29,4 +31,4 @@ try {
             interaction.editReply({ content: `Converted \`\`\`${convert}\`\`\``, ephemeral: true });
         }
     }
-} catch (e) { }
+} catch (e) { toError(e) }

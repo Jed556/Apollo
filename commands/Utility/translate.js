@@ -1,7 +1,9 @@
-const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
-const emb = require('../../config/embed.json');
-const translate = require('translate-google');
-const ISO6391 = require('iso-639-1');
+const
+    { EmbedBuilder, SlashCommandBuilder } = require('discord.js'),
+    { toError } = require('../../system/functions'),
+    emb = require('../../config/embed.json'),
+    translate = require('translate-google'),
+    ISO6391 = require('iso-639-1');
 
 try {
     module.exports = {
@@ -81,4 +83,4 @@ try {
             })
         },
     };
-} catch (e) { }
+} catch (e) { toError(e) }
