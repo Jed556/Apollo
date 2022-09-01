@@ -20,12 +20,13 @@ async function loadEvents(client) {
     const Files = await loadFiles("events")
 
     Files.forEach((file) => {
-        const event = require(file);
-        const L = file.split("/");
-        const fileName = L[L.length - 1];
-        const eventName = fileName.split(".")[0];
-        const category = L[L.length - 2];
-        const fileDir = category + `/` + fileName;
+        const
+            event = require(file),
+            L = file.split("/"),
+            fileName = L[L.length - 1],
+            eventName = fileName.split(".")[0],
+            category = L[L.length - 2],
+            fileDir = category + `/` + fileName;
 
         // Log errors to table
         if (!Events.includes(event.name)) {

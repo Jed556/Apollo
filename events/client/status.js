@@ -19,9 +19,10 @@ module.exports = {
 
                     if (!docs.maintenance) { // Check if under maintenance
                         client.user.setStatus("online");
-                        const Guilds = client.guilds.cache.size;
-                        const Users = client.users.cache.filter(user => !user.bot).size;
-                        let display = 4
+                        const
+                            Guilds = client.guilds.cache.size,
+                            Users = client.users.cache.filter(user => !user.bot).size;
+                        let display = randomNum(1, 5);
 
                         switch (display) {
                             // Set status as guild count
