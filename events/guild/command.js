@@ -126,24 +126,29 @@ module.exports = {
 
         // Run the command
         command.run(client, interaction).catch(e => {
-            console.log(toError(e, "Command Error"));
-            const errorEmb = new EmbedBuilder()
-                .setTimestamp()
-                .setColor(emb.errColor)
-                .setAuthor({ name: "AN ERROR OCCURED", iconURL: command.category == "music" ? emb.disc.error : emb.error })
+            console.log(toError(e, "Command Error")); // Log error
 
-            interaction.channel.send({
+            const // Setup message
+                errorEmb = new EmbedBuilder()
+                    .setTimestamp()
+                    .setColor(emb.errColor)
+                    .setAuthor({ name: "AN ERROR OCCURED", iconURL: command.category == "music" ? emb.disc.error : emb.error }),
+                message = "An error occured while running command",
+                err = e.stack ? e.stack : e;
+
+            interaction.channel.send({ // Send error to channel
                 embeds: [errorEmb
                     .setFooter({ text: "/" + command.data.name, iconURL: client.user.displayAvatarURL() })
-                    .setDescription(`**An error occured while running command \`${command.data.name}\`**\`\`\`${e.stack ? e.stack : e}\`\`\``)
+                    .setDescription(message + ` \`/${command.data.name}\` \`\`\`${err}\`\`\``)
                 ],
                 ephemeral: true
             });
-            client.users.fetch(OwnerID, false).then((user) => {
+
+            client.users.fetch(OwnerID, false).then((user) => { // Send error to DM
                 user.send({
                     embeds: [errorEmb
-                        .setFooter({ text: `${guild.name} : ${channel.name}`, iconURL: guild.iconURL({ dynamic: true }) })
-                        .setDescription(`**An error occured while running command \`${command.data.name}\`\nat ${guild.name} (\`${guildId}\`) - ${channel.name} (\`${channel.id}\`) **\`\`\`${e.stack ? e.stack : e}\`\`\``)
+                        .setFooter({ text: `${guild.name} #${channel.name}`, iconURL: guild.iconURL({ dynamic: true }) })
+                        .setDescription(message + ` \`/${command.data.name}\`\nat **${guild.name}** (\`${guildId}\`) **#${channel.name}** (\`${channel.id}\`) \`\`\`${err}\`\`\``)
                     ]
                 });
             });
