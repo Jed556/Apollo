@@ -11,7 +11,7 @@ try {
             .setDescription("Forwards for X Seconds")
             .setDefaultMemberPermissions()
             .setDMPermission(false)
-            .addNumberOption(option => option
+            .addIntegerOption(option => option
                 .setName("seconds")
                 .setDescription("Number of seconds to go forward")
                 .setRequired(true)

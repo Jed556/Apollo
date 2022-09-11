@@ -7,23 +7,26 @@ const
 // ---------- FUNCTIONS ---------- //
 
 /**
+ * 
  * @returns promisify(glob) shortcut
  */
 const PG = promisify(glob);
 
 /**
+ * 
  * @returns Client's root directory
  */
 function mainDir() {
-    return reSlash(process.cwd())
+    return reSlash(process.cwd());
 }
 
 /**
+ * 
  * @param {string} string
  * @returns Replaces "\" with "/"
  */
 function reSlash(string) {
-    return string.replace(/\\/g, '/')
+    return string.replace(/\\/g, '/');
 }
 
 /**
@@ -57,7 +60,7 @@ function delay(delayInms) {
             }, delayInms);
         });
     } catch (e) {
-        console.log(String(e.stack))
+        console.log(toError(e));
     }
 }
 
@@ -71,10 +74,10 @@ function escapeRegex(str) {
         try {
             return str.replace(/[.*+?^${}()|[\]\\]/g, `\\$&`);
         } catch {
-            return str
+            return str;
         }
     } catch (e) {
-        console.log(String(e.stack))
+        console.log(toError(e));
     }
 }
 

@@ -8,7 +8,7 @@ const { PG, mainDir } = require('./functions');
 async function loadFiles(dirName) {
     const Files = await PG(`${mainDir()}/${dirName}/**/*.js`);
     Files.forEach(file => delete require.cache[require.resolve(file)]);
-    return Files
+    return Files;
 }
 
 module.exports = { loadFiles };

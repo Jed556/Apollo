@@ -11,7 +11,7 @@ try {
             .setDescription("Jumps to a specific position of the song")
             .setDefaultMemberPermissions()
             .setDMPermission(false)
-            .addNumberOption(option => option
+            .addIntegerOption(option => option
                 .setName("seconds")
                 .setDescription("Position to seek in seconds")
                 .setRequired(true)

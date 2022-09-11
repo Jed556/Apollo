@@ -11,7 +11,7 @@ try {
             .setDescription("Rewinds for X seconds")
             .setDefaultMemberPermissions()
             .setDMPermission(false)
-            .addNumberOption(option => option
+            .addIntegerOption(option => option
                 .setName("seconds")
                 .setDescription("Number of seconds to rewind")
                 .setRequired(true)

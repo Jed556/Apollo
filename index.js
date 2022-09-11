@@ -8,10 +8,10 @@ const
 // Variable checks (Use .env if present)
 let Token, spotifyAPI, nsfw, youtubeCookie;
 require('dotenv').config();
-if (process.env.token && process.env.spotifyEnabled && process.env.spotifySecret && process.env.spotifyID && process.env.nsfwMusic && process.env.youtubeCookie) {
+if (process.env.token && process.env.spotifyEnabled && process.env.spotifySecret && process.env.spotifyID && process.env.nsfwMusic) {
     Token = process.env.token;
     nsfw = process.env.nsfwMusic === 'true';
-    youtubeCookie = process.env.youtubeCookie;
+    if (process.env.youtubeCookie) youtubeCookie = process.env.youtubeCookie;
     spotifyAPI = {
         enabled: process.env.spotifyEnabled === 'true',
         clientSecret: process.env.spotifySecret,

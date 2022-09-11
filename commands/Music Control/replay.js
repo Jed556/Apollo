@@ -23,7 +23,7 @@ try {
             const validate = await distubeValidate(interaction, newQueue, ["channel", "userLimit", "playing", "DJ"]);
             if (validate) return;
 
-            await newQueue.seek(seekNumber);
+            await newQueue.seek(0);
             interaction.reply({
                 embeds: [new EmbedBuilder()
                     .setTimestamp()

@@ -83,9 +83,9 @@ module.exports = {
                                 // Calculate the CPU usage
                                 const usage = process.cpuUsage();
                                 const currentCPUUsage = (usage.user + usage.system) * 1000;
-                                const cpuPerc = currentCPUUsage / total * 100;
+                                const cpuPerc = (currentCPUUsage / total * 100).toFixed(1);
 
-                                client.user.setActivity(`CPU: ${(cpuPerc / 1000).toFixed(1)}%`,
+                                client.user.setActivity(`CPU: ${cpuPerc}%`,
                                     { type: ActivityType.Watching });
                                 break;
                         }
@@ -95,7 +95,7 @@ module.exports = {
                         client.user.setActivity(`MAINTENANCE`, { type: ActivityType.Watching });
                     }
                 }, 5000);
-            }, randomNum(1, 5)) // randTime is a random number between 1 and 5 seconds
+            }, randomNum(1, 5)) // Random number between 1 and 5 seconds
         } catch (e) {
             console.log(toError(e, "Status Error"))
         }
