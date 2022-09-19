@@ -44,16 +44,19 @@ try {
                 .setFields([
                     { name: "ID:", value: `\`\`\`${User.id}\`\`\``, inline: false },
                     { name: "Nickname:", value: `\`\`\`${User.nickname || " "}\`\`\``, inline: true },
+                    { name: 'Username', value: `\`\`\`${user.username}\`\`\``, inline: true },
                     { name: "Discriminator:", value: `\`\`\`#${user.discriminator}\`\`\``, inline: true },
-                    { name: "Accent Color", value: `\`\`\`${user.accentColor ? "#" + user.accentColor.toString(16) : "None"}\`\`\``, inline: true },
+                    { name: "Accent Color", value: `\`\`\`${user.accentColor ? "#" + user.accentColor.toString(16) : user.bot ? "Auto" : "None"}\`\`\``, inline: true },
                     { name: "Banner", value: `${user.bannerURL() ? "\`\`\`True\`\`\`" : "\`\`\`False\`\`\`"}`, inline: true },
                     { name: "Is Bot:", value: `\`\`\`${user.bot ? "Yes" : "No"}\`\`\``, inline: true },
-                    { name: 'Nitro', value: `${User.premiumSubscriptionCount ? '\`\`\`Yes\`\`\`' : '\`\`\`No\`\`\`'}`, inline: true },
                     { name: "Joined at:", value: `\`\`\`${moment(User.joinedTimestamp).format('MMM Do YYYY')}\`\`\``, inline: true },
                     { name: "Created at:", value: `\`\`\`${moment(User.createdAt).format('MMM Do YYYY')}\`\`\``, inline: true }
                 ])
-                .setImage(user.bannerURL({ dynamic: true, size: 512 }) || "")
                 .setFooter({ text: `Requested by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) });
+
+            if (!user.bot && user.banner) {
+                embed.setImage(user.bannerURL({ dynamic: true, size: 512 }) || "")
+            }
 
             await interaction.reply({ embeds: [embed], ephemeral: true });
         }
