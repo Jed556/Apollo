@@ -669,7 +669,7 @@ async function distubeEvent(client) {
 
     /**
      * @param {*} queue The song queue
-     * @param {Boolean} leave If the bot should leave the voice channel\
+     * @param {Boolean} leave If the bot should leave the voice channel
      * @returns Updates the dashboard & music system
      */
     async function updateMusicSystem(queue, leave = false) {

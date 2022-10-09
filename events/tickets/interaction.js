@@ -58,7 +58,7 @@ module.exports = {
                 permissionOverwrites: [
                     {
                         id: interaction.guild.roles.everyone.id,
-                        deny: [PermissionFlagsBits.ViewChannel], // view channel
+                        deny: [PermissionFlagsBits.ViewChannel], // View channel
                     },
                     {
                         id: config.supportRole,
@@ -137,15 +137,12 @@ module.exports = {
 
             // Some Embeds
             const reply = new EmbedBuilder()
-                .setDescription(
-                    `The ticket has been closed by **${interaction.user.tag}**`
-                )
+                .setDescription(`The ticket has been closed by **${interaction.user.tag}**`)
                 .setColor("Red");
+
             const Embed = new EmbedBuilder()
                 .setColor("Red")
-                .setDescription(
-                    `The ticket is closing please wait 10 seconds until it gets deleted.`
-                );
+                .setDescription(`The ticket is closing please wait 10 seconds until it gets deleted.`);
 
             const EmbedDM = new EmbedBuilder()
                 .setTitle(`Ticket Closed!`)
@@ -153,12 +150,12 @@ module.exports = {
                 .setFields({
                     name: `Information:`,
                     value: `
-            **Guild Name:** ${interaction.guild.name}
-            **Guild Id:** ${interaction.guild.id}
-            **Created By:** <@!${channel.topic}>
-            **Ticket ID:** ${ID}
-            **Closed By:** ${interaction.user.tag}
-            `,
+                    **Guild Name:** ${interaction.guild.name}
+                    **Guild Id:** ${interaction.guild.id}
+                    **Created By:** <@!${channel.topic}>
+                    **Ticket ID:** ${ID}
+                    **Closed By:** ${interaction.user.tag}
+                    `,
                 })
                 .setFooter({ text: "The ticket was closed at" })
                 .setTimestamp();
@@ -190,6 +187,7 @@ module.exports = {
                 interaction.channel.delete();
             }, 10000);
         }
+
         // Checks if a user clicked ticket claim
         else if (interaction.customId == "ticket-claim") {
             if (!interaction.member.roles.cache.has(config.supportRole))
@@ -216,13 +214,16 @@ module.exports = {
                     iconURL: interaction.user.avatarURL(),
                 })
                 .setTitle(`Ticket-${interaction.user.username}#${interaction.user.discriminator}`)
-                .setDescription(`Welcome **${interaction.user.username}** to this ticket!\nPlease wait for a staff member to reply to your ticket, or if you created it by accidentally please use the "close ticket" button to close it.`)
+                .setDescription(
+                    `Welcome **${interaction.user.username}** to this ticket!\nPlease wait for a staff member to reply to your ticket, or if you created it by accidentally please use the "close ticket" button to close it.`
+                )
                 .setColor("Blurple");
 
             interaction.message.edit({
                 embeds: [Embed],
                 components: [DisabledClaim],
             });
+
             const reply = new EmbedBuilder()
                 .setDescription(
                     `Ticket has been claimed by **${interaction.user.tag}**!`
