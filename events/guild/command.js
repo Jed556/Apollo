@@ -77,7 +77,7 @@ module.exports = {
                     .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                     .setAuthor({ name: "IN COOLDOWN", iconURL: emb.alert })
                     .setFields([
-                        { name: "Command", value: `\`${command.name}\``, inline: true },
+                        { name: "Command", value: `\`${command.data.name}\``, inline: true },
                         { name: "Time left", value: `${timeLeft.toFixed(2)} second${Math.round(timeLeft) != 1 ? "s" : ""}` }
                     ])
                 ],
