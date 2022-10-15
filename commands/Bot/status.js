@@ -87,12 +87,7 @@ try {
             }
 
             // Compute for average memory usage
-            var avgMem = 0;
-            for (let i = 0; i < docs.memory.length; i++) {
-                avgMem += docs.memory[i];
-            }
-            avgMem = avgMem / docs.memory.length;
-
+            let avgMem = (docs.memory.reduce((a, b) => +a + +b, 0) / docs.memory.length).toFixed(2);
 
             // Chart Generation
             const width = 1500;
@@ -202,19 +197,22 @@ try {
             const attachment = new AttachmentBuilder(image, { name: 'chart.png' });
 
             // Add hardware field to embed
-            interaction.editReply({
-                embeds: [response
-                    .addFields({
-                        name: `<:icon_reply:962547429914337300> HARDWARE`,
-                        value: `
-                        **• CPU Usage**: ${await cpuUsage()}
-                        **• Average RAM Usage**: ${avgMem.toFixed(2)}MB
-                        `,
-                        inline: false
-                    })
-                    .setImage('attachment://chart.png')],
-                files: [attachment],
-            });
+            osUtils.cpuUsage(v => {
+                var usage = (v * 100).toFixed(2);
+                interaction.editReply({
+                    embeds: [response
+                        .addFields({
+                            name: `<:icon_reply:962547429914337300> HARDWARE`,
+                            value: `
+                            **• CPU Usage**: ${usage}%
+                            **• Average RAM Usage**: ${avgMem}MB
+                            `,
+                            inline: false
+                        })
+                        .setImage('attachment://chart.png')],
+                    files: [attachment],
+                });
+            })
         }
     }
 } catch (e) { toError(e) }
@@ -244,21 +242,4 @@ function switchTo(val) {
             break;
     }
     return status;
-}
-
-/**
- * 
- * @param {*} toFixed Fixed decimal value
- * @returns CPU usage in percent
- */
-function cpuUsage(toFixed) {
-    let usage;
-
-    osUtils.cpuUsage(v => {
-        usage = (v * 100).toFixed(toFixed || 2);
-    })
-
-    //usage *= (100).toFixed(toFixed || 2);
-    console.log(usage)
-    return usage;
 }
