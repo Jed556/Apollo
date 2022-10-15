@@ -2,7 +2,8 @@ const
     { ActivityType } = require('discord.js'),
     { randomNum } = require('../../system/functions'),
     DB = require('../../schemas/Status'),
-    os = require('os');
+    os = require('os'),
+    osUtils = require('os-utils');
 
 module.exports = {
     name: "ready",
@@ -22,7 +23,7 @@ module.exports = {
                         const
                             Guilds = client.guilds.cache.size,
                             Users = client.users.cache.filter(user => !user.bot).size;
-                        let display = randomNum(1, 5);
+                        let display = randomNum(1, 3);
 
                         switch (display) {
                             // Set status as guild count
@@ -73,20 +74,10 @@ module.exports = {
 
                             // Set status as CPU usage
                             case 5:
-                                const cpus = os.cpus();
-                                const cpu = cpus[0];
-
-                                // Accumulate every CPU times values
-                                const total = Object.values(cpu.times)
-                                    .reduce((acc, tv) => acc + tv, 0);
-
-                                // Calculate the CPU usage
-                                const usage = process.cpuUsage();
-                                const currentCPUUsage = (usage.user + usage.system) * 1000;
-                                const cpuPerc = (currentCPUUsage / total * 100).toFixed(1);
-
-                                client.user.setActivity(`CPU: ${cpuPerc}%`,
-                                    { type: ActivityType.Watching });
+                                osUtils.cpuUsage(function (v) {
+                                    client.user.setActivity(`CPU: ${(v * 100).toFixed(1)}%`,
+                                        { type: ActivityType.Watching });
+                                })
                                 break;
                         }
                     } else {

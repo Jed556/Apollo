@@ -3,6 +3,7 @@ const
     { toError } = require('../../system/functions'),
     { ChartJSNodeCanvas } = require('chartjs-node-canvas'),
     { connection } = require('mongoose'),
+    osUtils = require('os-utils'),
     moment = require('moment'),
     DB = require('../../schemas/Status'),
     emb = require('../../config/embed.json');
@@ -35,6 +36,7 @@ try {
                 _id: client.user.id
             });
 
+            // Create response embed
             let response = new EmbedBuilder()
                 .setTitle("Client Status")
                 .setColor(emb.color)
@@ -195,14 +197,19 @@ try {
                 plugins: [plugin]
             };
 
+            // Attach generated canvas
             const image = await canvas.renderToBuffer(chartConfig);
             const attachment = new AttachmentBuilder(image, { name: 'chart.png' });
 
+            // Add hardware field to embed
             interaction.editReply({
                 embeds: [response
                     .addFields({
                         name: `<:icon_reply:962547429914337300> HARDWARE`,
-                        value: `**• Average RAM Usage**: ${avgMem.toFixed(2)}MB`,
+                        value: `
+                        **• CPU Usage**: ${await cpuUsage()}
+                        **• Average RAM Usage**: ${avgMem.toFixed(2)}MB
+                        `,
                         inline: false
                     })
                     .setImage('attachment://chart.png')],
@@ -212,6 +219,11 @@ try {
     }
 } catch (e) { toError(e) }
 
+/**
+ * 
+ * @param {*} val Icon status value
+ * @returns Icon status
+ */
 function switchTo(val) {
     var status = " ";
     switch (val) {
@@ -232,4 +244,21 @@ function switchTo(val) {
             break;
     }
     return status;
+}
+
+/**
+ * 
+ * @param {*} toFixed Fixed decimal value
+ * @returns CPU usage in percent
+ */
+function cpuUsage(toFixed) {
+    let usage;
+
+    osUtils.cpuUsage(v => {
+        usage = (v * 100).toFixed(toFixed || 2);
+    })
+
+    //usage *= (100).toFixed(toFixed || 2);
+    console.log(usage)
+    return usage;
 }
