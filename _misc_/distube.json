@@ -1,0 +1,10 @@
+{
+    "ytCookie": "",
+    "spotify_api": {
+        "enabled": false,
+        "clientSecret": "",
+        "clientId": ""
+    },
+    "nsfwMusic": true,
+    "music-request-edit-delay": 6000
+}

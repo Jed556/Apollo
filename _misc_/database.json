@@ -1,0 +1,6 @@
+{
+    "connectDB": true,
+    "database": "",
+    "updateInterval": 20,
+    "memoryShift": 50
+}

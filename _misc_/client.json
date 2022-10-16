@@ -1,0 +1,9 @@
+{
+    "token": "",
+    "botID": "",
+    "ownerID": "",
+    "adminIDs": [],
+    "guildID": "",
+    "loadGlobal": true,
+    "defaultCooldown": 0.3
+}
