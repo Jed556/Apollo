@@ -1,15 +1,25 @@
-# <img align="top" src="https://i.imgur.com/jkGzVb8.png" width="42" height="42"/> &nbsp;Apollø <br/>
-Apollø is a JavaScript based Discord bot that runs with **discord.js** and **distube**. This bot was originally made as a music bot and further improved as my interest in Discoord bots grow.<br/>
+<div align="center">
+	<br />
+	<p>
+		<a href="https://discord.js.org"><img src="https://i.imgur.com/jkGzVb8.png" width="150" alt="discord.js" /></a> 
+	</p>
+	<p>
+		<a href="https://discord.gg/5ezrYqutmD"><img alt="Discord" src="https://img.shields.io/discord/946241935742488616?color=5865F2&logo=discord&logoColor=white"></a>
+	</p>
+</div>
+
+Apollø is a JavaScript based Discord bot that runs with **discord.js** and **distube**. This bot was originally made as a music bot and further improved as my interest in Discord bots grow.<br/>
 
 *Please credit me after modifying/using the project!* :)<br/>
 
-### Table of Contents
-[Installation](https://github.com/Jed556/Apollo#installation)<br/>
-- [Basic](https://github.com/Jed556/Apollo#basic)
-- [Ubuntu / SSH](https://github.com/Jed556/Apollo#ubuntu--ssh)
-- [Other Dependencies](https://github.com/Jed556/Apollo#other-dependencies)
-<br/>
-[About](https://github.com/Jed556/Apollo#about)<br/>
+## Table of Contents
+- [Installation](https://github.com/Jed556/Apollo#installation)
+  - [Basic](https://github.com/Jed556/Apollo#basic)
+  - [Ubuntu / SSH](https://github.com/Jed556/Apollo#ubuntu--ssh)
+  - [Other Dependencies](https://github.com/Jed556/Apollo#other-dependencies)
+    - Ubuntu
+    - Windows
+- [About](https://github.com/Jed556/Apollo#about)
 
 ## Installation
 ### Basic
@@ -27,9 +37,14 @@ Apollø is a JavaScript based Discord bot that runs with **discord.js** and **di
 
 ### Other Dependencies
 These dependencies are required in certain circumstances<br/>
-<br/>
-**Canvas Builder**<br>
-`sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev`
-
-## About
-[**Updates**](https://github.com/users/Jed556/projects/4) &nbsp; &nbsp; [**Discord**](https://discord.gg/5ezrYqutmD)<br/>
+- Ubuntu / SSH
+  ``` bash
+  npm i forever surge -g
+  sudo apt install ffmpeg
+  sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+  ```
+- Windows
+  ``` text
+  npm i ffmpeg-static
+  npm i forever surge -g
+  ```
