@@ -1,7 +1,7 @@
 <div align="center">
 	<br />
 	<p>
-		<a href="https://discord.js.org"><img src="https://i.imgur.com/jkGzVb8.png" width="150" alt="discord.js" /></a> 
+		<a href="https://tiny.one/Apollo-inv"><img src="https://i.imgur.com/MX2uOPJ.png" width="760" alt="discord.js" /></a> 
 	</p>
 	<p>
 		<a href="https://discord.gg/5ezrYqutmD"><img alt="Discord" src="https://img.shields.io/discord/946241935742488616?color=5865F2&logo=discord&logoColor=white"></a>
@@ -19,7 +19,6 @@ Apollø is a JavaScript based Discord bot that runs with **discord.js** and **di
   - [Other Dependencies](https://github.com/Jed556/Apollo#other-dependencies)
     - Ubuntu
     - Windows
-- [About](https://github.com/Jed556/Apollo#about)
 
 ## Installation
 ### Basic
