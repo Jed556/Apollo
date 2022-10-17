@@ -5,6 +5,8 @@
 	</p>
 	<p>
 		<a href="https://discord.gg/5ezrYqutmD"><img alt="Discord" src="https://img.shields.io/discord/946241935742488616?color=5865F2&logo=discord&logoColor=white"></a>
+		<a href="[https://discord.gg/5ezrYqutmD](https://github.com/Jed556/Apollo/releases)"><img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/Jed556/Apollo?include_prereleases&logo=github&logoColor=white"></a>
+		<a href="https://discord.gg/5ezrYqutmD"><img alt="GitHub all releases" src="https://img.shields.io/github/downloads/Jed556/Apollo/total?logoColor=white"></a>
 	</p>
 </div>
 
