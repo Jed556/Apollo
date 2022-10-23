@@ -27,7 +27,7 @@ try {
 
             interaction.reply({
                 embeds: [new EmbedBuilder()
-                    .setAuthor(`Searching...`)
+                    .setAuthor({ name: `Searching...` })
                     .setTimestamp()
                     .setColor(emb.color)
                     .setDescription(`\`\`\`${search}\`\`\``)
