@@ -25,14 +25,15 @@ try {
                 { member } = interaction,
                 search = interaction.options.getString("image");
 
+            const embed = new EmbedBuilder()
+                .setAuthor({ name: "Searching...", iconURL: emb.googleIcon })
+                .setTimestamp()
+                .setColor(emb.color)
+                .setDescription(`\`\`\`${search}\`\`\``)
+                .setFooter({ text: `Requested by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) });
+
             interaction.reply({
-                embeds: [new EmbedBuilder()
-                    .setAuthor({ name: `Searching...` })
-                    .setTimestamp()
-                    .setColor(emb.color)
-                    .setDescription(`\`\`\`${search}\`\`\``)
-                    .setFooter({ text: `Requested by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
-                ]
+                embeds: [embed]
             });
 
             try {
@@ -45,14 +46,10 @@ try {
                 })
 
                 const results = await google.scrape(search, 30);
-                interaction.editReply({
-                    embeds: [new EmbedBuilder()
-                        .setAuthor(`Searching...`)
-                        .setTimestamp()
-                        .setColor(emb.color)
+                await interaction.editReply({
+                    embeds: [embed
+                        .setAuthor({ name: "Searched", iconURL: emb.googleIcon })
                         .setImage(results[randomNum(0, results.length)].url)
-                        .setDescription(`\`\`\`${search}\`\`\``)
-                        .setFooter({ text: `Requested by: ${member.user.tag}`, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
                     ]
                 });
             } catch (e) {
