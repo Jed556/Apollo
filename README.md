@@ -23,6 +23,7 @@
     - 24/7 Ubuntu Server
     - Windows
   - [Heroku](https://github.com/Jed556/Apollo#heroku)
+- [Support](https://github.com/Jed556/Apollo#support)
 
 ## Installation
 ### Basic / Windows
@@ -93,3 +94,8 @@ These dependencies are required in certain circumstances<br/>
 ### Heroku
 Heroku hosting is deprecated.<br/>
 *Please refer to [v0.3.1 Files](https://github.com/Jed556/Apollo/blob/v0.3.1) for hosting.*
+
+## Support
+**Gmail:** <a href="mailto:jguiriba11@gmail.com">Send Email</a><br/>
+**Discord:** [Apollø Tickets](https://discord.gg/MEaUBJ5cgv)<br/>
+**Updates:** [Issues](https://github.com/Jed556/Apollo/issues), [Project](https://github.com/users/Jed556/projects/4), [Discord](https://discord.gg/5ezrYqutmD)
