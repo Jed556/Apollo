@@ -47,39 +47,45 @@ try {
                 cd = interaction.options.getInteger("countdown") || 0,
                 handler = interaction.options.getString("system");
 
-            let reloaded = [], reloadType;
+            let embed = new EmbedBuilder()
+                .setTimestamp()
+                .setColor(emb.color)
+                .setAuthor({ name: "Reloading System", iconURL: emb.ownerAvatar })
+                .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
+
+            let reloadType;
             switch (handler) {
                 case "command":
-                    reloaded.push(reloadCommands(client, cd));
+                    reloadCommands(client, cd, embed, interaction);
+                    reloadType = "Commands";
                     break;
                 case "event":
-                    reloaded.push(reloadEvents(client, cd));
+                    reloadEvents(client, cd, embed, interaction);
+                    reloadType = "Events";
                     break;
                 default: {
-                    reloaded.push(reloadEvents(client, cd));
-                    reloaded.push(reloadCommands(client, cd));
+                    reloadEvents(client, cd, embed, interaction);
+                    reloadCommands(client, cd, embed, interaction);
+                    reloadType = "Handlers";
                 }
             }
 
-
-            sum = reloaded.reduce((pv, cv) => pv + cv, 0);
-            if (sum == 1)
-                reloadType = "Commands";
-            else if (sum == 2)
-                reloadType = "Events";
-            else
-                reloadType = "Handlers";
-
             interaction.reply({
-                embeds: [new EmbedBuilder()
-                    .setTimestamp()
-                    .setColor(emb.color)
-                    .setAuthor({ name: "Reloading System", iconURL: emb.ownerAvatar })
+                embeds: [embed
                     .setDescription(`**Reloading ${client.user.username} ${reloadType}${cd ? ` in ${cd} sec${cd != 1 ? "s" : ""}` : "..."}**`)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                 ],
                 ephemeral: true
             });
+
+            setTimeout(async () => {
+                interaction.editReply({
+                    embeds: [embed
+                        .setAuthor({ name: "Reloaded System", iconURL: emb.ownerAvatar })
+                        .setDescription(`**Reloaded ${client.user.username} ${reloadType}** `)
+                    ],
+                    ephemeral: true
+                });
+            }, (cd * 1000) + 3000);
         }
     }
 } catch (e) { toError(e) }
@@ -87,18 +93,19 @@ try {
 /**
  * 
  * @param {*} client Discord client
+ * @param {*} cd Cooldown
  * @returns Reload value (1)
  */
 async function reloadCommands(client, cd) {
     setTimeout(async () => {
         loadCommands(client);
     }, cd * 1000);
-    return 1;
 }
 
 /**
  * 
  * @param {*} client Discord client
+ * @param {*} cd Cooldown
  * @returns Reload value (2)
  */
 async function reloadEvents(client, cd) {
@@ -107,5 +114,4 @@ async function reloadEvents(client, cd) {
             client.removeListener(`${key}`, value, true);
         loadEvents(client);
     }, cd * 1000);
-    return 2;
 }

@@ -74,10 +74,10 @@ module.exports = {
 
                             // Set status as CPU usage
                             case 5:
-                                osUtils.cpuUsage(function (v) {
+                                osUtils.cpuUsage((v) => {
                                     client.user.setActivity(`CPU: ${(v * 100).toFixed(1)}%`,
                                         { type: ActivityType.Watching });
-                                })
+                                });
                                 break;
                         }
                     } else {
