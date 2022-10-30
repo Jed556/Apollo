@@ -36,6 +36,9 @@ try {
                 _id: client.user.id
             });
 
+            await client.user.fetch();
+            await client.application.fetch();
+
             // Check the total number of commands
             let check = [];
             const Files = await loadFiles("commands");
@@ -44,6 +47,7 @@ try {
             // Create status and formatter handlers
             const
                 formatter = new Intl.ListFormat("en-GB", { style: "long", type: "conjunction" }),
+                getChannelTypeSize = type => client.channels.cache.filter(channel => type.includes(channel.type)).size,
                 status = [
                     "Disconnected",
                     "Connected",
