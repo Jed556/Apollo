@@ -1,5 +1,5 @@
 const
-    { EmbedBuilder, SlashCommandBuilder, AttachmentBuilder, version } = require('discord.js'),
+    { EmbedBuilder, SlashCommandBuilder, AttachmentBuilder, ChannelType, UserFlags, version } = require('discord.js'),
     { toError } = require('../../system/functions'),
     { ChartJSNodeCanvas } = require('chartjs-node-canvas'),
     { connection } = require('mongoose'),
