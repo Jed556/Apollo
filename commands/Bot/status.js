@@ -3,9 +3,8 @@ const
     { toError } = require('../../system/functions'),
     { ChartJSNodeCanvas } = require('chartjs-node-canvas'),
     { connection } = require('mongoose'),
-    osUtils = require('os-utils'),
+    { loadFiles } = require('../../system/fileLoader'),
     os = require('os'),
-    moment = require('moment'),
     DB = require('../../schemas/Status'),
     emb = require('../../config/embed.json');
 require('moment-duration-format');
