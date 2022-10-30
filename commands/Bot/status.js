@@ -63,7 +63,7 @@ try {
                 .setTitle(`${client.user.username}'s Status`)
                 .setThumbnail(client.user.displayAvatarURL({ size: 1024 }))
                 .addFields(
-                    { name: "Description", value: `📝 ${client.application.description || "None"}` },
+                    { name: "📝 Description", value: `${client.application.description || "None"}` },
                     {
                         name: "General",
                         value: [
@@ -84,7 +84,7 @@ try {
                             `🏓 **Ping** ${client.ws.ping}ms`,
                             `🧠 **CPU Model** ${os.cpus()[0].model}`,
                             `💾 **CPU Usage** ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}%`,
-                            `🐏 **Average RAM Usage**: ${avgMem}MB`,
+                            `🐏 **Average RAM Usage** ${avgMem}MB`,
                             `📚 **Database** ${status[connection.readyState]}`,
                             `👩🏻‍🔧 **Node.js** ${process.version}`,
                             `🛠 **Discord.js** ${version}`
@@ -98,9 +98,9 @@ try {
                             `🌍 **Servers** ${client.guilds.cache.size}`,
                             `👨‍👩‍👧‍👦 **Users** ${client.users.cache.size}`,
                             `😏 **Emojis** ${client.emojis.cache.size}`,
-                            `💬 **Text Channels** ${getChannelTypeSize([ChannelType.GuildText, ChannelType.GuildForum, ChannelType.GuildNews])}`,
+                            `💬 **Text Channels** ${getChannelTypeSize([ChannelType.GuildText, ChannelType.GuildForum, ChannelType.GuildAnnouncement])}`,
                             `🎙 **Voice Channels** ${getChannelTypeSize([ChannelType.GuildVoice, ChannelType.GuildStageVoice])}`,
-                            `🧵 **Threads** ${getChannelTypeSize([ChannelType.GuildPublicThread, ChannelType.GuildPrivateThread, ChannelType.GuildNewsThread])}`
+                            `🧵 **Threads** ${getChannelTypeSize([ChannelType.PublicThread, ChannelType.PrivateThread, ChannelType.AnnouncementThread])}`
                         ].join("\n"),
                         inline: true
                     }
