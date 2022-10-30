@@ -1,9 +1,10 @@
 const
-    { EmbedBuilder, SlashCommandBuilder, AttachmentBuilder } = require('discord.js'),
+    { EmbedBuilder, SlashCommandBuilder, AttachmentBuilder, version } = require('discord.js'),
     { toError } = require('../../system/functions'),
     { ChartJSNodeCanvas } = require('chartjs-node-canvas'),
     { connection } = require('mongoose'),
     osUtils = require('os-utils'),
+    os = require('os'),
     moment = require('moment'),
     DB = require('../../schemas/Status'),
     emb = require('../../config/embed.json');
@@ -36,23 +37,71 @@ try {
                 _id: client.user.id
             });
 
-            // Create response embed
+            // Check the total number of commands
+            let check = [];
+            const Files = await loadFiles("commands");
+            Files.forEach((file) => { check.push(file) });
+
+            // Create status and formatter handlers
+            const
+                formatter = new Intl.ListFormat("en-GB", { style: "long", type: "conjunction" }),
+                status = [
+                    "Disconnected",
+                    "Connected",
+                    "Connecting",
+                    "Disconnecting"
+                ];
+
+            // Compute for average memory usage
+            let avgMem = (docs.memory.reduce((a, b) => +a + +b, 0) / docs.memory.length).toFixed(2);
+
             let response = new EmbedBuilder()
-                .setTitle("Client Status")
                 .setColor(emb.color)
-                .setFields([{
-                    name: `<:icon_reply:962547429914337300> GENERAL`,
-                    value: `
-            **• Client**: <:icon_online:970322600930721802> ONLINE
-            **• Ping**: ${client.ws.ping}ms
-            **• Uptime**: ${moment.duration(parseInt(client.uptime)).format(" D [days], H [hrs], m [mins], s [secs]")}
-            \n`,
-                    inline: false
-                }, {
-                    name: `<:icon_reply:962547429914337300> DATABASE`,
-                    value: `**• Connection**: ${switchTo(connection.readyState)}\n`,
-                    inline: true
-                }])
+                .setTitle(`${client.user.username}'s Status`)
+                .setThumbnail(client.user.displayAvatarURL({ size: 1024 }))
+                .addFields(
+                    { name: "Description", value: `📝 ${client.application.description || "None"}` },
+                    {
+                        name: "General",
+                        value: [
+                            `👩🏻‍🔧 **Client** ${client.user.tag}`,
+                            `💳 **ID** ${client.user.id}`,
+                            `📆 **Created** <t:${parseInt(client.user.createdTimestamp / 1000)}:R>`,
+                            `👑 **Owner** ${client.application.owner ? `<@${client.application.owner.id}> (${client.application.owner.tag})` : "None"}`,
+                            `<:VerifiedBot:1025804638135529532> **Verified** ${client.user.flags & UserFlags.VerifiedBot ? "Yes" : "No"}`,
+                            `🏷 **Tags** ${client.application.tags.length ? formatter.format(client.application.tags.map(tag => `*${tag}*`)) : "None"}`,
+                            `<:SupportsCommands:1025822712528121966> **Commands** ${client.commands.size}/${check.length}`
+                        ].join("\n")
+                    },
+                    {
+                        name: "System",
+                        value: [
+                            `🖥 **Operating System** ${os.type().replace("Windows_NT", "Windows").replace("Darwin", "macOS")}`,
+                            `⏰ **Up Since** <t:${parseInt(client.readyTimestamp / 1000)}:R>`,
+                            `🏓 **Ping** ${client.ws.ping}ms`,
+                            `🧠 **CPU Model** ${os.cpus()[0].model}`,
+                            `💾 **CPU Usage** ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}%`,
+                            `🐏 **Average RAM Usage**: ${avgMem}MB`,
+                            `📚 **Database** ${status[connection.readyState]}`,
+                            `👩🏻‍🔧 **Node.js** ${process.version}`,
+                            `🛠 **Discord.js** ${version}`
+                        ].join("\n"),
+                        inline: true
+                    },
+                    {
+                        // Using the caches for some of these isn't always reliable, but it would be a waste of resources to loop through all servers every single time someone used this command.
+                        name: "Statistics",
+                        value: [
+                            `🌍 **Servers** ${client.guilds.cache.size}`,
+                            `👨‍👩‍👧‍👦 **Users** ${client.users.cache.size}`,
+                            `😏 **Emojis** ${client.emojis.cache.size}`,
+                            `💬 **Text Channels** ${getChannelTypeSize([ChannelType.GuildText, ChannelType.GuildForum, ChannelType.GuildNews])}`,
+                            `🎙 **Voice Channels** ${getChannelTypeSize([ChannelType.GuildVoice, ChannelType.GuildStageVoice])}`,
+                            `🧵 **Threads** ${getChannelTypeSize([ChannelType.GuildPublicThread, ChannelType.GuildPrivateThread, ChannelType.GuildNewsThread])}`
+                        ].join("\n"),
+                        inline: true
+                    }
+                )
 
             await interaction.reply({
                 embeds: [response],
@@ -85,9 +134,6 @@ try {
             for (let i = UpdateInt; (i - UpdateInt) < (docs.memory.length * UpdateInt); i += UpdateInt) {
                 labels.push(i.toString());
             }
-
-            // Compute for average memory usage
-            let avgMem = (docs.memory.reduce((a, b) => +a + +b, 0) / docs.memory.length).toFixed(2);
 
             // Chart Generation
             const width = 1500;
@@ -197,49 +243,10 @@ try {
             const attachment = new AttachmentBuilder(image, { name: 'chart.png' });
 
             // Add hardware field to embed
-            osUtils.cpuUsage(v => {
-                var usage = (v * 100).toFixed(2);
-                interaction.editReply({
-                    embeds: [response
-                        .addFields({
-                            name: `<:icon_reply:962547429914337300> HARDWARE`,
-                            value: `
-                            **• CPU Usage**: ${usage}%
-                            **• Average RAM Usage**: ${avgMem}MB
-                            `,
-                            inline: false
-                        })
-                        .setImage('attachment://chart.png')],
-                    files: [attachment],
-                });
-            })
+            interaction.editReply({
+                embeds: [response.setImage('attachment://chart.png')],
+                files: [attachment],
+            });
         }
     }
 } catch (e) { toError(e) }
-
-/**
- * 
- * @param {*} val Icon status value
- * @returns Icon status
- */
-function switchTo(val) {
-    var status = " ";
-    switch (val) {
-        case 0:
-            status = `<:icon_offline:970322600771354634> DISCONNECTED`;
-            break;
-
-        case 1:
-            status = `<:icon_online:970322600930721802> CONNECTED`;
-            break;
-
-        case 2:
-            status = `<:icon_connecting:970322601887023125> CONNECTING`;
-            break;
-
-        case 3:
-            status = `<:icon_disconnecting:970322601878638712> DISCONNECTING`;
-            break;
-    }
-    return status;
-}
