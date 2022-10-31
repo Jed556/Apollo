@@ -1,5 +1,5 @@
 const
-    { EmbedBuilder, GuildVerificationLevel, GuildExplicitContentFilter, GuildNSFWLevel } = require('discord.js'),
+    { EmbedBuilder, SlashCommandBuilder, GuildVerificationLevel, GuildExplicitContentFilter, GuildNSFWLevel } = require('discord.js'),
     { toError } = require('../../system/functions');
 
 try {
@@ -38,7 +38,7 @@ try {
                     if (roleString.length + totalLength > maxFieldLength)
                         break;
 
-                    totalLength += roleString.length + 1; // +1 as it's likely we want to display them with a space between each role, which counts towards the limit.
+                    totalLength += roleString.length + 1; // +1 = spaces
                     result.push(roleString);
                 }
 

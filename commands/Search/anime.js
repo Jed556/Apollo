@@ -1,5 +1,5 @@
 const
-    { EmbedBuilder, ActionRowBuilder, ButtonStyle, ButtonBuilder, SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js'),
+    { EmbedBuilder, SlashCommandBuilder, ActionRowBuilder, ButtonStyle, ButtonBuilder } = require('discord.js'),
     { toError } = require('../../system/functions'),
     mal = require('mal-scraper'),
     emb = require('../../config/embed.json');
@@ -7,17 +7,17 @@ const
 try {
     module.exports = {
         data: new SlashCommandBuilder()
-            .setName('search-anime (query)')
+            .setName('search-anime')
             .setDescription('💮 Search for information about Anime by given name')
             .setDefaultMemberPermissions()
-            .setDMPermission(false)
+            .setDMPermission(true)
             .addStringOption(option =>
                 option
                     .setName('query')
                     .setDescription('Anime name')
                     .setRequired(true),
             ),
-        help: "/search-anime (image)",
+        help: "/search-anime (query)",
         cooldown: 1,
         allowedUIDs: [],
 
