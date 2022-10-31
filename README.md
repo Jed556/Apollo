@@ -93,7 +93,7 @@ These dependencies are required in certain circumstances<br/>
 
 ### Heroku
 Heroku hosting is deprecated.<br/>
-*Please refer to [v0.3.1 Files](https://github.com/Jed556/Apollo/blob/v0.3.1) for hosting.*
+*Please refer to [v0.3.1 Files](https://github.com/Jed556/Apollo/tree/v0.3.1) for hosting.*
 
 ## Support
 **Gmail:** <a href="mailto:jguiriba11@gmail.com">Send Email</a><br/>
