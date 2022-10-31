@@ -1,5 +1,5 @@
 const
-    { EmbedBuilder, SlashCommandBuilder, GuildVerificationLevel, GuildExplicitContentFilter, GuildNSFWLevel } = require('discord.js'),
+    { EmbedBuilder, SlashCommandBuilder, ChannelType, GuildVerificationLevel, GuildExplicitContentFilter, GuildNSFWLevel } = require('discord.js'),
     { toError } = require('../../system/functions');
 
 try {
@@ -79,7 +79,7 @@ try {
                                 value: [
                                     `📜 **Created** <t:${parseInt(guild.createdTimestamp / 1000)}:R>`,
                                     `💳 **ID** ${guild.id}`,
-                                    `👑 **Owner** <@${guild.ownerId}>`,
+                                    `<:lyx:957998527328452638> **Owner** <@${guild.ownerId}>`,
                                     `🌍 **Language** ${new Intl.DisplayNames(["en"], { type: "language" }).of(guild.preferredLocale)}`,
                                     `💻 **Vanity URL** ${guild.vanityURLCode || "None"}`,
                                 ].join("\n")
@@ -97,7 +97,7 @@ try {
                             {
                                 name: `Users (${guild.memberCount})`,
                                 value: [
-                                    `👨‍👩‍👧‍👦 **Members** ${guild.memberCount - botCount}`,
+                                    `🧑🏻‍👩🏻‍👧🏻‍👦🏻 **Members** ${guild.memberCount - botCount}`,
                                     `🤖 **Bots** ${botCount}`
                                 ].join("\n"),
                                 inline: true
@@ -129,7 +129,7 @@ try {
                                     `📈 **Tier** ${guild.premiumTier || "None"}`,
                                     `💪🏻 **Boosts** ${guild.premiumSubscriptionCount}`,
                                     `💎 **Boosters** ${guild.members.cache.filter(member => member.roles.premiumSubscriberRole).size}`,
-                                    `🏋🏻‍♀️ **Total Boosters** ${guild.members.cache.filter(member => member.premiumSince).size}`
+                                    `🏋🏻 **Total Boosters** ${guild.members.cache.filter(member => member.premiumSince).size}`
                                 ].join("\n"),
                                 inline: true
                             },

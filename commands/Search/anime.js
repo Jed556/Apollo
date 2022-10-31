@@ -8,7 +8,7 @@ try {
     module.exports = {
         data: new SlashCommandBuilder()
             .setName('search-anime')
-            .setDescription('💮 Search for information about Anime by given name')
+            .setDescription('Search Anime information')
             .setDefaultMemberPermissions()
             .setDMPermission(true)
             .addStringOption(option =>

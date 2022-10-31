@@ -100,11 +100,11 @@ try {
                         .setThumbnail(user.avatarURL({ size: 1024 }))
                         .setImage(user.bannerURL({ size: 1024 }))
                         .addFields(
-                            { name: "ID", value: `💳 ${user.id}` },
+                            { name: "💳 ID", value: `${user.id}` },
                             { name: "Activities", value: presence?.activities.map(activity => `${activityType[activity.type]} ${activity.name}`).join("\n") || "None" },
                             { name: "Joined Server", value: `🤝🏻 <t:${parseInt(User.joinedTimestamp / 1000)}:R>`, inline: true },
                             { name: "Account Created", value: `📆 <t:${parseInt(user.createdTimestamp / 1000)}:R>`, inline: true },
-                            { name: "Nickname", value: `🦸🏻‍♀️ ${User.nickname || "None"}`, inline: true },
+                            { name: "Nickname", value: `📛 ${User.nickname || "None"}`, inline: true },
                             {
                                 name: `Roles (${maxDisplayRoles(sortedRoles)} of ${sortedRoles.length})`,
                                 value: `${sortedRoles.slice(0, maxDisplayRoles(sortedRoles)).join(" ") || "None"}`
@@ -112,7 +112,7 @@ try {
                             { name: `Badges (${userFlags.length})`, value: userFlags.length ? formatter.format(userFlags.map(flag => `**${badges[flag]}**`)) : "None" },
                             { name: `Devices`, value: devices.map(device => `${device.emoji} ${device.text}`).join("\n"), inline: true },
                             { name: "Profile Colour", value: `🎨 ${user.hexAccentColor || "None"}`, inline: true },
-                            { name: "Boosting Server", value: `🏋🏻‍♀️ ${roles.premiumSubscriberRole ? `Since <t:${parseInt(User.premiumSinceTimestamp / 1000)}:R>` : "No"}`, inline: true },
+                            { name: "Boosting Server", value: `⬆ ${roles.premiumSubscriberRole ? `Since <t:${parseInt(User.premiumSinceTimestamp / 1000)}:R>` : "No"}`, inline: true },
                             { name: "Banner", value: user.bannerURL() ? "** **" : "🎏 None" }
                         )
                 ], ephemeral: true
