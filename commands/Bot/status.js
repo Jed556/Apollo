@@ -70,10 +70,10 @@ try {
                             `🤖 **Client** ${client.user.tag}`,
                             `💳 **ID** ${client.user.id}`,
                             `📆 **Created** <t:${parseInt(client.user.createdTimestamp / 1000)}:R>`,
-                            `👑 **Owner** ${client.application.owner ? `<@${client.application.owner.id}> (${client.application.owner.tag})` : "None"}`,
+                            `<:lyx:957998527328452638> **Owner** ${client.application.owner ? `<@${client.application.owner.id}> (${client.application.owner.tag})` : "None"}`,
                             `<:VerifiedBot:1025804638135529532> **Verified** ${client.user.flags & UserFlags.VerifiedBot ? "Yes" : "No"}`,
                             `🏷 **Tags** ${client.application.tags.length ? formatter.format(client.application.tags.map(tag => `*${tag}*`)) : "None"}`,
-                            `<:SupportsCommands:1025822712528121966> **Commands** ${client.commands.size}/${check.length}`
+                            `<:SupportsCommands:1025822712528121966> **Commands** ${client.commands.size} / ${check.length}`
                         ].join("\n")
                     },
                     {
@@ -86,8 +86,8 @@ try {
                             `💾 **CPU Usage** ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}%`,
                             `🐏 **Average RAM Usage** ${avgMem}MB`,
                             `📚 **Database** ${status[connection.readyState]}`,
-                            `⚙️ **Node.js** ${process.version}`,
-                            `🛠 **Discord.js** ${version}`
+                            `<:nodejs:172018499005317120> **Node.js** ${process.version}`,
+                            `<:djs:222078108977594368> **Discord.js** ${version}`
                         ].join("\n"),
                         inline: true
                     },
