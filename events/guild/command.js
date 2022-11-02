@@ -1,5 +1,4 @@
 const
-    { cyanBright, greenBright, yellow, red, dim } = require('chalk'),
     { EmbedBuilder, InteractionType } = require('discord.js'),
     { toError } = require('../../system/functions'),
     emb = require('../../config/embed.json'),

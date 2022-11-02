@@ -1,7 +1,8 @@
 const
-    { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, ChannelType, PermissionFlagsBits } = require("discord.js"),
-    { createTranscript } = require("discord-html-transcripts"),
-    ticketSchema = require("../../schemas/Ticket");
+    { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, ChannelType, PermissionFlagsBits } = require('discord.js'),
+    { createTranscript } = require('discord-html-transcripts'),
+    ticketSchema = require('../../schemas/Ticket'),
+    emb = require('../../config/embed.json');
 
 module.exports = {
     name: "interactionCreate",
@@ -47,7 +48,7 @@ module.exports = {
                 AddReactions,
                 AttachFiles,
                 EmbedLinks,
-                ReadMessageHistory,
+                ReadMessageHistory
             } = PermissionFlagsBits;
 
             // Create the ticket channel
@@ -58,7 +59,7 @@ module.exports = {
                 permissionOverwrites: [
                     {
                         id: interaction.guild.roles.everyone.id,
-                        deny: [PermissionFlagsBits.ViewChannel], // View channel
+                        deny: [ViewChannel], // View channel
                     },
                     {
                         id: config.supportRole,
@@ -217,7 +218,7 @@ module.exports = {
                 .setDescription(
                     `Welcome **${interaction.user.username}** to this ticket!\nPlease wait for a staff member to reply to your ticket, or if you created it by accidentally please use the "close ticket" button to close it.`
                 )
-                .setColor("Blurple");
+                .setColor(emb.color);
 
             interaction.message.edit({
                 embeds: [Embed],

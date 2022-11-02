@@ -1,8 +1,8 @@
 const
     { EmbedBuilder, SlashCommandBuilder, PermissionFlagsBits, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle, } = require('discord.js'),
     { toError } = require('../../system/functions'),
-    emb = require('../../config/embed.json'),
-    ticketSchema = require("../../schemas/Ticket");
+    ticketSchema = require('../../schemas/Ticket'),
+    emb = require('../../config/embed.json');
 
 try {
     module.exports = {

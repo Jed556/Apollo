@@ -1,6 +1,6 @@
 {
   "name": "apollo",
-  "version": "3.8.16",
+  "version": "3.8.17",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
