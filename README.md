@@ -35,6 +35,7 @@
 - Run the program `node .`
 
 ### Ubuntu / SSH
+- Install [Node.js](https://nodejs.org/en/)
 - Clone the repository
 - Copy or move **Apollo/\_misc\_/[apollo.sh](https://github.com/Jed556/Apollo/blob/main/_misc_/apollo.sh)** outside **Apollo** folder
 - Enter `chmod u+x apollo.sh`
@@ -98,9 +99,9 @@ Heroku hosting is deprecated.<br>
 
 ## Support
 <div align="center">
-  <a href="https://discordapp.com/users/839430747088617472"><img src="https://discord.c99.nl/widget/theme-3/839430747088617472.png" alt="Jed556" height="71"></a>
-  <a href="https://discordapp.com/users/994902546273550346"><img src="https://discord.c99.nl/widget/theme-1/994902546273550346.png" alt="Jed556" height="71"></a>
-  <a href="https://discord.gg/5ezrYqutmD"><img src="https://discord.com/api/guilds/946241935742488616/widget.png?style=banner2" height="71"></a>
+  <a href="https://discordapp.com/users/839430747088617472"><img src="https://discord.c99.nl/widget/theme-3/839430747088617472.png" alt="Jed556" height="58"></a>
+  <a href="https://discordapp.com/users/994902546273550346"><img src="https://discord.c99.nl/widget/theme-1/994902546273550346.png" alt="Jed556" height="58"></a>
+  <a href="https://discord.gg/5ezrYqutmD"><img src="https://discord.com/api/guilds/946241935742488616/widget.png?style=banner2" height="58"></a>
 </div>
 <br>
 <div align="center">
