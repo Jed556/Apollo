@@ -1,19 +1,20 @@
 <div align="center">
-	<br />
-	<p>
-		<a href="https://tiny.one/Apollo-inv"><img src="https://i.imgur.com/pMReolo.png" width="760" alt="discord.js" /></a> 
-	</p>
-	<p>
-		<a href="https://discord.gg/5ezrYqutmD"><img alt="Discord" src="https://img.shields.io/discord/946241935742488616?color=5865F2&logo=discord&logoColor=white&label="></a>
-		<a href="https://github.com/Jed556/Apollo/releases"><img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/Jed556/Apollo?include_prereleases&color=35566D&logo=github&logoColor=white&label=latest"></a>
-		<a href=https://github.com/Jed556/Apollo/tree/main><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/Jed556/Apollo?color=253C4F&label=dev&logo=json"></a>
-		<a href="https://github.com/Jed556/Apollo/releases"><img alt="GitHub downloads" src="https://img.shields.io/github/downloads/Jed556/Apollo/total?label=downloads&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA2klEQVQ4jZ2SMWpCQRCGv5WHWKQIHsAj5Ah2IR7ByhvYpUiVxkqipPCE5gKKBB5Y+KXIIzzXWX3mh2FhZ/5vZ3YXAqkzdavumtiqs6g2MvfV2kvVaj+v7wWMChgE+4MmdxMQ7RVz14r/Dbirg7+Z1BHw2ERJT+oe2KeUvs4y6ntw8yUtLtAq6rqDeaPG/XWAlM0Z5KOzWZ2owwCybJk/c7M6VCf4+0XHhU5e1bfoZHWs1hVwInjflBLA6vrAnCrgADyrxwZGa83Va60vwCGpU2ADPNw4Ldc3MP8Bk60okvXOxJoAAAAASUVORK5CYII="></a>
-	</p>
+  <br>
+  <p>
+    <a href="https://tiny.one/Apollo-inv"><img src="https://i.imgur.com/pMReolo.png" width="760" alt="discord.js" /></a> 
+  </p>
+  <p>
+    <a href="https://discord.gg/5ezrYqutmD"><img alt="Discord" src="https://img.shields.io/discord/946241935742488616?color=5865F2&logo=discord&logoColor=white&label="></a>
+    <a href="https://github.com/Jed556/Apollo/releases"><img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/Jed556/Apollo?include_prereleases&color=35566D&logo=github&logoColor=white&label=latest"></a>
+    <a href=https://github.com/Jed556/Apollo/tree/main><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/Jed556/Apollo?color=253C4F&label=dev&logo=json"></a>
+    <a href="https://github.com/Jed556/Apollo/releases"><img alt="GitHub downloads" src="https://img.shields.io/github/downloads/Jed556/Apollo/total?label=downloads&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA2klEQVQ4jZ2SMWpCQRCGv5WHWKQIHsAj5Ah2IR7ByhvYpUiVxkqipPCE5gKKBB5Y+KXIIzzXWX3mh2FhZ/5vZ3YXAqkzdavumtiqs6g2MvfV2kvVaj+v7wWMChgE+4MmdxMQ7RVz14r/Dbirg7+Z1BHw2ERJT+oe2KeUvs4y6ntw8yUtLtAq6rqDeaPG/XWAlM0Z5KOzWZ2owwCybJk/c7M6VCf4+0XHhU5e1bfoZHWs1hVwInjflBLA6vrAnCrgADyrxwZGa83Va60vwCGpU2ADPNw4Ldc3MP8Bk60okvXOxJoAAAAASUVORK5CYII="></a>
+  </p>
 </div>
 
-**Apollø** is a JavaScript based Discord bot that runs on [**discord.js**](https://github.com/discordjs/discord.js) and [**DisTube**](https://github.com/skick1234/DisTube). This bot is a reworked and improved version of [**JavaSkripp**](https://github.com/Jed556/JavaSkripp-DEPRECATED) - from scratch. Apollø supports music, utility, entertainment and moderation commands.<br/>
-
-*Please credit me after modifying/using the project!* :)<br/>
+**Apollø** is a JavaScript based Discord bot that runs on [**discord.js**](https://github.com/discordjs/discord.js) and [**DisTube**](https://github.com/skick1234/DisTube). This bot is a reworked and improved version of [**JavaSkripp**](https://github.com/Jed556/JavaSkripp-DEPRECATED) - from scratch. Apollø supports music, utility, entertainment and moderation commands.
+<div align="center">
+  <i>Please credit me after modifying or using the project! :)</i>
+</div>
 
 ## Table of Contents
 - [Installation](https://github.com/Jed556/Apollo#installation)
@@ -92,10 +93,20 @@ These dependencies are required in certain circumstances<br/>
   ```
 
 ### Heroku
-Heroku hosting is deprecated.<br/>
+Heroku hosting is deprecated.<br>
 *Please refer to [v0.3.1 Files](https://github.com/Jed556/Apollo/tree/v0.3.1) for hosting.*
 
 ## Support
-**Gmail:** <a href="mailto:jguiriba11@gmail.com">Send Email</a><br/>
-**Discord:** [Apollø Tickets](https://discord.gg/MEaUBJ5cgv)<br/>
-**Updates:** [Issues](https://github.com/Jed556/Apollo/issues), [Project](https://github.com/users/Jed556/projects/4), [Discord](https://discord.gg/5ezrYqutmD)
+<div align="center">
+  <a href="https://discordapp.com/users/839430747088617472"><img src="https://discord.c99.nl/widget/theme-3/839430747088617472.png" alt="Jed556" height="71"></a>
+  <a href="https://discordapp.com/users/994902546273550346"><img src="https://discord.c99.nl/widget/theme-1/994902546273550346.png" alt="Jed556" height="71"></a>
+  <a href="https://discord.gg/5ezrYqutmD"><img src="https://discord.com/api/guilds/946241935742488616/widget.png?style=banner2" height="71"></a>
+</div>
+<br>
+<div align="center">
+  <a href="https://github.com/Jed556/Apollo/issues">Issues</a>
+  &nbsp; &nbsp;
+  <a href="https://github.com/users/Jed556/projects/4">Updates</a>
+  &nbsp; &nbsp;
+  <a href="mailto:jguiriba11@gmail.com">Send Email</a>
+</div>
