@@ -7,7 +7,6 @@ const
     os = require('os'),
     DB = require('../../schemas/Status'),
     emb = require('../../config/embed.json');
-require('moment-duration-format');
 
 // Variable checks (Use .env if present)
 require('dotenv').config();
@@ -67,7 +66,7 @@ try {
                     {
                         name: "General",
                         value: [
-                            `🤖 **Client** ${client.user.tag}`,
+                            `⚙️ **Client** ${client.user.tag}`,
                             `💳 **ID** ${client.user.id}`,
                             `📆 **Created** <t:${parseInt(client.user.createdTimestamp / 1000)}:R>`,
                             `<:lyx:957998527328452638> **Owner** ${client.application.owner ? `<@${client.application.owner.id}> (${client.application.owner.tag})` : "None"}`,
@@ -96,7 +95,8 @@ try {
                         name: "Statistics",
                         value: [
                             `🌍 **Servers** ${client.guilds.cache.size}`,
-                            `🧑🏻‍👩🏻‍👧🏻‍👦🏻 **Users** ${client.users.cache.size}`,
+                            `🧑🏻‍👩🏻‍👧🏻‍👦🏻 **Users** ${client.users.cache.filter(user => !user.bot).size}`,
+                            `🤖 **Bots** ${client.users.cache.filter(user => user.bot).size}`,
                             `😄 **Emojis** ${client.emojis.cache.size}`,
                             `💬 **Text Channels** ${getChannelTypeSize([ChannelType.GuildText, ChannelType.GuildForum, ChannelType.GuildAnnouncement])}`,
                             `🎙 **Voice Channels** ${getChannelTypeSize([ChannelType.GuildVoice, ChannelType.GuildStageVoice])}`,
