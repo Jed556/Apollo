@@ -6,16 +6,14 @@ const
 
 // Variable checks (Use .env if present)
 require('dotenv').config();
-let Token, BotID, GuildID, DefaultCooldown;
-if (process.env.token && process.env.guildID && process.env.botID && process.env.defaultCooldown) {
+let Token, GuildID, DefaultCooldown;
+if (process.env.token && process.env.guildID && process.env.defaultCooldown) {
     Token = process.env.token;
-    BotID = process.env.botID;
     GuildID = process.env.guildID;
     DefaultCooldown = process.env.defaultCooldown;
 } else {
-    const { token, botID, guildID, defaultCooldown } = require('../config/client.json');
+    const { token, guildID, defaultCooldown } = require('../config/client.json');
     Token = token;
-    BotID = botID;
     GuildID = guildID;
     DefaultCooldown = defaultCooldown;
 }
