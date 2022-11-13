@@ -73,7 +73,7 @@ try {
                             `${emoji.owner} **Owner** ${client.application.owner ? `<@${client.application.owner.id}> (${client.application.owner.tag})` : "None"}`,
                             `${emoji.verified} **Verified** ${client.user.flags & UserFlags.VerifiedBot ? "Yes" : "No"}`,
                             `🏷 **Tags** ${client.application.tags.length ? formatter.format(client.application.tags.map(tag => `*${tag}*`)) : "None"}`,
-                            `${emoji.slashCommand} **Commands** ${client.commands.size} / ${check.length}`
+                            `${emoji.badges.VerifiedDeveloper} **Commands** ${client.commands.size} / ${check.length}`
                         ].join("\n")
                     },
                     {

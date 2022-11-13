@@ -14,9 +14,14 @@
         "BugHunterLevel1": "<:discordbughunterlv1:1041207440605184071>",
         "BugHunterLevel2": "<:discordbughunterlv2:1041207443105005648>",
         "VerifiedBot": "<:verifiedbot:1041207445202161665>",
-        "VerifiedDeveloper": "<a:devBadge:1041201635868807188>",
+        "VerifiedDeveloper": "<a:devbadge:1041237174466646087>",
         "PremiumEarlySupporter": "<:discordearlysupporter:1041207426663317564>"
     },
     "owner": "<:serverowner:1041207434410213426>",
-    "verified": "<:verified:1041207422691315823>"
+    "verified": "<:verified:1041207422691315823>",
+    "hand": {
+        "right": "<a:righthand:1041237282142822410>",
+        "left": "<a:lefthand:1041237250219966504>"
+    },
+    "boostroles": "<a:boostroles:1041236971328118804>"
 }
