@@ -50,8 +50,6 @@ try {
                 { name: "offline", text: "Offline", emoji: "💤" }
             ];
 
-            const badges = emoji.badges;
-
             const maxDisplayRoles = (roles, maxFieldLength = 1024) => {
                 let totalLength = 0;
                 const result = [];
@@ -77,6 +75,8 @@ try {
             const deviceFilter = clientType.filter(device => clientStatus.includes(device.name));
             const devices = !Array.isArray(deviceFilter) ? new Array(deviceFilter) : deviceFilter;
 
+            const badges = formatter.format(userFlags.map(flag => `**${emoji.badges[flag]}**`));
+
             interaction.reply({
                 embeds: [
                     new EmbedBuilder()
@@ -97,7 +97,7 @@ try {
                                 name: `Roles (${maxDisplayRoles(sortedRoles)} of ${sortedRoles.length})`,
                                 value: `${sortedRoles.slice(0, maxDisplayRoles(sortedRoles)).join(" ") || "None"}`
                             },
-                            { name: `Badges (${userFlags.length})`, value: userFlags.length ? formatter.format(userFlags.map(flag => `**${badges[flag]}**`)) : "None" },
+                            { name: `Badges (${userFlags.length})`, value: userFlags.length ? badges : "None" },
                             { name: `Devices`, value: devices.map(device => `${device.emoji} ${device.text}`).join("\n"), inline: true },
                             { name: "Profile Colour", value: `🎨 ${user.hexAccentColor || "None"}`, inline: true },
                             { name: "Boosting Server", value: `${emoji.boostroles} ${roles.premiumSubscriberRole ? `Since <t:${parseInt(User.premiumSinceTimestamp / 1000)}:R>` : "No"}`, inline: true },
