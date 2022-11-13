@@ -5,6 +5,7 @@ const
     { loadFiles } = require('../../system/fileLoader'),
     { loadCommands } = require('../../handlers/commands'),
     { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk'),
+    { AsciiTable3 } = require('ascii-table3'),
     emb = require('../../config/embed.json'),
     os = require('os');
 
@@ -35,8 +36,13 @@ module.exports = {
             // Login Log
             console.log(`${cyanBright.bold("[INFO]")} Logged in as ${bold(client.user.username) + dim("#" + client.user.tag.split("#")[1])}`);
 
+            // Create console log template
+            const Table = new AsciiTable3().setStyle('unicode-single').setAlignCenter();
+            Table.setHeading("Discord.js", "Node", "OS", "Loaded");
+            Table.addRow(Discord.version, process.version, `${os.platform()} ${os.arch()}`, `${client.commands.size}/${check.length} Commands`);
+            //console.log(Table.toString());
 
-            // Create log template
+            // Create dm log template
             let log = new EmbedBuilder()
                 .setTimestamp()
                 .setFields([
