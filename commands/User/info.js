@@ -1,6 +1,7 @@
 const
     { EmbedBuilder, SlashCommandBuilder } = require('discord.js'),
-    { toError } = require('../../system/functions');
+    { toError } = require('../../system/functions'),
+    emoji = require('../../config/emojis.json');
 
 try {
     module.exports = {
@@ -49,20 +50,7 @@ try {
                 { name: "offline", text: "Offline", emoji: "💤" }
             ];
 
-            const badges = {
-                BugHunterLevel1: "<:BugHunter:1025778237432922212>",
-                BugHunterLevel2: "<:BugBuster:1025778236015259810>",
-                CertifiedModerator: "<:DiscordCertifiedModerator:1025778239001591818>",
-                HypeSquadOnlineHouse1: "<:HypesquadBravery:1025778246329061486>",
-                HypeSquadOnlineHouse2: "<:HypesquadBrilliance:1025778247616704532>",
-                HypeSquadOnlineHouse3: "<:HypesquadBalance:1025778245087543337>",
-                Hypesquad: "<:HypeSquadEventAttendee:1025778249642541167>",
-                Partner: "<:DiscordPartner:1025778240427671592>",
-                PremiumEarlySupporter: "<:EarlySupporter:1025778243825049650>",
-                Staff: "<:DiscordStaff:1025778241929232445>",
-                VerifiedBot: "<:VerifiedBot:1025804638135529532>",
-                VerifiedDeveloper: "<:VerifiedDeveloper:1025778251127341076>"
-            };
+            const badges = emoji.badges;
 
             const maxDisplayRoles = (roles, maxFieldLength = 1024) => {
                 let totalLength = 0;

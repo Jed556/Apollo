@@ -3,19 +3,20 @@
     "check": ":white_check_mark:",
     "loading": ":arrows_counterclockwise:",
     "ping": ":signal_strength:",
-    "badges": [
-        { "name": "DISCORD_EMPLOYEE", "emoji": "<:discordemployee:1041207447152492588>" },
-        { "name": "DISCORD_CERTIFIED_MODERATOR", "emoji": "<:certifiedmoderator:1041207428676587620>" },
-        { "name": "PARTNERED_SERVER_OWNER", "emoji": "<:discordpartner:1041207438696775720>" },
-        { "name": "HYPESQUARD_EVENTS", "emoji": "<:discordhypesquad:1041207430517882950>" },
-        { "name": "HOUSE_BRAVERY", "emoji": "<:discordbravery:1041207418866126868>" },
-        { "name": "HOUSE_BRILLIANCE", "emoji": "<:discordbrillance:1041207420753555506>" },
-        { "name": "HOUSE_BALANCE", "emoji": "<:discordbalance:1041207436297637918>" },
-        { "name": "BUGHUNTER_LEVEL_1", "emoji": "<:discordbughunterlv1:1041207440605184071>" },
-        { "name": "BUGHUNTER_LEVEL_2", "emoji": "<:discordbughunterlv2:1041207443105005648>" },
-        { "name": "EARLY_VERIFIED_BOT_DEVELOPER", "emoji": "<a:devBadge:1041201635868807188>" },
-        { "name": "EARLY_SUPPORTER", "emoji": "<:discordearlysupporter:1041207426663317564>" }
-    ],
+    "badges": {
+        "Staff": "<:discordemployee:1041207447152492588>",
+        "CertifiedModerator": "<:certifiedmoderator:1041207428676587620>",
+        "Partner": "<:discordpartner:1041207438696775720>",
+        "Hypesquad": "<:discordhypesquad:1041207430517882950>",
+        "HypeSquadOnlineHouse1": "<:discordbravery:1041207418866126868>",
+        "HypeSquadOnlineHouse2": "<:discordbrillance:1041207420753555506>",
+        "HypeSquadOnlineHouse3": "<:discordbalance:1041207436297637918>",
+        "BugHunterLevel1": "<:discordbughunterlv1:1041207440605184071>",
+        "BugHunterLevel2": "<:discordbughunterlv2:1041207443105005648>",
+        "VerifiedBot": "<:verifiedbot:1041207445202161665>",
+        "VerifiedDeveloper": "<a:devBadge:1041201635868807188>",
+        "PremiumEarlySupporter": "<:discordearlysupporter:1041207426663317564>"
+    },
     "owner": "<:serverowner:1041207434410213426>",
     "verified": "<:verified:1041207422691315823>"
 }
