@@ -99,7 +99,7 @@ try {
                             },
                             { name: `Badges (${userFlags.length})`, value: userFlags.length ? badges : "None" },
                             { name: `Devices`, value: devices.map(device => `${device.emoji} ${device.text}`).join("\n"), inline: true },
-                            { name: "Profile Colour", value: `🎨 ${user.hexAccentColor || "None"}`, inline: true },
+                            { name: "Profile Color", value: `🎨 ${user.hexAccentColor || "None"}`, inline: true },
                             { name: "Boosting Server", value: `${emoji.boostroles} ${roles.premiumSubscriberRole ? `Since <t:${parseInt(User.premiumSinceTimestamp / 1000)}:R>` : "No"}`, inline: true },
                             { name: "Banner", value: user.bannerURL() ? "** **" : "🎏 None" }
                         )

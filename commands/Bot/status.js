@@ -73,7 +73,7 @@ try {
                             `${emoji.owner} **Owner** ${client.application.owner ? `<@${client.application.owner.id}> (${client.application.owner.tag})` : "None"}`,
                             `${emoji.verified} **Verified** ${client.user.flags & UserFlags.VerifiedBot ? "Yes" : "No"}`,
                             `🏷 **Tags** ${client.application.tags.length ? formatter.format(client.application.tags.map(tag => `*${tag}*`)) : "None"}`,
-                            `${emoji.badges.VerifiedDeveloper} **Commands** ${client.commands.size} / ${check.length}`
+                            `${emoji.badges.SlashSupported} **Commands** ${client.commands.size} / ${check.length}`
                         ].join("\n")
                     },
                     {
@@ -86,8 +86,8 @@ try {
                             `💾 **CPU Usage** ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}%`,
                             `🐏 **Average RAM Usage** ${avgMem}MB`,
                             `📚 **Database** ${status[connection.readyState]}`,
-                            `${emoji.nodejs} **Node.js** ${process.version}`,
-                            `${emoji.djs} **Discord.js** ${version}`
+                            `${emoji.code.js} **Node.js** ${process.version}`,
+                            `${emoji.code.djs} **Discord.js** ${version}`
                         ].join("\n"),
                         inline: true
                     },

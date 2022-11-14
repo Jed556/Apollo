@@ -1,6 +1,7 @@
 const
     { EmbedBuilder, SlashCommandBuilder, ChannelType, GuildVerificationLevel, GuildExplicitContentFilter, GuildNSFWLevel } = require('discord.js'),
-    { toError } = require('../../system/functions');
+    { toError } = require('../../system/functions'),
+    emoji = require('../../config/emojis.json');
 
 try {
     module.exports = {
@@ -55,13 +56,13 @@ try {
 
             const totalChannels = getChannelTypeSize([
                 ChannelType.GuildText,
-                ChannelType.GuildNews,
+                ChannelType.GuildAnnouncement,
                 ChannelType.GuildVoice,
                 ChannelType.GuildStageVoice,
                 ChannelType.GuildForum,
-                ChannelType.GuildPublicThread,
-                ChannelType.GuildPrivateThread,
-                ChannelType.GuildNewsThread,
+                ChannelType.PublicThread,
+                ChannelType.PrivateThread,
+                ChannelType.AnnouncementThread,
                 ChannelType.GuildCategory
             ]);
 
@@ -79,12 +80,12 @@ try {
                                 value: [
                                     `📜 **Created** <t:${parseInt(guild.createdTimestamp / 1000)}:R>`,
                                     `💳 **ID** ${guild.id}`,
-                                    `<:lyx:957998527328452638> **Owner** <@${guild.ownerId}>`,
+                                    `${emoji.owner} **Owner** <@${guild.ownerId}>`,
                                     `🌍 **Language** ${new Intl.DisplayNames(["en"], { type: "language" }).of(guild.preferredLocale)}`,
                                     `💻 **Vanity URL** ${guild.vanityURLCode || "None"}`,
                                 ].join("\n")
                             },
-                            { name: "Features", value: guild.features?.map(feature => `- ${toPascalCase(feature, " ")}`)?.join("\n") || "None", inline: true },
+                            { name: "Features", value: guild.features?.map(feature => `• ${toPascalCase(feature, " ")}`)?.join("\n") || "None", inline: true },
                             {
                                 name: "Security",
                                 value: [
@@ -107,9 +108,9 @@ try {
                             {
                                 name: `Channels, Threads & Categories (${totalChannels})`,
                                 value: [
-                                    `💬 **Text** ${getChannelTypeSize([ChannelType.GuildText, ChannelType.GuildForum, ChannelType.GuildNews])}`,
+                                    `💬 **Text** ${getChannelTypeSize([ChannelType.GuildText, ChannelType.GuildForum, ChannelType.GuildAnnouncement])}`,
                                     `🎙 **Voice** ${getChannelTypeSize([ChannelType.GuildVoice, ChannelType.GuildStageVoice])}`,
-                                    `🧵 **Threads** ${getChannelTypeSize([ChannelType.GuildPublicThread, ChannelType.GuildPrivateThread, ChannelType.GuildNewsThread])}`,
+                                    `🧵 **Threads** ${getChannelTypeSize([ChannelType.PublicThread, ChannelType.PrivateThread, ChannelType.AnnouncementThread])}`,
                                     `📑 **Categories** ${getChannelTypeSize([ChannelType.GuildCategory])}`
                                 ].join("\n"),
                                 inline: true
@@ -127,9 +128,9 @@ try {
                                 name: "Nitro",
                                 value: [
                                     `📈 **Tier** ${guild.premiumTier || "None"}`,
-                                    `💪🏻 **Boosts** ${guild.premiumSubscriptionCount}`,
-                                    `💎 **Boosters** ${guild.members.cache.filter(member => member.roles.premiumSubscriberRole).size}`,
-                                    `🏋🏻 **Total Boosters** ${guild.members.cache.filter(member => member.premiumSince).size}`
+                                    `${emoji.boostroles} **Boosts** ${guild.premiumSubscriptionCount}`,
+                                    `${emoji.blurpleboost} **Boosters** ${guild.members.cache.filter(member => member.roles.premiumSubscriberRole).size}`,
+                                    `${emoji.boost} **Total Boosters** ${guild.members.cache.filter(member => member.premiumSince).size}`
                                 ].join("\n"),
                                 inline: true
                             },

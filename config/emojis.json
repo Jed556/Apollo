@@ -4,18 +4,24 @@
     "loading": ":arrows_counterclockwise:",
     "ping": ":signal_strength:",
     "badges": {
-        "Staff": "<:discordemployee:1041207447152492588>",
-        "CertifiedModerator": "<:certifiedmoderator:1041207428676587620>",
-        "Partner": "<:discordpartner:1041207438696775720>",
         "Hypesquad": "<:discordhypesquad:1041207430517882950>",
         "HypeSquadOnlineHouse1": "<:discordbravery:1041207418866126868>",
         "HypeSquadOnlineHouse2": "<:discordbrillance:1041207420753555506>",
         "HypeSquadOnlineHouse3": "<:discordbalance:1041207436297637918>",
         "BugHunterLevel1": "<:discordbughunterlv1:1041207440605184071>",
         "BugHunterLevel2": "<:discordbughunterlv2:1041207443105005648>",
+        "Staff": "<:discordemployee:1041207447152492588>",
+        "Partner": "<:discordpartner:1041207438696775720>",
+        "CertifiedModerator": "<:certifiedmoderator:1041207428676587620>",
+        "PremiumEarlySupporter": "<:discordearlysupporter:1041207426663317564>",
+        "TeamPseudoUser": "",
         "VerifiedBot": "<:verifiedbot:1041207445202161665>",
         "VerifiedDeveloper": "<a:devbadge:1041237174466646087>",
-        "PremiumEarlySupporter": "<:discordearlysupporter:1041207426663317564>"
+        "SlashSupported": "<:slashsupported:1041502728024756287>",
+        "ActiveDeveloper": "",
+        "BotHTTPInteractions": "",
+        "Quarantined": "",
+        "Spammer": ""
     },
     "owner": "<:serverowner:1041207434410213426>",
     "verified": "<:verified:1041207422691315823>",
@@ -23,5 +29,14 @@
         "right": "<a:righthand:1041237282142822410>",
         "left": "<a:lefthand:1041237250219966504>"
     },
-    "boostroles": "<a:boostroles:1041236971328118804>"
+    "boost": "<:boost:1041237074432499712>",
+    "boostroles": "<a:boostroles:1041236971328118804>",
+    "blurpleboost": "<:blurpleboost:1041207416953503824>",
+    "code": {
+        "github": "<:github:1041500506859778058>",
+        "vscode": "<:vscode:1041501828292034590>",
+        "javascript": "<:javascript:1041501082083414138>",
+        "js": "<:js:1041500600355008592>",
+        "djs": "<:discordjs:1041503028487929906>"
+    }
 }
