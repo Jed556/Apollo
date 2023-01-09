@@ -1,5 +1,10 @@
 
-const config = require('../../config/client.json');
+const
+    config = require('../../config/client.json'),
+    { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk'),
+    chalk = require('chalk'),
+    blurple = chalk.bold.hex("#7289da");
+
 module.exports = {
     name: "interactionCreate",
     on: true,
@@ -15,6 +20,6 @@ module.exports = {
 
         const guild = interaction.guild.name;
         const channel = interaction.channel.name;
-        console.log(`[${guild} in #${channel} from ${interaction.user.tag}] Command: /${commandName} ${subCommand}`);
+        console.log(`${blurple(`[${guild} in #${channel} from ${interaction.user.tag}]`)} ${bold("Command:")} /${commandName} ${subCommand}`);
     }
 }

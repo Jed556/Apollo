@@ -1,7 +1,11 @@
-const config = require('../../config/client.json');
-const emb = require('../../config/embed.json');
-const { EmbedBuilder } = require('discord.js');
-const { randomNum } = require('../../system/functions');
+const
+    config = require('../../config/client.json'),
+    emb = require('../../config/embed.json'),
+    { EmbedBuilder } = require('discord.js'),
+    { randomNum } = require('../../system/functions'),
+    { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk'),
+    chalk = require('chalk'),
+    blurple = chalk.bold.hex("#7289da");
 
 module.exports = {
     name: "messageCreate",
@@ -13,7 +17,7 @@ module.exports = {
         if (config.listener.guild) {
             const guild = message.guild.name;
             const channel = message.channel.name;
-            console.log(`[${guild} in #${channel} from ${message.author.tag}]${message.content ? ` MESSAGE: ${message.content}` : ""}${message.attachments.size ? ` ATTACHMENT: ${message.attachments.first().url}` : ""}`);
+            console.log(`${blurple(`[${guild} in #${channel} from ${message.author.tag}]`)}${message.content ? ` MESSAGE: ${message.content}` : ""}${message.attachments.size ? ` ATTACHMENT: ${message.attachments.first().url}` : ""}`);
         }
 
         // DM message logging
@@ -88,7 +92,7 @@ module.exports = {
             client.users.fetch(config.ownerID, false).then((user) => {
                 user.send({ embeds: [log] });
             });
-            console.log(`[${message.author.tag}]${message.content ? ` MESSAGE: ${message.content}` : ""}${message.attachments.size ? ` ATTACHMENT: ${message.attachments.first().url}` : ""}`);
+            console.log(`${blurple(`[${message.author.tag}]`)}${message.content ? ` ${bold("MESSAGE:")} ${message.content}` : ""}${message.attachments.size ? ` ${bold("ATTACHMENT:")} ${message.attachments.first().url}` : ""}`);
         }
     }
 }
