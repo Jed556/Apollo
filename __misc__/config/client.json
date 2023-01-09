@@ -4,5 +4,11 @@
     "adminIDs": [],
     "guildID": "",
     "loadGlobal": true,
-    "defaultCooldown": 0.3
+    "defaultCooldown": 0.3,
+    "listener": {
+        "interaction": false,
+        "DM": true,
+        "guild": false,
+        "friendlyMode": false
+    }
 }
