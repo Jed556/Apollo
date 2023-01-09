@@ -595,8 +595,8 @@ async function distubeEvent(client) {
                 { name: `⏱ Duration:`, value: `>>> \`${newQueue.formattedCurrentTime} / ${newTrack.formattedDuration}\``, inline: true },
                 { name: `🌀 Queue:`, value: `>>> \`${newQueue.songs.length} song${newQueue.songs.length != 1 ? "s" : ""}\` - \`${newQueue.formattedDuration}\``, inline: true },
                 { name: `🔊 Volume:`, value: `>>> \`${newQueue.volume} %\``, inline: true },
-                { name: `♾ Loop:`, value: `>>> ${newQueue.repeatMode ? newQueue.repeatMode === 2 ? `${emoji.check}\` Queue\`` : `${emoji.check} \`Song\`` : `${emoji.x}`}`, inline: true },
-                { name: `↪️ Autoplay:`, value: `>>> ${newQueue.autoplay ? `${emoji.check}` : `${emoji.x}`}`, inline: true },
+                { name: `♾ Loop:`, value: `>>> ${newQueue.repeatMode ? newQueue.repeatMode === 2 ? `${emoji.switch.on}\` Queue\`` : `${emoji.switch.on} \`Song\`` : `${emoji.switch.off}`}`, inline: true },
+                { name: `↪️ Autoplay:`, value: `>>> ${newQueue.autoplay ? `${emoji.switch.on}` : `${emoji.switch.off}`}`, inline: true },
                 { name: `⬇ Download:`, value: `>>> [\`File Link\`](${newTrack.streamURL})`, inline: true },
                 { name: `🎙 Filter${filterList.length != 1 ? "s" : ""}:`, value: `>>> ${filterList && filterList.length > 0 ? `${filterList.map(f => `\`${f}\``).join(`, `)}` : `${emoji.x}`}`, inline: filterList.length > 2 ? false : true },
                 { name: `💿 DJ-Role${client.distubeSettings.get(newQueue.id, "djroles").length > 1 ? "s" : ""}:`, value: `>>> ${djs}`, inline: (client.distubeSettings.get(newQueue.id, "djroles").length > 2 || djs != "`Not Set`") ? false : true }
