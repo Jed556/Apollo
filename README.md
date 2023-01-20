@@ -35,9 +35,10 @@
 - Run the program `node .`
 
 ### Ubuntu / SSH
-- Install [Node.js](https://nodejs.org/en/)
 - Clone the repository
-- Copy or move **Apollo/\_\_misc\_\_/[apollo.sh](https://github.com/Jed556/Apollo/blob/main/_misc_/apollo.sh)** outside **Apollo** folder
+- Copy or move **Apollo/\_\_misc\_\_/[apollo.sh](https://github.com/Jed556/Apollo/blob/main/__misc__/apollo.sh)** outside 
+- Create or fill up a config file from the [**templates**](https://github.com/Jed556/Apollo/blob/main/__misc__/config) given. The **client.json** and **.env** files have the same purpose, pick one (will ignore **.env** if **client.js** is present)
+**Apollo** folder
 - Enter `chmod u+x apollo.sh`
 - Run the script: `./apollo.sh`
   ``` bash  
