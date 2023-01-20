@@ -89,11 +89,16 @@ sudo apt install -y gconf-service libgbm-dev libasound2 libatk1.0-0 libc6 libcai
 
 echo -e "\n${BP}Node Version Manager${RP}   ( Node.js | NPM )${NC}"
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-nvm install latest
+export NVM_DIR="$HOME/.nvm"
+source ~/.bash_profile
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+nvm install node
+npm install -g npm
 
 echo -e "\n${BP}NPM Global Install${RP}   ( forever | surge | puppeteer )${NC}"
 npm i forever surge -g
-sudo npm i -g puppeteer --unsafe-perm=true -allow-root
+npm i -g puppeteer --unsafe-perm=true -allow-root
 
 echo -e "\n${BP}NPM Install${NC}"
 npm i
