@@ -4,17 +4,18 @@
 # --------------------------------------------------------
 
 # Output Style
-BR='\033[1;31m'
-BG='\033[1;32m'
-BY='\033[1;33m'
-BB='\033[1;34m'
-BP='\033[1;35m'
-RP='\033[0;35m'
-BC='\033[1;36m'
-BW='\033[1;37m'
-OB='\033[44m'
-OIB='\033[104m'
-NC='\033[0m'
+# Source: https://stackoverflow.com/a/28938235
+BR='\033[1;31m' # Bold Red
+BG='\033[1;32m' # Bold Green
+BY='\033[1;33m' # Bold Yellow
+BB='\033[1;34m' # Bold Blue
+BP='\033[1;35m' # Bold Purple
+RP='\033[0;35m' # Regular Purple
+BC='\033[1;36m' # Bold Cyan
+BW='\033[1;37m' # Bold White
+OB='\033[44m'   # On Blue (Background)
+OIB='\033[104m' # On High Intensity Blue (Background)
+NC='\033[0m'    # Normal Color
 
 # Variables
 exist=false
@@ -87,21 +88,28 @@ sudo apt install chromium-browser -y
 # Comment the line below if you don't want to accidentally change the kernel
 sudo apt install -y gconf-service libgbm-dev libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
 
-echo -e "\n${BP}Node Version Manager${RP}   ( Node.js | NPM )${NC}"
+echo -e "\n${BP}Node Version Manager${RP}   ( nodejs | npm | yarn )${NC}"
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+source ~/.bashrc
 export NVM_DIR="$HOME/.nvm"
-source ~/.bash_profile
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 nvm install node
-npm install -g npm
+npm i -g yarn npm
 
 echo -e "\n${BP}NPM Global Install${RP}   ( forever | surge | puppeteer )${NC}"
 npm i forever surge -g
 npm i -g puppeteer --unsafe-perm=true -allow-root
 
-echo -e "\n${BP}NPM Install${NC}"
-npm i
+echo -e "\n${BP}NPM Install | Yarn${NC}"
+# Install dependencies using Yarn
+yarn
+# If yarn failed, try installing dependencies using npm
+if [ $? -ne 0 ]; then
+    echo -e "\n${RP}Yarn failed. Falling back to npm...${NC}"
+    npm i
+fi
+
 echo -e "${BP}==================================== INSTALLED ====================================${NC}"
 
 
