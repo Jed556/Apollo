@@ -37,7 +37,7 @@
 ### Ubuntu / SSH
 - Install [Node.js](https://nodejs.org/en/)
 - Clone the repository
-- Copy or move **Apollo/\_misc\_/[apollo.sh](https://github.com/Jed556/Apollo/blob/main/_misc_/apollo.sh)** outside **Apollo** folder
+- Copy or move **Apollo/\_\_misc\_\_/[apollo.sh](https://github.com/Jed556/Apollo/blob/main/_misc_/apollo.sh)** outside **Apollo** folder
 - Enter `chmod u+x apollo.sh`
 - Run the script: `./apollo.sh`
   ``` bash  
