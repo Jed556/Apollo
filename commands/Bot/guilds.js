@@ -29,7 +29,7 @@ try {
 
         run: async (client, interaction) => {
             let guildlen = client.guilds.cache.size;
-            interaction.editReply({
+            interaction.reply({
                 embeds: [new EmbedBuilder()
                     .setColor(emb.color)
                     .setAuthor({ name: "SERVERS / GUILDS", iconURL: client.user.displayAvatarURL() })
