@@ -62,7 +62,7 @@ module.exports = {
 
                 // Store memory usage in database
                 await statusDB.findOneAndUpdate(
-                    { _id: client.user.id },
+                    { clientID: client.user.id },
                     { memory: memArray },
                     { upsert: true }
                 );

@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 
 module.exports = model("Distube", new Schema({
-    _id: {
+    clientID: {
         type: Number,
         required: true
     },

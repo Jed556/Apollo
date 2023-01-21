@@ -32,7 +32,7 @@ try {
 
             // Find matching database data
             const docs = await DB.findOne({
-                _id: client.user.id,
+                clientID: client.user.id,
             });
 
             let maintenance;
@@ -44,7 +44,7 @@ try {
 
             // Store memory usage in database
             await DB.findOneAndUpdate(
-                { _id: client.user.id },
+                { clientID: client.user.id },
                 { maintenance },
                 { upsert: true }
             );

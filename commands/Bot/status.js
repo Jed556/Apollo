@@ -33,7 +33,7 @@ try {
         run: async (client, interaction) => {
             // Find matching database data
             const docs = await DB.findOne({
-                _id: client.user.id
+                clientID: client.user.id
             });
 
             await client.user.fetch();

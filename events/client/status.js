@@ -15,7 +15,7 @@ module.exports = {
                 setInterval(() => {
                     // Find matching database data
                     const docs = DB.findOne({
-                        _id: client.user.id,
+                        clientID: client.user.id,
                     });
 
                     if (!docs.maintenance) { // Check if under maintenance
@@ -23,7 +23,7 @@ module.exports = {
                         const
                             Guilds = client.guilds.cache.size,
                             Users = client.users.cache.filter(user => !user.bot).size;
-                        let display = randomNum(1, 3);
+                        let display = randomNum(0, 3);
 
                         switch (display) {
                             // Set status as guild count
