@@ -1,15 +1,24 @@
 
 const
-    config = require('../../config/client.json'),
     { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk'),
     chalk = require('chalk'),
     blurple = chalk.bold.hex("#7289da");
+
+// Variable checks (Use .env if present)
+require('dotenv').config();
+let ListenerInteraction;
+if (process.env.listenerInteraction) {
+    ListenerInteraction = process.env.listenerInteraction;
+} else {
+    const { listener } = require('../../config/config.json');
+    ListenerInteraction = listener
+}
 
 module.exports = {
     name: "interactionCreate",
     on: true,
     run: async (client, interaction) => {
-        if (!config.listener.interaction) return;
+        if (!ListenerInteraction) return;
 
         const
             subCommand = "",

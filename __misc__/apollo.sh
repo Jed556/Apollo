@@ -75,16 +75,16 @@ echo -e "\n${BP}============================= INSTALLING DEPENDENCIES ==========
 cd Apollo
 
 echo -e "\n${BP}APT Update${NC}"
-sudo apt update
+sudo apt -y update
 
 echo -e "\n${BP}FFMPEG${NC}"
-sudo apt install ffmpeg
+sudo apt install -y ffmpeg
 
 echo -e "\n${BP}Canvas Builder${RP}   ( build-essential | libcairo2-dev | libpango1.0-dev | libjpeg-dev | libgif-dev | librsvg2-dev )${NC}"
-sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+sudo apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
 
 echo -e "\n${BP}Puppeteer Dependencies${NC}"
-sudo apt install chromium-browser -y
+sudo apt install -y chromium-browser -y
 # Comment the line below if you don't want to accidentally change the kernel
 sudo apt install -y gconf-service libgbm-dev libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
 
@@ -94,11 +94,11 @@ source ~/.bashrc
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-nvm install node
+nvm install node && nvm use node --silent
 npm i -g yarn npm
 
 echo -e "\n${BP}NPM Global Install${RP}   ( forever | surge | puppeteer )${NC}"
-npm i forever surge -g
+npm i -g forever surge
 npm i -g puppeteer --unsafe-perm=true -allow-root
 
 echo -e "\n${BP}NPM Install | Yarn${NC}"

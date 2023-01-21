@@ -1,5 +1,4 @@
 const
-    config = require('../../config/client.json'),
     emb = require('../../config/embed.json'),
     { EmbedBuilder } = require('discord.js'),
     { randomNum } = require('../../system/functions'),
@@ -7,14 +6,28 @@ const
     chalk = require('chalk'),
     blurple = chalk.bold.hex("#7289da");
 
+// Variable checks (Use .env if present)
+require('dotenv').config();
+let ListenerFriendlyMode, ListenerDM, ListenerGuild;
+if (process.env.listenerInteraction) {
+    ListenerFriendlyMode = process.env.listenerDM;
+    ListenerDM = process.env.listenerGuild;
+    ListenerGuild = process.env.listenerFriendly;
+} else {
+    const { listener } = require('../../config/config.json');
+    ListenerFriendlyMode = listener.friendlyMode;
+    ListenerDM = listener.DM;
+    ListenerGuild = listener.guild;
+}
+
 module.exports = {
     name: "messageCreate",
     on: true,
     run: async (client, message) => {
         if (message.author.bot) return;
-        if ((!message.guild || !message.channel) && config.listener.DM) return DM();
+        if ((!message.guild || !message.channel) && ListenerDM) return DM();
 
-        if (config.listener.guild) {
+        if (ListenerGuild) {
             const guild = message.guild.name;
             const channel = message.channel.name;
             console.log(`${blurple(`[${guild} in #${channel} from ${message.author.tag}]`)}${message.content ? ` MESSAGE: ${message.content}` : ""}${message.attachments.size ? ` ATTACHMENT: ${message.attachments.first().url}` : ""}`);
@@ -36,7 +49,7 @@ module.exports = {
             const msg = message.content.toLowerCase()
 
             // Friendly auto reply
-            if (config.friendlyMode) {
+            if (ListenerFriendlyMode) {
                 if ((msg == "hi") || (msg == "hello") || (msg == "hey")) {
                     const replyArray = ["Yoooo!", "Hey There!", "Hello There!", "Hello Friend!", "Heyyy!"]
                     const reply = replyArray[randomNum(replyArray.length)];

@@ -20,6 +20,7 @@
 - [Installation](https://github.com/Jed556/Apollo#installation)
   - [Basic / Windows](https://github.com/Jed556/Apollo#basic--windows)
   - [Ubuntu / SSH](https://github.com/Jed556/Apollo#ubuntu--ssh)
+  - [Ubuntu / SSH - Deprecated](https://github.com/Jed556/Apollo#ubuntu--ssh---deprecated)
   - [Other Dependencies](https://github.com/Jed556/Apollo#other-dependencies)
     - 24/7 Ubuntu Server
     - Windows
@@ -35,9 +36,18 @@
 - Run the program `node .`
 
 ### Ubuntu / SSH
+- Create or fill up a config file from the [**templates**](https://github.com/Jed556/Apollo/blob/main/__misc__/config) given in the directory you want to install Apollo. All configurations in the **JSON files** are also in the **.env** file (will ignore **JSON files** if **.env** is present)
+- Simply copy, paste and run the code below to your linux terminal. It automatically handles dependency installation, installation updates, copying of config files and runs the client.
+```Bash
+curl -s -LJO https://raw.githubusercontent.com/Jed556/Apollo/main/__misc__/apollo.sh && chmod u+x apollo.sh && ./apollo.sh
+```
+- You may run `./apollo.sh` in your terminal if you want to get the latest release, update your dependencies and restart the client.
+
+### Ubuntu / SSH - Deprecated
+This installation is deprecated due to repeated installation doubling the download size since `apollo.sh` clones the downloaded repo again in order to update it.
 - Clone the repository
 - Copy or move **Apollo/\_\_misc\_\_/[apollo.sh](https://github.com/Jed556/Apollo/blob/main/__misc__/apollo.sh)** outside 
-- Create or fill up a config file from the [**templates**](https://github.com/Jed556/Apollo/blob/main/__misc__/config) given. The **client.json** and **.env** files have the same purpose, pick one (will ignore **.env** if **client.js** is present)
+- Create or fill up a config file from the [**templates**](https://github.com/Jed556/Apollo/blob/main/__misc__/config) given. All configurations in the **JSON files** are also in the **.env** file (will ignore **JSON files** if **.env** is present)
 **Apollo** folder
 - Enter `chmod u+x apollo.sh`
 - Run the script: `./apollo.sh`
