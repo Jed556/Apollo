@@ -28,7 +28,7 @@ try {
         allowedUIDs: [OwnerID, ...AdminIDs],
 
         run: async (client, interaction) => {
-            await interaction.deferReply();
+            await interaction.deferReply({ ephemeral: true });
 
             let guildlen = client.guilds.cache.size;
             await interaction.editReply({

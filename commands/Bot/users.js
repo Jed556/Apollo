@@ -28,9 +28,9 @@ try {
         allowedUIDs: [OwnerID, ...AdminIDs],
 
         run: async (client, interaction) => {
-            await interaction.deferReply();
+            await interaction.deferReply({ ephemeral: true });
 
-            userlen = client.users.cache.filter(user => !user.bot).size;
+            let userlen = client.users.cache.filter(user => !user.bot).size;
             await interaction.editReply({
                 embeds: [new EmbedBuilder()
                     .setColor(emb.color)
