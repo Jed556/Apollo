@@ -37,9 +37,9 @@
 
 ### Ubuntu / SSH
 - Create or fill up a config file from the [**templates**](https://github.com/Jed556/Apollo/blob/main/__misc__/config) given in the directory you want to install Apollo. All configurations in the **JSON files** are also in the **.env** file (will ignore **JSON files** if **.env** is present)
-- Simply copy, paste and run the code below to your linux terminal. It automatically handles dependency installation, installation updates, copying of config files and runs the client.
+- Simply copy, paste and run the code below to your linux terminal. It automatically handles dependency installation, installation updates, copying of config files, runs the client and sets the global node version to use for future use cases.
 ```Bash
-curl -s -LJO https://raw.githubusercontent.com/Jed556/Apollo/main/__misc__/apollo.sh && chmod u+x apollo.sh && ./apollo.sh
+curl -s -LJO https://raw.githubusercontent.com/Jed556/Apollo/main/__misc__/apollo.sh && chmod u+x apollo.sh && ./apollo.sh && nvm use --lts --silent node
 ```
 - You may run `./apollo.sh` in your terminal if you want to get the latest release, update your dependencies and restart the client.
 
