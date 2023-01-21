@@ -10,7 +10,7 @@ let ListenerInteraction;
 if (process.env.listenerInteraction) {
     ListenerInteraction = process.env.listenerInteraction;
 } else {
-    const { listener } = require('../../config/config.json');
+    const { listener } = require('../../config/client.json');
     ListenerInteraction = listener
 }
 
