@@ -31,7 +31,7 @@ try {
             await interaction.deferReply();
 
             userlen = client.users.cache.filter(user => !user.bot).size;
-            interaction.followUp({
+            interaction.editReply({
                 embeds: [new EmbedBuilder()
                     .setColor(emb.color)
                     .setAuthor({ name: "USERS", iconURL: client.user.displayAvatarURL() })
@@ -44,6 +44,7 @@ try {
                 let embedCounter = 1;
                 let embed = new EmbedBuilder()
                     .setTitle(`${guild.name} : ${embedCounter}`)
+                    .setThumbnail(guild.iconURL({ dynamic: true }))
                     .setColor(emb.color);
 
                 let fieldCounter = 0;
@@ -53,17 +54,24 @@ try {
                         embed.addFields({ name: member.user.tag, value: `||${member.user.id}||` });
                         fieldCounter++;
                     } else {
-                        interaction.followUp({ embeds: [embed] });
+                        interaction.followUp({
+                            embeds: [embed],
+                            ephemeral: true
+                        });
                         embedCounter++;
                         embed = new EmbedBuilder()
                             .setTitle(`${guild.name} : ${embedCounter}`)
+                            .setThumbnail(guild.iconURL({ dynamic: true }))
                             .setColor(emb.color);
                         fieldCounter = 0;
                     }
                 });
 
                 if (fieldCounter > 0) {
-                    interaction.followUp({ embeds: [embed] });
+                    interaction.followUp({
+                        embeds: [embed],
+                        ephemeral: true
+                    });
                 }
             });
         }

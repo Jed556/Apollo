@@ -29,18 +29,45 @@ try {
 
         run: async (client, interaction) => {
             await interaction.deferReply();
-            let servers = client.guilds.cache.map(guild => guild.name + " ||" + guild.id + "||")
 
+            let guildlen = client.guilds.cache.size;
             interaction.editReply({
                 embeds: [new EmbedBuilder()
-                    .setTimestamp()
                     .setColor(emb.color)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                     .setAuthor({ name: "SERVERS / GUILDS", iconURL: client.user.displayAvatarURL() })
-                    .setDescription(`**${client.user.username}** is currently in **${servers.length}** servers:\n${servers.join("\n")}`)
+                    .setDescription(`**${client.user.username}** is currently in **${guildlen}** servers:`)
                 ],
                 ephemeral: true
             });
+
+            let embedCounter = 1;
+            let embed = new EmbedBuilder()
+                .setTitle(`Guilds : ${embedCounter}`)
+                .setColor(emb.color);
+            let fieldCounter = 0;
+            client.guilds.cache.forEach((guild) => {
+                if (fieldCounter < 25) {
+                    embed.addFields({ name: guild.name, value: `||${guild.id}||` });
+                    fieldCounter++;
+                } else {
+                    interaction.followUp({
+                        embeds: [embed],
+                        ephemeral: true
+                    });
+                    embedCounter++;
+                    embed = new EmbedBuilder()
+                        .setTitle(`Guilds : ${embedCounter}`)
+                        .setColor(emb.color);
+                    fieldCounter = 0;
+                }
+            });
+
+            if (fieldCounter > 0) {
+                interaction.followUp({
+                    embeds: [embed],
+                    ephemeral: true
+                });
+            }
         }
     }
 } catch (e) { toError(e) }
