@@ -8,16 +8,20 @@ const
 
 // Variable checks (Use .env if present)
 require('dotenv').config();
-let ListenerFriendlyMode, ListenerDM, ListenerGuild;
+let ListenerFriendlyMode, ListenerDM, ListenerGuild, OwnerID, AdminIDs = [];
 if (process.env.listenerInteraction) {
     ListenerFriendlyMode = process.env.listenerDM;
     ListenerDM = process.env.listenerGuild;
     ListenerGuild = process.env.listenerFriendly;
+    OwnerID = process.env.ownerID;
+    if (process.env.adminIDs) AdminIDs = process.env.adminIDs.split(', ');
 } else {
-    const { listener } = require('../../config/config.json');
+    const { listener, ownerID, adminIDs } = require('../../config/client.json');
     ListenerFriendlyMode = listener.friendlyMode;
     ListenerDM = listener.DM;
     ListenerGuild = listener.guild;
+    OwnerID = ownerID;
+    AdminIDs = adminIDs;
 }
 
 module.exports = {
@@ -102,7 +106,7 @@ module.exports = {
                 }
             }
 
-            client.users.fetch(config.ownerID, false).then((user) => {
+            client.users.fetch(OwnerID, false).then((user) => {
                 user.send({ embeds: [log] });
             });
             console.log(`${blurple(`[${message.author.tag}]`)}${message.content ? ` ${bold("MESSAGE:")} ${message.content}` : ""}${message.attachments.size ? ` ${bold("ATTACHMENT:")} ${message.attachments.first().url}` : ""}`);
