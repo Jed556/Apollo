@@ -29,17 +29,42 @@ try {
 
         run: async (client, interaction) => {
             await interaction.deferReply();
-            let users = client.users.cache.map(user => user.tag + " ||" + user.id + "||")
 
-            interaction.editReply({
+            userlen = client.users.cache.filter(user => !user.bot).size;
+            interaction.followUp({
                 embeds: [new EmbedBuilder()
-                    .setTimestamp()
                     .setColor(emb.color)
-                    .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
-                    .setAuthor({ name: "SERVERS / GUILDS", iconURL: client.user.displayAvatarURL() })
-                    .setDescription(`**${client.user.username}** is currently with **${users.length}** users: ${users.join("\n")}`)
+                    .setAuthor({ name: "USERS", iconURL: client.user.displayAvatarURL() })
+                    .setDescription(`**${client.user.username}** is currently with **${userlen}** users:`)
                 ],
                 ephemeral: true
+            });
+
+            client.guilds.cache.forEach((guild) => {
+                let embedCounter = 1;
+                let embed = new EmbedBuilder()
+                    .setTitle(`${guild.name} : ${embedCounter}`)
+                    .setColor(emb.color);
+
+                let fieldCounter = 0;
+                const nonBotUsers = guild.members.cache.filter(member => !member.user.bot);
+                nonBotUsers.forEach((member) => {
+                    if (fieldCounter < 25) {
+                        embed.addFields({ name: member.user.tag, value: `||${member.user.id}||` });
+                        fieldCounter++;
+                    } else {
+                        interaction.followUp({ embeds: [embed] });
+                        embedCounter++;
+                        embed = new EmbedBuilder()
+                            .setTitle(`${guild.name} : ${embedCounter}`)
+                            .setColor(emb.color);
+                        fieldCounter = 0;
+                    }
+                });
+
+                if (fieldCounter > 0) {
+                    interaction.followUp({ embeds: [embed] });
+                }
             });
         }
     }

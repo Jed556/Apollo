@@ -37,7 +37,7 @@ try {
                     .setColor(emb.color)
                     .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
                     .setAuthor({ name: "SERVERS / GUILDS", iconURL: client.user.displayAvatarURL() })
-                    .setDescription(`**${client.user.username}** is currently in **${servers.length}** servers: ${servers.join("\n")}`)
+                    .setDescription(`**${client.user.username}** is currently in **${servers.length}** servers:\n${servers.join("\n")}`)
                 ],
                 ephemeral: true
             });
