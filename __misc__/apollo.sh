@@ -67,6 +67,9 @@ fi
 # Copy necessary files
 echo -e "\n${BY}================================== COPYING FILES ==================================${NC}"
 cp -v .env Apollo
+cp -v client.json Apollo/config
+cp -v distube.json Apollo/config
+cp -v database.json Apollo/config
 echo -e "${BY}===================================== COPIED ======================================${NC}"
 
 
