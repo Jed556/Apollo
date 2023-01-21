@@ -28,8 +28,6 @@ try {
         allowedUIDs: [OwnerID, ...AdminIDs],
 
         run: async (client, interaction) => {
-            await interaction.deferReply();
-
             let guildlen = client.guilds.cache.size;
             interaction.editReply({
                 embeds: [new EmbedBuilder()
