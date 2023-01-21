@@ -97,7 +97,7 @@ source ~/.bashrc
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-nvm install --lts node && nvm use --lts node --silent
+nvm install --lts --latest-npm node && nvm use --lts --silent node
 npm i -g yarn npm
 
 echo -e "\n${BP}NPM Global Install${RP}   ( forever | surge | puppeteer )${NC}"
