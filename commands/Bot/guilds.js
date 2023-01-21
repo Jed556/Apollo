@@ -28,8 +28,10 @@ try {
         allowedUIDs: [OwnerID, ...AdminIDs],
 
         run: async (client, interaction) => {
+            await interaction.deferReply();
+
             let guildlen = client.guilds.cache.size;
-            interaction.reply({
+            await interaction.editReply({
                 embeds: [new EmbedBuilder()
                     .setColor(emb.color)
                     .setAuthor({ name: "SERVERS / GUILDS", iconURL: client.user.displayAvatarURL() })

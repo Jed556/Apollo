@@ -28,8 +28,10 @@ try {
         allowedUIDs: [OwnerID, ...AdminIDs],
 
         run: async (client, interaction) => {
+            await interaction.deferReply();
+
             userlen = client.users.cache.filter(user => !user.bot).size;
-            interaction.reply({
+            await interaction.editReply({
                 embeds: [new EmbedBuilder()
                     .setColor(emb.color)
                     .setAuthor({ name: "USERS", iconURL: client.user.displayAvatarURL() })
