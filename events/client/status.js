@@ -35,7 +35,7 @@ module.exports = {
                     switch (display) {
                         // Set status as guild count
                         case 0:
-                            client.user.setActivity(`${Guilds} Server ${Guilds > 1 || Guilds < 1 ? "s" : ""}`,
+                            client.user.setActivity(`${Guilds} Server${Guilds > 1 || Guilds < 1 ? "s" : ""}`,
                                 { type: ActivityType.Listening });
                             break;
 
