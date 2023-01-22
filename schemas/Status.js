@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 
 module.exports = model("Status", new Schema({
-    clientID: {
+    _id: {
         type: Number,
         required: true
     },

@@ -16,10 +16,10 @@ module.exports = {
                 prevDisplay1 = 0,
                 prevDisplay2 = 0;
 
-            setInterval(() => {
+            setInterval(async () => {
                 // Find matching database data
-                const docs = DB.findOne({
-                    clientID: client.user.id
+                const docs = await DB.findOne({
+                    _id: client.user.id
                 });
 
                 if (!docs.maintenance) { // Check if under maintenance

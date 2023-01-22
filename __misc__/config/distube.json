@@ -3,7 +3,7 @@
     "spotify_api": {
         "enabled": false,
         "clientSecret": "",
-        "clientId": ""
+        "_id": ""
     },
     "nsfwMusic": true,
     "music-request-edit-delay": 6000
