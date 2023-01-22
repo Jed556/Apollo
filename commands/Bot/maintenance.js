@@ -1,5 +1,5 @@
 const
-    { EmbedBuilder, SlashCommandBuilder } = require('discord.js'),
+    { EmbedBuilder, SlashCommandBuilder, ActivityType } = require('discord.js'),
     { toError } = require('../../system/functions'),
     emb = require('../../config/embed.json'),
     DB = require('../../schemas/Status');
@@ -48,6 +48,15 @@ try {
                 { maintenance },
                 { upsert: true }
             );
+
+            // Set status as under maintenance
+            if (maintenance) {
+                client.user.setStatus("dnd");
+                client.user.setActivity("MAINTENANCE", { type: ActivityType.Watching });
+            } else {
+                client.user.setStatus("idle");
+                client.user.setActivity("Deployment", { type: ActivityType.Watching });
+            }
 
             interaction.editReply({
                 embeds: [new EmbedBuilder()
