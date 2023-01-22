@@ -58,15 +58,19 @@ try {
                 case "command":
                     reloadCommands(client, cd, embed, interaction);
                     reloadType = "Commands";
+                    client.cmdOk = false;
                     break;
                 case "event":
                     reloadEvents(client, cd, embed, interaction);
                     reloadType = "Events";
+                    client.evtOk = false;
                     break;
                 default: {
                     reloadEvents(client, cd, embed, interaction);
                     reloadCommands(client, cd, embed, interaction);
                     reloadType = "Handlers";
+                    client.cmdOk = false;
+                    client.evtOk = false;
                 }
             }
 

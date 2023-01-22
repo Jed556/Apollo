@@ -108,6 +108,9 @@ client.distubeSettings = new Enmap({ name: "distubeSettings", dataDir: "./localD
 client.infos = new Enmap({ name: "infos", dataDir: "./localDB/infos" });
 client.autoresume = new Enmap({ name: "autoresume", dataDir: "./localDB/infos" });
 client.maps = new Map();
+client.cmdOk = false;
+client.dbOk = false;
+client.evtOk = false;
 
 // Load the Handlers
 const

@@ -44,8 +44,10 @@ async function loadCommands(client) {
 
     if (client.commands.size < check.length)
         console.log(toError(null, "Refreshing commands failed") + err);
-    else
+    else {
         console.log(cyanBright.bold("[INFO]") + " Reloaded commands");
+        client.cmdOk = true;
+    }
 }
 
 /**

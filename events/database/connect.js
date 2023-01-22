@@ -45,6 +45,7 @@ module.exports = {
                 useUnifiedTopology: true
             }).then(() => {
                 console.log(`${cyanBright.bold("[INFO]")} Connected to database`);
+                client.dbOk = true;
             }).catch((err) => {
                 console.log(toError(null, "Can't connect to database") + ` ${dim.bold("(Client)")}` + "\n        " + err.stack.split("\n").map(l => `${l}\n    `).join(""));
             });

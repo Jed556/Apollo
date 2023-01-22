@@ -58,6 +58,7 @@ async function loadEvents(client) {
 
 
     console.log(Table.toString()); // Log table to console
+    client.evtOk = true;
 }
 
 module.exports = { loadEvents };
