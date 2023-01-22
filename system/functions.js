@@ -38,7 +38,7 @@ function reSlash(string) {
 function randomNum(min, max) {
     try {
         let number;
-        if (min && max) {
+        if (min || max) {
             number = Math.round(Math.random() * (max - min)) + min;
         } else {
             number = Math.round(Math.random());
