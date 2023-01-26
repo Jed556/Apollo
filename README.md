@@ -20,18 +20,22 @@
 - [Installation](https://github.com/Jed556/Apollo#installation)
   - [Basic / Windows](https://github.com/Jed556/Apollo#basic--windows)
   - [Ubuntu / SSH](https://github.com/Jed556/Apollo#ubuntu--ssh)
-  - [Ubuntu / SSH - Deprecated](https://github.com/Jed556/Apollo#ubuntu--ssh---deprecated)
+  - [Ubuntu / SSH - Deprecated](https://github.com/Jed556/Apollo/tree/f4f37004912b4ec12cb503c52d3ead87d9f0a373#ubuntu--ssh---deprecated)
   - [Other Dependencies](https://github.com/Jed556/Apollo#other-dependencies)
     - 24/7 Ubuntu Server
     - Windows
-  - [Heroku](https://github.com/Jed556/Apollo#heroku)
+  - [Heroku - Deprecated](https://github.com/Jed556/Apollo/tree/f4f37004912b4ec12cb503c52d3ead87d9f0a373#heroku)
 - [Support](https://github.com/Jed556/Apollo#support)
 
 ## Installation
+I recommend using **JSON files** for now.<br>
+**.env files** are parsed as strings, causing some of the config values to be interpreted incorrectly.
 ### Basic / Windows
 - Install [Node.js](https://nodejs.org/en/)
-- Download [Apollo.zip](https://github.com/Jed556/Apollo/releases)
-- Go inside the repository folder
+- Download latest [Apollo.zip](https://github.com/Jed556/Apollo/releases) release
+- Extract the **Apollo-main** folder to your desired location
+- Go inside the repository folder ***Apollo-main***
+- Create or fill up a config file from the [**templates**](https://github.com/Jed556/Apollo/blob/main/__misc__/config) given in the directory you want to install Apollo. All configurations in the **JSON files** are also in the **.env** file (will ignore **JSON files** if **.env** is present). **JSON files** must be in **\<REPO_FOLDER\>/config/** while .env must be in **\<REPO_FOLDER\>/**
 - Install dependencies `npm i`
 - Run the program `node .`
 
@@ -42,49 +46,6 @@
 curl -s -LJO https://raw.githubusercontent.com/Jed556/Apollo/main/__misc__/apollo.sh && chmod u+x apollo.sh && ./apollo.sh && nvm use --lts --silent node
 ```
 - You may run `./apollo.sh` in your terminal if you want to get the latest release, update your dependencies and restart the client.
-
-### Ubuntu / SSH - Deprecated
-This installation is deprecated due to repeated installation doubling the download size since `apollo.sh` clones the downloaded repo again in order to update it.
-- Clone the repository
-- Copy or move **Apollo/\_\_misc\_\_/[apollo.sh](https://github.com/Jed556/Apollo/blob/main/__misc__/apollo.sh)** outside 
-- Create or fill up a config file from the [**templates**](https://github.com/Jed556/Apollo/blob/main/__misc__/config) given. All configurations in the **JSON files** are also in the **.env** file (will ignore **JSON files** if **.env** is present)
-**Apollo** folder
-- Enter `chmod u+x apollo.sh`
-- Run the script: `./apollo.sh`
-  ``` bash  
-  # Check if directory exists
-  exist=false
-  if [ -d "Apollo" ]; then
-      exist=true
-  fi
-
-  # Stop processes
-  if [ "$exist" = true ]; then
-      forever stop Apollo/index.js
-  fi
-  
-  # Clone / Update
-  if [ "$exist" = true ]; then
-      rm -rf Apollo && echo $'removed \'Apollo\''
-  fi
-  git clone https://github.com/Jed556/Apollo.git
-  
-  # Install dependencies
-  cd Apollo
-  sudo apt update
-  sudo apt install ffmpeg
-  sudo apt-get install build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
-  sudo apt install chromium-browser -y
-  npm i forever surge -g
-  sudo npm i -g puppeteer --unsafe-perm=true -allow-root
-  npm i
-
-  # Create necesssary files
-  touch apollo.log && echo $'created \'apollo.log\''
-
-  # Run Apollo
-  forever start -a -l ../Apollo/apollo.log index.js
-  ```
 
 ### Other Dependencies
 These dependencies are required in certain circumstances<br/>
@@ -103,10 +64,6 @@ These dependencies are required in certain circumstances<br/>
   ``` text
   npm i ffmpeg-static
   ```
-
-### Heroku
-Heroku hosting is deprecated.<br>
-*Please refer to [v0.3.1 Files](https://github.com/Jed556/Apollo/tree/v0.3.1) for hosting.*
 
 ## Support
 <div align="center">
