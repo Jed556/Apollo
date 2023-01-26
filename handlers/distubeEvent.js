@@ -56,7 +56,7 @@ async function distubeEvent(client) {
                         time: track.duration > 0 ? track.duration * 1000 : 600000
                     }); //collector for 5 seconds
 
-                    // Array of last 10 embeds (0-9)
+                    // Edit status check
                     let lastEdited = false;
 
                     // EDIT THE SONG DASHBOARD EVERY 10 SECONDS!
@@ -606,16 +606,16 @@ async function distubeEvent(client) {
             .setFooter({ text: newTrack.user.tag, iconURL: newTrack.user.displayAvatarURL({ dynamic: true }) });
 
         // Setup dashboard buttons
-        let previous = new ButtonBuilder().setStyle('Primary').setCustomId('1').setEmoji('⏮').setLabel(`Previous`);
-        let skip = new ButtonBuilder().setStyle('Primary').setCustomId('2').setEmoji(`⏭`).setLabel(`Skip`)
-        let stop = new ButtonBuilder().setStyle('Danger').setCustomId('3').setEmoji(`⏹`).setLabel(`Stop`)
-        let pause = new ButtonBuilder().setStyle('Secondary').setCustomId('4').setEmoji('⏸').setLabel(`Pause`)
-        let shuffle = new ButtonBuilder().setStyle('Primary').setCustomId('5').setEmoji('🔀').setLabel(`Shuffle`)
-        let autoplay = new ButtonBuilder().setStyle('Success').setCustomId('6').setEmoji('🔁').setLabel(`Autoplay`)
-        let songloop = new ButtonBuilder().setStyle('Success').setCustomId('7').setEmoji(`🔂`).setLabel(`Song`)
-        let queueloop = new ButtonBuilder().setStyle('Success').setCustomId('8').setEmoji(`🔁`).setLabel(`Queue`)
-        let rewind = new ButtonBuilder().setStyle('Primary').setCustomId('9').setEmoji('⏪').setLabel(`-10 Sec`)
-        let forward = new ButtonBuilder().setStyle('Primary').setCustomId('10').setEmoji('⏩').setLabel(`+10 Sec`)
+        let previous = new ButtonBuilder().setStyle("Primary").setCustomId("1").setEmoji("⏮").setLabel("Previous");
+        let skip = new ButtonBuilder().setStyle("Primary").setCustomId("2").setEmoji("⏭").setLabel("Skip")
+        let stop = new ButtonBuilder().setStyle("Danger").setCustomId("3").setEmoji("⏹").setLabel("Stop")
+        let pause = new ButtonBuilder().setStyle("Secondary").setCustomId("4").setEmoji("⏸").setLabel("Pause")
+        let shuffle = new ButtonBuilder().setStyle("Primary").setCustomId("5").setEmoji("🔀").setLabel("Shuffle")
+        let autoplay = new ButtonBuilder().setStyle("Success").setCustomId("6").setEmoji("🔁").setLabel("Autoplay")
+        let songloop = new ButtonBuilder().setStyle("Success").setCustomId("7").setEmoji("🔂").setLabel("Song")
+        let queueloop = new ButtonBuilder().setStyle("Success").setCustomId("8").setEmoji("🔁").setLabel("Queue")
+        let rewind = new ButtonBuilder().setStyle("Primary").setCustomId("9").setEmoji("⏪").setLabel("-10 Sec")
+        let forward = new ButtonBuilder().setStyle("Primary").setCustomId("10").setEmoji("⏩").setLabel("+10 Sec")
 
         // Dashboard button actions
         if (newQueue.songs.length == 0) {
@@ -629,22 +629,22 @@ async function distubeEvent(client) {
             previous = previous.setDisabled(false);
         }
         if (!newQueue.playing) {
-            pause = pause.setStyle('Success').setEmoji('▶️').setLabel(`Resume`)
+            pause = pause.setStyle("Success").setEmoji("▶️").setLabel("Resume")
         }
         if (newQueue.autoplay) {
-            autoplay = autoplay.setStyle('Secondary')
+            autoplay = autoplay.setStyle("Secondary")
         }
         if (newQueue.repeatMode === 0) {
-            songloop = songloop.setStyle('Success')
-            queueloop = queueloop.setStyle('Success')
+            songloop = songloop.setStyle("Success")
+            queueloop = queueloop.setStyle("Success")
         }
         if (newQueue.repeatMode === 1) {
-            songloop = songloop.setStyle('Secondary')
-            queueloop = queueloop.setStyle('Success')
+            songloop = songloop.setStyle("Secondary")
+            queueloop = queueloop.setStyle("Success")
         }
         if (newQueue.repeatMode === 2) {
-            songloop = songloop.setStyle('Success')
-            queueloop = queueloop.setStyle('Secondary')
+            songloop = songloop.setStyle("Success")
+            queueloop = queueloop.setStyle("Secondary")
         }
         if (Math.floor(newQueue.currentTime) < 10) {
             rewind = rewind.setDisabled()
@@ -674,30 +674,30 @@ async function distubeEvent(client) {
      */
     async function updateMusicSystem(queue, leave = false) {
         if (!queue) return;
-        if (client.distubeSettings.get(queue.id, `music.channel`) && client.distubeSettings.get(queue.id, `music.channel`).length > 5) {
-            let messageId = client.distubeSettings.get(queue.id, `music.message`);
+        if (client.distubeSettings.get(queue.id, "music.channel") && client.distubeSettings.get(queue.id, "music.channel").length > 5) {
+            let messageId = client.distubeSettings.get(queue.id, "music.message");
 
             // Try to get the guild
             let guild = client.guilds.cache.get(queue.id);
-            if (!guild) return console.log(`Update-Music-System` + ` - Music System - Guild not found!`)
+            if (!guild) return console.log("Update-Music-System" + " - Music System - Guild not found!")
 
             // Try to get the channel
-            let channel = guild.channels.cache.get(client.distubeSettings.get(queue.id, `music.channel`));
-            if (!channel) channel = await guild.channels.fetch(client.distubeSettings.get(queue.id, `music.channel`)).catch(() => { }) || false
-            if (!channel) return console.log(`Update-Music-System` + ` - Music System - Channel not found!`)
-            if (!channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) return console.log(`Music System - Missing Permissions`)
+            let channel = guild.channels.cache.get(client.distubeSettings.get(queue.id, "music.channel"));
+            if (!channel) channel = await guild.channels.fetch(client.distubeSettings.get(queue.id, "music.channel")).catch(() => { }) || false
+            if (!channel) return console.log("Update-Music-System" + " - Music System - Channel not found!")
+            if (!channel.permissionsFor(channel.guild.me).has(Permissions.FLAGS.SEND_MESSAGES)) return console.log("Music System - Missing Permissions")
 
             // Try to get the channel
             let message = channel.messages.cache.get(messageId);
             if (!message) message = await channel.messages.fetch(messageId).catch(() => { }) || false;
-            if (!message) return console.log(`Update-Music-System` + ` - Music System - Message not found!`)
+            if (!message) return console.log("Update-Music-System" + " - Music System - Message not found!")
 
             // Edit the message to correct it
             var data = generateQueueEmbed(client, queue.id, leave)
             message.edit(data).catch((e) => {
                 console.log(e)
             }).then(m => {
-                console.log(`Update-Music-System` + ` - Edited the message due to a User Interaction`)
+                console.log("Update-Music-System" + " - Edited the message due to a User Interaction")
             })
         }
     }

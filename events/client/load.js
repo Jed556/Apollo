@@ -1,6 +1,6 @@
 const
     Discord = require('discord.js'),
-    { EmbedBuilder } = require('discord.js'),
+    { EmbedBuilder, ActivityType } = require('discord.js'),
     { toError } = require('../../system/functions'),
     { loadFiles } = require('../../system/fileLoader'),
     { loadCommands } = require('../../handlers/commands'),
@@ -66,7 +66,7 @@ module.exports = {
                         ]
                     });
                 });
-                client.user.setActivity(`Redeploys • ERROR`, { type: "WATCHING" });
+                client.user.setActivity("Redeploys • ERROR", { type: ActivityType.Watching });
             } else {
                 // Success log
                 client.users.fetch(OwnerID, false).then((user) => {

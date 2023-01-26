@@ -1,8 +1,7 @@
 const
     { EmbedBuilder, SlashCommandBuilder } = require('discord.js'),
     { toError } = require('../../system/functions'),
-    emb = require('../../config/embed.json'),
-    DB = require('../../schemas/Status');
+    emb = require('../../config/embed.json');
 
 // Variable checks (Use .env if present)
 require('dotenv').config();

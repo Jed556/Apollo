@@ -1,5 +1,5 @@
 const
-    { EmbedBuilder, SlashCommandBuilder, SelectMenuBuilder, ActionRowBuilder } = require('discord.js'),
+    { EmbedBuilder, SlashCommandBuilder, StringSelectMenuBuilder, ActionRowBuilder } = require('discord.js'),
     { distubeValidate } = require('../../system/distubeFunctions'),
     { toError } = require('../../system/functions'),
     emb = require('../../config/embed.json');
@@ -53,7 +53,7 @@ try {
                 pages.push(embeds.slice(i, i + 3));
             }
             pages = pages.slice(0, 24);
-            const Menu = new SelectMenuBuilder()
+            const Menu = new StringSelectMenuBuilder()
                 .setCustomId("QUEUEPAGES")
                 .setPlaceholder("Select Page")
                 .addOptions(
@@ -74,7 +74,7 @@ try {
 
             //Event
             client.on('interactionCreate', (i) => {
-                if (!i.isSelectMenu()) return;
+                if (!i.isStringSelectMenu()) return;
                 if (i.customId === "QUEUEPAGES" && i.applicationId == client.user.id) {
                     i.reply({
                         embeds: pages[Number(i.values[0])],

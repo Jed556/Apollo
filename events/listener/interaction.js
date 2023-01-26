@@ -20,15 +20,28 @@ module.exports = {
     run: async (client, interaction) => {
         if (!ListenerInteraction) return;
 
-        const
-            subCommand = "",
-            commandName = interaction.commandName;
+
+        let subCommand = "";
         try {
             subCommand = interaction.options.getSubcommand() + " ";
         } catch { }
 
-        const guild = interaction.guild.name;
-        const channel = interaction.channel.name;
-        console.log(`${blurple(`[${guild} in #${channel} from ${interaction.user.tag}]`)} ${bold("Command:")} /${commandName} ${subCommand}`);
+        const
+            commandName = interaction.commandName,
+            guild = interaction.guild.name,
+            guildID = interaction.guild.id,
+            channel = interaction.channel.name,
+            channelID = interaction.channel.id,
+            user = interaction.user.tag,
+            userID = interaction.user.id;
+
+        let
+            infoStr = blurple(`[${guild} ${dim(`<${guildID}>`)} in #${channel} ${dim(`<${channelID}>`)} from ${user} ${dim(`<${userID}>`)}]`),
+            cmdStr = bold("Command:") + ` /${commandName} ${subCommand}`;
+
+        if (!interaction.isChatInputCommand())
+            console.log(`${infoStr} ${interaction.customId ? `${bold("Interaction ID:")} ${interaction.customId}` : bold("Component Interaction")}`);
+        else
+            console.log(`${infoStr} ${cmdStr} `);
     }
 }
