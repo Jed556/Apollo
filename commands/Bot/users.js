@@ -49,7 +49,11 @@ try {
                 const nonBotUsers = guild.members.cache.filter(member => !member.user.bot);
                 nonBotUsers.forEach((member) => {
                     if (fieldCounter < 25) {
-                        embed.addFields({ name: member.displayName, value: `<@${member.user.id}>#${member.user.discriminator}`, inline: true });
+                        if (interaction.guild.id == guild.id)
+                            tag = `<@${member.user.id}>[#${member.user.discriminator}](https://discord.com/users/${member.user.id})`;
+                        else
+                            tag = `[#${member.user.tag}](https://discord.com/users/${member.user.id})`;
+                        embed.addFields({ name: member.displayName, value: tag, inline: true });
                         fieldCounter++;
                     } else {
                         client.usersEmbedArray.push(embed);
@@ -63,6 +67,7 @@ try {
                     client.usersEmbedArray.push(embed);
                 }
             });
+            client.usersEmbedArray.reverse();
 
             // List pagination
             let
