@@ -29,6 +29,7 @@ try {
         run: async (client, interaction) => {
             await interaction.deferReply({ ephemeral: true });
             let userlen = client.users.cache.filter(user => !user.bot).size;
+            const maxFields = 24; // Must be >= 25
 
             // List maker
             client.guilds.cache.forEach((guild) => {
@@ -48,11 +49,11 @@ try {
                 let fieldCounter = 0;
                 const nonBotUsers = guild.members.cache.filter(member => !member.user.bot);
                 nonBotUsers.forEach((member) => {
-                    if (fieldCounter < 25) {
+                    if (fieldCounter < (maxFields || 25)) {
                         if (interaction.guild.id == guild.id)
                             tag = `<@${member.user.id}>[#${member.user.discriminator}](https://discord.com/users/${member.user.id})`;
                         else
-                            tag = `[#${member.user.tag}](https://discord.com/users/${member.user.id})`;
+                            tag = `[${member.user.tag}](https://discord.com/users/${member.user.id})`;
                         embed.addFields({ name: member.displayName, value: tag, inline: true });
                         fieldCounter++;
                     } else {
