@@ -107,6 +107,7 @@ client.events = new Collection();
 client.distubeSettings = new Enmap({ name: "distubeSettings", dataDir: "./localDB/settings" });
 client.infos = new Enmap({ name: "infos", dataDir: "./localDB/infos" });
 client.autoresume = new Enmap({ name: "autoresume", dataDir: "./localDB/infos" });
+client.usersEmbedArray = [];
 client.maps = new Map();
 client.cmdOk = false;
 client.dbOk = false;
