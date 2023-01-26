@@ -105,7 +105,7 @@ async function distubeEvent(client) {
                         }, 7000)
 
                         // ---------------------------------------- PREVIOUS ---------------------------------------- //
-                        if (i.customId == `1`) {
+                        if (i.customId == "musicPrev") {
                             // Validate if user can execute the command
                             const validate = await distubeValidate(i, newQueue, ["channel", "playing", "previous"]);
                             if (validate) return;
@@ -120,7 +120,7 @@ async function distubeEvent(client) {
 
 
                         // ---------------------------------------- SKIP ---------------------------------------- //
-                        if (i.customId == `2`) {
+                        if (i.customId == "musicSkip") {
                             // Validate if user can execute the command
                             const validate = await distubeValidate(i, newQueue, ["channel", "playing", "skip"]);
                             if (validate) return clearInterval(songEditInterval);
@@ -135,7 +135,7 @@ async function distubeEvent(client) {
                         }
 
                         // ---------------------------------------- STOP ---------------------------------------- //
-                        if (i.customId == `3`) {
+                        if (i.customId == "musicStop") {
                             // Validate if user can execute the command
                             const validate = await distubeValidate(i, newQueue, ["channel"]);
                             if (validate) return;
@@ -154,7 +154,7 @@ async function distubeEvent(client) {
                         }
 
                         // ---------------------------------------- PAUSE & RESUME ---------------------------------------- //
-                        if (i.customId == `4`) {
+                        if (i.customId == "musicPause") {
                             // Validate if user can execute the command
                             const validate = await distubeValidate(i, newQueue, ["channel"]);
                             if (validate) return;
@@ -186,7 +186,7 @@ async function distubeEvent(client) {
                         }
 
                         // ---------------------------------------- SHUFFLE ---------------------------------------- //
-                        if (i.customId == `5`) {
+                        if (i.customId == "musicShuffle") {
                             // Validate if user can execute the command
                             const validate = await distubeValidate(i, newQueue, ["channel"]);
                             if (validate) return;
@@ -204,7 +204,7 @@ async function distubeEvent(client) {
 
 
                         // ---------------------------------------- AUTOPLAY ---------------------------------------- //
-                        if (i.customId == `6`) {
+                        if (i.customId == "musicAutoplay") {
                             // Validate if user can execute the command
                             const validate = await distubeValidate(i, newQueue, ["channel"]);
                             if (validate) return;
@@ -239,7 +239,7 @@ async function distubeEvent(client) {
                         }
 
                         // ---------------------------------------- SONG LOOP ---------------------------------------- //
-                        if (i.customId == `7`) {
+                        if (i.customId == "musicSongloop") {
                             // Validate if user can execute the command
                             const validate = await distubeValidate(i, newQueue, ["channel"]);
                             if (validate) return;
@@ -268,7 +268,7 @@ async function distubeEvent(client) {
                         }
 
                         // ---------------------------------------- QUEUE LOOP ---------------------------------------- //
-                        if (i.customId == `8`) {
+                        if (i.customId == "musicQueueloop") {
                             // Validate if user can execute the command
                             const validate = await distubeValidate(i, newQueue, ["channel"]);
                             if (validate) return;
@@ -297,7 +297,7 @@ async function distubeEvent(client) {
                         }
 
                         // ---------------------------------------- REWIND ---------------------------------------- //
-                        if (i.customId == `9`) {
+                        if (i.customId == "musicRewind") {
                             // Validate if user can execute the command
                             const validate = await distubeValidate(i, newQueue, ["channel"]);
                             if (validate) return;
@@ -318,7 +318,7 @@ async function distubeEvent(client) {
                         }
 
                         // ---------------------------------------- FORWARD ---------------------------------------- //
-                        if (i.customId == `10`) {
+                        if (i.customId == "musicForward") {
                             // Validate if user can execute the command
                             const validate = await distubeValidate(i, newQueue, ["channel"]);
                             if (validate) return;
@@ -606,16 +606,16 @@ async function distubeEvent(client) {
             .setFooter({ text: newTrack.user.tag, iconURL: newTrack.user.displayAvatarURL({ dynamic: true }) });
 
         // Setup dashboard buttons
-        let previous = new ButtonBuilder().setStyle("Primary").setCustomId("1").setEmoji("⏮").setLabel("Previous");
-        let skip = new ButtonBuilder().setStyle("Primary").setCustomId("2").setEmoji("⏭").setLabel("Skip")
-        let stop = new ButtonBuilder().setStyle("Danger").setCustomId("3").setEmoji("⏹").setLabel("Stop")
-        let pause = new ButtonBuilder().setStyle("Secondary").setCustomId("4").setEmoji("⏸").setLabel("Pause")
-        let shuffle = new ButtonBuilder().setStyle("Primary").setCustomId("5").setEmoji("🔀").setLabel("Shuffle")
-        let autoplay = new ButtonBuilder().setStyle("Success").setCustomId("6").setEmoji("🔁").setLabel("Autoplay")
-        let songloop = new ButtonBuilder().setStyle("Success").setCustomId("7").setEmoji("🔂").setLabel("Song")
-        let queueloop = new ButtonBuilder().setStyle("Success").setCustomId("8").setEmoji("🔁").setLabel("Queue")
-        let rewind = new ButtonBuilder().setStyle("Primary").setCustomId("9").setEmoji("⏪").setLabel("-10 Sec")
-        let forward = new ButtonBuilder().setStyle("Primary").setCustomId("10").setEmoji("⏩").setLabel("+10 Sec")
+        let previous = new ButtonBuilder().setStyle("Primary").setCustomId("musicPrev").setEmoji("⏮").setLabel("Previous");
+        let skip = new ButtonBuilder().setStyle("Primary").setCustomId("musicSkip").setEmoji("⏭").setLabel("Skip")
+        let stop = new ButtonBuilder().setStyle("Danger").setCustomId("musicStop").setEmoji("⏹").setLabel("Stop")
+        let pause = new ButtonBuilder().setStyle("Secondary").setCustomId("musicPause").setEmoji("⏸").setLabel("Pause")
+        let shuffle = new ButtonBuilder().setStyle("Primary").setCustomId("musicShuffle").setEmoji("🔀").setLabel("Shuffle")
+        let autoplay = new ButtonBuilder().setStyle("Success").setCustomId("musicAutoplay").setEmoji("🔁").setLabel("Autoplay")
+        let songloop = new ButtonBuilder().setStyle("Success").setCustomId("musicSongloop").setEmoji("🔂").setLabel("Song")
+        let queueloop = new ButtonBuilder().setStyle("Success").setCustomId("musicQueueloop").setEmoji("🔁").setLabel("Queue")
+        let rewind = new ButtonBuilder().setStyle("Primary").setCustomId("musicRewind").setEmoji("⏪").setLabel("-10 Sec")
+        let forward = new ButtonBuilder().setStyle("Primary").setCustomId("musicForward").setEmoji("⏩").setLabel("+10 Sec")
 
         // Dashboard button actions
         if (newQueue.songs.length == 0) {
