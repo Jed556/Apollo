@@ -36,6 +36,7 @@
         validArgs=("h" "a" "s" "c" "F" "X" "U" "S" "G" "L" "r" "t" "-")
         inputArgs="$*"
         argsArr=""
+        argsArrSelf=""
         invalidChars=""
         duplicateChars=""
 
@@ -54,6 +55,11 @@
                 # List valid chars
             elif [[ $char != "-" ]]; then
                 argsArr+="$char, "
+
+                # Args to pass after self update
+                if [[ $char != "s" ]]; then
+                    argsArrSelf+="-$char"
+                fi
 
                 # Check for duplicate args
                 if [[ $(echo ${inputArgs[@]} | tr ' ' '\n' | grep -c $char) -gt 1 ]]; then
@@ -88,7 +94,7 @@
             case "$char" in
                 # Script related
                 *h*) HELP=true;; # Display Help
-                *a*) ART=true;; # Display Art
+                *a*) NART=true;; # Hide Art
 
                 # Repository related
                 *s*) SELF=true;;# Update Self
@@ -113,34 +119,8 @@
 
 
 
-    if [[ "$HELP" = true ]]; then
-        echo -e "${BB}Script related${NC}"
-        echo -e "   ${BW}h${NC}  Display Help"
-        echo -e "   ${BW}a${NC}  Display Art"
-
-        echo -e "${BC}Repository related${NC}"
-        echo -e "   ${BW}s${NC}  Update Self"
-        echo -e "   ${BW}c${NC}  Clone repository"
-
-        echo -e "${BY}File management related${NC}"
-        echo -e "   ${BW}F${NC}  Copy configs & manage files"
-        echo -e "   ${BW}X${NC}  Clean-up files"
-        echo -e "   ${BW}U${NC}  Update all dependencies"
-        echo -e "   ${BW}S${NC}  Update system dependencies"
-        echo -e "   ${BW}G${NC}  Update global dependencies"
-        echo -e "   ${BW}L${NC}  Update package dependencies"
-        echo -e "   ${BW}X${NC}  Update package dependencies"
-
-        echo -e "${BG}Run related${NC}"
-        echo -e "   ${BW}r${NC}  Start or restart"
-        echo -e "   ${BW}t${NC}  Tail logs"
-        exit 0
-    fi
-
-
-
     # Art
-    if [[ "$ART" = true || "$NO_ARGS" = true ]]; then
+    if [[ ("$NART" = true || "$NO_ARGS" = true) && (!"$HELP" || "$SELF") ]]; then
         echo -e "${BW}"
         echo -e "${NC}    ${OIB}      ${OB}                                                               ${OIB}      ${NC}    "
         echo -e "  ${OIB}     ${OB}        _____ __________________  .____    .____    ________         ${OIB}     ${NC}  "
@@ -154,7 +134,7 @@
 
 
 
-    # Self Update (r = run-only)
+    # Self Update
     if [[ "$SELF" = true || "$NO_ARGS" = true ]]; then
         echo -e "\n${BC}=================================== SELF UPDATE ===================================${NC}"
         echo -e "Updating..."
@@ -166,13 +146,39 @@
             cp -v "$file2" "$file1"
             echo -e "Done"
             echo -e "${BC}================================ UPDATED apollo.sh ================================${NC}\n"
-            $0 -cfus
+            $0 $argsArrSelf
             exit
         else
             echo -e "Latest Installed"
             echo -e "${BC}================================ CHECKED apollo.sh ================================${NC}\n"
         fi
         rm -f "$file2"
+    fi
+
+
+
+    if [[ "$HELP" = true ]]; then
+        echo -e "${BY}Script related${NC}"
+        echo -e "   ${BW}h${NC}  Display Help"
+        echo -e "   ${BW}a${NC}  Hide Art"
+
+        echo -e "${BC}Repository related${NC}"
+        echo -e "   ${BW}s${NC}  Update Self"
+        echo -e "   ${BW}c${NC}  Clone repository"
+
+        echo -e "${BP}File management related${NC}"
+        echo -e "   ${BW}F${NC}  Copy configs & manage files"
+        echo -e "   ${BW}X${NC}  Clean-up files"
+        echo -e "   ${BW}U${NC}  Update all dependencies"
+        echo -e "   ${BW}S${NC}  Update system dependencies"
+        echo -e "   ${BW}G${NC}  Update global dependencies"
+        echo -e "   ${BW}L${NC}  Update package dependencies"
+        echo -e "   ${BW}X${NC}  Update package dependencies"
+
+        echo -e "${BG}Run related${NC}"
+        echo -e "   ${BW}r${NC}  Start or restart"
+        echo -e "   ${BW}t${NC}  Tail logs"
+        exit 0
     fi
 
 
