@@ -33,7 +33,7 @@
     # Initialize args
     if [ $# > 0 ]; then
         # Set vars
-        validArgs=("h" "a" "s" "c" "F" "X" "U" "S" "G" "L" "r" "t" "-")
+        validArgs=("h" "a" "s" "c" "F" "X" "U" "S" "G" "L" "r" "t" "-" "b")
         inputArgs="$*"
         argsArr=""
         argsArrSelf=""
@@ -61,6 +61,11 @@
                     argsArrSelf+="-$char"
                 fi
 
+                # Check if bash file activated
+                if [[ $char != "b" ]]; then
+                    BASH=true
+                fi
+
                 # Check for duplicate args
                 if [[ $(echo ${inputArgs[@]} | tr ' ' '\n' | grep -c $char) -gt 1 ]]; then
                         duplicateChars+="$char, "
@@ -74,7 +79,7 @@
         argsArr=$(echo $argsArr | sed 's/.$//')
 
         # Check for valid chars to print
-        if [[ ! -z $argsArr ]]; then
+        if [[ ! -z $argsArr && "$BASH" = true ]]; then
             echo -e "${BC}[INFO]${NC} Script ran with flags: $argsArr"
         fi
 
@@ -120,7 +125,7 @@
 
 
     # Art
-    if [[ ("$NART" = true || "$NO_ARGS" = true) && (!"$HELP" = true || "$SELF" = true) ]]; then
+    if [[ ( "$NART" != true || "$NO_ARGS" = true ) && ( "$HELP" != true || "$SELF" = true ) ]]; then
         echo -e "${BW}"
         echo -e "${NC}    ${OIB}      ${OB}                                                               ${OIB}      ${NC}    "
         echo -e "  ${OIB}     ${OB}        _____ __________________  .____    .____    ________         ${OIB}     ${NC}  "
