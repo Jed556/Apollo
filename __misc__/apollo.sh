@@ -146,7 +146,7 @@
             cp -v "$file2" "$file1"
             echo -e "Done"
             echo -e "${BC}================================ UPDATED apollo.sh ================================${NC}\n"
-            $0 $argsArrSelf
+            $0 $argsArrSelf || $0
             exit
         else
             echo -e "Latest Installed"
