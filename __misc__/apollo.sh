@@ -78,15 +78,15 @@
         duplicateChars=$(echo $duplicateChars | sed 's/.$//')
         argsArr=$(echo $argsArr | sed 's/.$//')
 
-        # Check for valid chars to print
-        if [[ ! -z $argsArr && "$BASH" = true ]]; then
-            echo -e "${BC}[INFO]${NC} Script ran with flags: $argsArr"
-        fi
-
         # Check for invalid chars to print
         if [[ ! -z $invalidChars ]]; then
             echo -e "${BR}[ERROR]${NC} Flags $invalidChars not found"
             exit 1
+        fi
+
+        # Check for valid chars to print
+        if [[ ! -z $argsArr && "$BASH" != true ]]; then
+            echo -e "${BC}[INFO]${NC} Script ran with flags: $argsArr"
         fi
 
         # Check for duplicate chars to print
@@ -151,7 +151,7 @@
             cp -v "$file2" "$file1"
             echo -e "Done"
             echo -e "${BC}================================ UPDATED apollo.sh ================================${NC}\n"
-            $0 $argsArrSelf || $0
+            $0 $argsArrSelf b
             exit
         else
             echo -e "Latest Installed"
