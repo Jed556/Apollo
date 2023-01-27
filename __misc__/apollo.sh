@@ -29,6 +29,13 @@
         exist=true
     fi
 
+    # Create temp folder if none
+    createTemp () {
+        if [ ! -d "$tempFolder" ]; then
+            mkdir $tempFolder
+        fi
+    }
+
 
     # Initialize args
     if [ $# > 0 ]; then
@@ -107,7 +114,7 @@
 
                 # File management related
                 *F*) FILES=true;; # Copy configs & manage files
-                *X*) UPDATE_LOC=true;; # Clean-up files
+                *X*) CLEAN=true;; # Clean-up files
                 *U*) UPDATE=true;; # Update all dependencies
                 *S*) UPDATE_SYS=true;; # Update system dependencies
                 *G*) UPDATE_GLB=true;; # Update global dependencies
@@ -143,26 +150,27 @@
     if [[ "$SELF" = true || "$NO_ARGS" = true ]]; then
         echo -e "\n${BC}=================================== SELF UPDATE ===================================${NC}"
         echo -e "Updating..."
+        createTemp
         file1="apollo.sh"
         file2="apollo.remote"
-        curl -s -L https://raw.githubusercontent.com/Jed556/Apollo/main/__misc__/apollo.sh -o "$file2"
-        compare="$(cmp --s $file1 $file2; echo $?)"
+        curl -s -L https://raw.githubusercontent.com/Jed556/Apollo/main/__misc__/apollo.sh -o $tempFolder/$file2
+        compare="$(cmp --s $file1 $tempFolder/$file2; echo $?)"
         if [[ "$compare" = 1 ]]; then
-            cp -v "$file2" "$file1"
+            cp -v "$tempFolder/$file2" "$file1"
             echo -e "Done"
-            echo -e "${BC}================================ UPDATED apollo.sh ================================${NC}\n"
+            echo -e "${BC}================================ UPDATED apollo.sh ================================${NC}"
             $0 $argsArrSelf b
             exit
         else
             echo -e "Latest Installed"
-            echo -e "${BC}================================ CHECKED apollo.sh ================================${NC}\n"
+            echo -e "${BC}================================ CHECKED apollo.sh ================================${NC}"
         fi
-        rm -f "$file2"
     fi
 
 
 
     if [[ "$HELP" = true ]]; then
+        echo -e "\n${BW}HELP${NC}\n"
         echo -e "${BY}Script related${NC}"
         echo -e "   ${BW}h${NC}  Display Help"
         echo -e "   ${BW}a${NC}  Hide Art"
@@ -173,7 +181,7 @@
 
         echo -e "${BP}File management related${NC}"
         echo -e "   ${BW}F${NC}  Copy configs & manage files"
-        echo -e "   ${BW}X${NC}  Clean-up files"
+        # echo -e "   ${BW}X${NC}  Clean-up files ( logs | temps | cache )"
         echo -e "   ${BW}U${NC}  Update all dependencies"
         echo -e "   ${BW}S${NC}  Update system dependencies"
         echo -e "   ${BW}G${NC}  Update global dependencies"
@@ -183,6 +191,7 @@
         echo -e "${BG}Run related${NC}"
         echo -e "   ${BW}r${NC}  Start or restart"
         echo -e "   ${BW}t${NC}  Tail logs"
+        echo -e "\n"
         exit 0
     fi
 
@@ -306,10 +315,7 @@
             touch Apollo/$logName && echo -e "created '$logName'"
             touch Apollo/$errLogName && echo -e "created '$errLogName'"
 
-            # Create temp folder if none
-            if [ ! -d "$tempFolder" ]; then
-            mkdir $tempFolder
-            fi
+            createTemp
 
             # Move old logs to temp folder
             for file in apollo-*.log
