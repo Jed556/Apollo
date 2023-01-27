@@ -36,7 +36,6 @@
         fi
     }
 
-
     # Initialize args
     if [[ $# > 0 ]]; then
         # Set vars
@@ -64,7 +63,7 @@
                 argsArr+="$char, "
 
                 # Args to pass after self update
-                if [[ "$char" != "s" && "$char" != "b" ]]; thenug
+                if [[ "$char" != "s" && "$char" != "b" ]]; then
                     argsArrSelf+="$char"
                 fi
 
@@ -73,6 +72,8 @@
                     # Exit if no other args passed
                     if [[ $# == 1 ]]; then
                         exit 0
+                    elif [[ $# == 2 && $2 == "-" ]]; then
+                        NO_ARGS=true
                     fi
                     BASH=true
                 fi
@@ -150,19 +151,19 @@
 
 
     # Self Update
-    if [[ "$SELF" = true || "$NO_ARGS" = true ]]; then
+    if [[ ( "$SELF" = true || "$NO_ARGS" = true ) && "$BASH" != true ]]; then
         echo -e "\n${BC}=================================== SELF UPDATE ===================================${NC}"
         echo -e "Updating..."
         createTemp
         file1="apollo.sh"
         file2="apollo.remote"
-        # curl -s -L https://raw.githubusercontent.com/Jed556/Apollo/main/__misc__/apollo.sh -o $tempFolder/$file2
+        curl -s -L https://raw.githubusercontent.com/Jed556/Apollo/main/__misc__/apollo.sh -o $tempFolder/$file2
         compare="$(cmp --s $file1 $tempFolder/$file2; echo $?)"
         if [[ "$compare" = 1 ]]; then
             cp -v "$tempFolder/$file2" "$file1"
             echo -e "Done"
             echo -e "${BC}================================ UPDATED apollo.sh ================================${NC}"
-            $0 $argsArrSelf b
+            $0 b $argsArrSelf
             exit 0
         else
             echo -e "Latest Installed"
