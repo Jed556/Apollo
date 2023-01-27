@@ -91,9 +91,13 @@
             exit 1
         fi
 
-        # Check for valid chars to print
+        # Check for valid args before continuing
         if [[ ! -z $argsArr && "$BASH" != true ]]; then
             echo -e "${BC}[INFO]${NC} Script ran with flags: $argsArr"
+        
+        # Check if no args passed and ran from batch
+        elif [[ "$BASH" != true ]]; then
+            exit 0
         fi
 
         # Check for duplicate chars to print
