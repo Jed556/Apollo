@@ -68,9 +68,9 @@ try {
                         name: "General",
                         value: [
                             `⚙️ **Client** ${client.user.tag}`,
-                            `💳 **ID** ${client.user.id}`,
+                            `💳 **ID** ||${client.user.id}||`,
                             `📆 **Created** <t:${parseInt(client.user.createdTimestamp / 1000)}:R>`,
-                            `${emoji.owner} **Owner** ${client.application.owner ? `<@${client.application.owner.id}>#${client.application.owner.discriminator}` : "None"}`,
+                            `${emoji.owner} **Owner** ${client.application.owner ? `<@${client.application.owner.id}>[#${client.application.owner.discriminator}](https://discord.com/users/${client.application.owner.id})` : "None"}`,
                             `${emoji.verified} **Verified** ${client.user.flags & UserFlags.VerifiedBot ? "Yes" : "No"}`,
                             `🏷 **Tags** ${client.application.tags.length ? formatter.format(client.application.tags.map(tag => `*${tag}*`)) : "None"}`,
                             `${emoji.badges.SlashSupported} **Commands** ${client.commands.size} / ${check.length}`
