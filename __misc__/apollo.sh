@@ -96,7 +96,7 @@
             echo -e "${BC}[INFO]${NC} Script ran with flags: $argsArr"
         
         # Check if no args passed and ran from batch
-        elif [[ "$BASH" != true ]]; then
+        elif [[ "$BASH" = true && $# == 0 ]]; then
             exit 0
         fi
 
