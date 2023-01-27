@@ -120,7 +120,7 @@
 
 
     # Art
-    if [[ ("$NART" = true || "$NO_ARGS" = true) && (!"$HELP" || "$SELF") ]]; then
+    if [[ ("$NART" = true || "$NO_ARGS" = true) && (!"$HELP" = true || "$SELF" = true) ]]; then
         echo -e "${BW}"
         echo -e "${NC}    ${OIB}      ${OB}                                                               ${OIB}      ${NC}    "
         echo -e "  ${OIB}     ${OB}        _____ __________________  .____    .____    ________         ${OIB}     ${NC}  "
