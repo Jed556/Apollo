@@ -43,7 +43,7 @@
         validArgs=("h" "a" "s" "c" "F" "X" "U" "S" "G" "L" "r" "t" "-" "b")
         inputArgs="$*"
         argsArr=""
-        argsArrSelf=""
+        argsArrSelf="-"
         invalidChars=""
         duplicateChars=""
 
@@ -68,8 +68,12 @@
                     argsArrSelf+="-$char"
                 fi
 
-                # Check if bash file activated
+                # Check if bash activated
                 if [[ $char = "b" ]]; then
+                    # Exit if no other args passed
+                    if [[ $# == 1 ]]; then
+                        exit 0
+                    fi
                     BASH=true
                 fi
 
@@ -94,10 +98,6 @@
         # Check for valid args before continuing
         if [[ ! -z $argsArr && "$BASH" != true ]]; then
             echo -e "${BC}[INFO]${NC} Script ran with flags: $argsArr"
-        
-        # Check if no args passed and ran from batch
-        elif [[ "$BASH" = true && $# == 0 ]]; then
-            exit 0
         fi
 
         # Check for duplicate chars to print
@@ -136,7 +136,7 @@
 
 
     # Art
-    if [[ ( "$NART" != true || "$NO_ARGS" = true ) && ( "$HELP" != true || "$SELF" = true ) ]]; then
+    if [[ ( "$NART" != true || "$NO_ARGS" = true ) && ( "$HELP" != true || "$SELF" = true || "$BASH" != true ) ]]; then
         echo -e "${BW}"
         echo -e "${NC}    ${OIB}      ${OB}                                                               ${OIB}      ${NC}    "
         echo -e "  ${OIB}     ${OB}        _____ __________________  .____    .____    ________         ${OIB}     ${NC}  "
@@ -164,7 +164,7 @@
             echo -e "Done"
             echo -e "${BC}================================ UPDATED apollo.sh ================================${NC}"
             $0 $argsArrSelf b
-            exit
+            exit 0
         else
             echo -e "Latest Installed"
             echo -e "${BC}================================ CHECKED apollo.sh ================================${NC}"
