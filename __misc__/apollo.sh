@@ -69,7 +69,7 @@
                 fi
 
                 # Check if bash file activated
-                if [[ $char != "b" ]]; then
+                if [[ $char = "b" ]]; then
                     BASH=true
                 fi
 
