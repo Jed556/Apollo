@@ -41,12 +41,11 @@
     file2="apollo.remote"
     curl -s -L https://raw.githubusercontent.com/Jed556/Apollo/main/__misc__/apollo.sh -o "$file2"
     compare="$(cmp --s $file1 $file2; echo $?)"
-    if [[ $compare ]]; then
+    if [[ "$compare" = 1 ]]; then
         cp -v "$file2" "$file1"
         echo -e "Done"
         echo -e "${BC}================================ UPDATED apollo.sh ================================${NC}\n"
-        $0
-        exit
+        $0 && exit
     else
         echo -e "Latest Installed"
         echo -e "${BC}================================ CHECKED apollo.sh ================================${NC}\n"
