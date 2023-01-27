@@ -38,7 +38,7 @@
 
 
     # Initialize args
-    if [ $# > 0 ]; then
+    if [[ $# > 0 ]]; then
         # Set vars
         validArgs=("h" "a" "s" "c" "F" "X" "U" "S" "G" "L" "r" "t" "-" "b")
         inputArgs="$*"
@@ -60,11 +60,11 @@
                 invalidChars+="$char, "
 
                 # List valid args
-            elif [[ $char != "-" ]]; then
+            elif [[ "$char" != "-" ]]; then
                 argsArr+="$char, "
 
                 # Args to pass after self update
-                if [[ $char != "s" || $char != "b" ]]; then
+                if [[ "$char" != "s" && "$char" != "b" ]]; thenug
                     argsArrSelf+="$char"
                 fi
 
@@ -134,8 +134,6 @@
         argsArrSelf+="-"
     fi
 
-
-
     # Art
     if [[ "$NART" != true && "$BASH" != true && "$HELP" != true ]]; then
         echo -e "${BW}"
@@ -158,7 +156,7 @@
         createTemp
         file1="apollo.sh"
         file2="apollo.remote"
-        curl -s -L https://raw.githubusercontent.com/Jed556/Apollo/main/__misc__/apollo.sh -o $tempFolder/$file2
+        # curl -s -L https://raw.githubusercontent.com/Jed556/Apollo/main/__misc__/apollo.sh -o $tempFolder/$file2
         compare="$(cmp --s $file1 $tempFolder/$file2; echo $?)"
         if [[ "$compare" = 1 ]]; then
             cp -v "$tempFolder/$file2" "$file1"
