@@ -43,7 +43,7 @@
         validArgs=("h" "a" "s" "c" "F" "X" "U" "S" "G" "L" "r" "t" "-" "b")
         inputArgs="$*"
         argsArr=""
-        argsArrSelf="-"
+        argsArrSelf=""
         invalidChars=""
         duplicateChars=""
 
@@ -56,20 +56,20 @@
             # Check for valid and invalid args
             if ! [[ ${validArgs[*]} =~ $char ]]; then
 
-                # List invalid chars
+                # List invalid args
                 invalidChars+="$char, "
 
-                # List valid chars
+                # List valid args
             elif [[ $char != "-" ]]; then
                 argsArr+="$char, "
 
                 # Args to pass after self update
-                if [[ $char != "s" ]]; then
-                    argsArrSelf+="-$char"
+                if [[ $char != "s" || $char != "b" ]]; then
+                    argsArrSelf+="$char"
                 fi
 
                 # Check if bash activated
-                if [[ $char = "b" ]]; then
+                if [[ $char == "b" ]]; then
                     # Exit if no other args passed
                     if [[ $# == 1 ]]; then
                         exit 0
@@ -77,30 +77,30 @@
                     BASH=true
                 fi
 
-                # Check for duplicate args
+                # List duplicate args
                 if [[ $(echo ${inputArgs[@]} | tr ' ' '\n' | grep -c $char) -gt 1 ]]; then
                         duplicateChars+="$char, "
                 fi
             fi
         done
 
-        # Remove last ", " from invalid chars and duplicate chars
+        # Remove last ", " from invalid args and duplicate args
         invalidChars=$(echo $invalidChars | sed 's/.$//')
         duplicateChars=$(echo $duplicateChars | sed 's/.$//')
         argsArr=$(echo $argsArr | sed 's/.$//')
 
-        # Check for invalid chars to print
+        # Check for invalid args
         if [[ ! -z $invalidChars ]]; then
             echo -e "${BR}[ERROR]${NC} Flags $invalidChars not found"
             exit 1
         fi
 
-        # Check for valid args before continuing
+        # Check for valid args
         if [[ ! -z $argsArr && "$BASH" != true ]]; then
             echo -e "${BC}[INFO]${NC} Script ran with flags: $argsArr"
         fi
 
-        # Check for duplicate chars to print
+        # Check for duplicate args
         if [[ ! -z $duplicateChars ]]; then
             echo -e "${BY}[WARN]${NC} Characters $duplicateChars are duplicate"
         fi
@@ -131,12 +131,13 @@
         done
     else
         NO_ARGS=true
+        argsArrSelf+="-"
     fi
 
 
 
     # Art
-    if [[ ( "$NART" != true || "$NO_ARGS" = true ) && ( "$HELP" != true || "$SELF" = true || "$BASH" != true ) ]]; then
+    if [[ "$NART" != true && "$BASH" != true && "$HELP" != true ]]; then
         echo -e "${BW}"
         echo -e "${NC}    ${OIB}      ${OB}                                                               ${OIB}      ${NC}    "
         echo -e "  ${OIB}     ${OB}        _____ __________________  .____    .____    ________         ${OIB}     ${NC}  "
