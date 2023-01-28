@@ -314,19 +314,18 @@
     if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$FILES" = true || "$NO_ARGS" = true ]]; then
         echo -e "\n${BY}================================= CREATING FILES ==================================${NC}"
         if [[ "$exist" = true ]]; then
-            logName="apollo_$today.log"
-            errLogName="apollo_${today}_err.log"
-            touch Apollo/$logName && echo -e "created '$logName'"
-            touch Apollo/$errLogName && echo -e "created '$errLogName'"
+            date=$(date +"%m-%d-%Y")
+            logName="apollo-$date.log"
+            errLogName="apollo-${date}_err.log"
 
-            createTemp
+            touch "Apollo/$logName" && echo "created '$logName'"
+            touch "Apollo/$errLogName" && echo "created '$errLogName'"
 
-            # Move old logs to temp folder
-            for file in apollo-*.log
-            do
-                if [ "$file" != "$logName" ]; then
-                    mv $file $tempFolder
-                    echo "Moved $file to $tempFolder"
+           createTemp
+
+            for file in Apollo/apollo_*.log; do
+                if [[ "$file" != "$logName" && "$file" != "$errLogName" ]]; then
+                    mv "$file" "$tempFolder/"
                 fi
             done
         else
