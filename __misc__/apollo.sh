@@ -235,7 +235,8 @@
         fi
     fi
 
-
+    # Clean up
+    # rm -d -r apolloTemp
 
     # Copy necessary files
     if [[ "$FILES" = true || "$NO_ARGS" = true ]]; then
@@ -315,8 +316,8 @@
         echo -e "\n${BY}================================= CREATING FILES ==================================${NC}"
         if [[ "$exist" = true ]]; then
             date=$(date +"%m-%d-%Y")
-            logName="apollo-$date.log"
-            errLogName="apollo-${date}_err.log"
+            logName="apollo_$date.log"
+            errLogName="apollo_${date}_err.log"
 
             touch "Apollo/$logName" && echo "created '$logName'"
             touch "Apollo/$errLogName" && echo "created '$errLogName'"
@@ -325,7 +326,7 @@
 
             for file in Apollo/apollo_*.log; do
                 if [[ "$file" != "$logName" && "$file" != "$errLogName" ]]; then
-                    mv "$file" "$tempFolder/"
+                    mv "$file" "$tempFolder/" && echo "moved '$file to $tempFolder'"
                 fi
             done
         else
