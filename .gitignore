@@ -1,0 +1,17 @@
+# Coding Directory
+.vscode
+node_modules
+package-lock.json
+
+# Environment
+.env
+localDB/*/enmap*
+config/client*
+config/distube.json
+config/database.json
+config/heroku.json
+
+# Other
+icon
+art.sh
+HM.bat
