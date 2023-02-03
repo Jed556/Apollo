@@ -22,7 +22,6 @@
     # Declare variables
     tempFolder="apolloTemp"
     today=$(date +%m-%d-%Y)
-    singleLog=true
 
 
     # Check if directory exists
@@ -40,7 +39,7 @@
     # Initialize args
     if [[ $# > 0 ]]; then
         # Set vars
-        validArgs=("h" "a" "s" "c" "F" "X" "U" "S" "G" "L" "r" "t" "-" "b")
+        validArgs=("h" "a" "n" "l" "s" "c" "F" "X" "U" "S" "G" "L" "r" "t" "-" "b")
         inputArgs="$*"
         argsArr=""
         argsArrSelf=""
