@@ -22,6 +22,7 @@
     # Declare variables
     tempFolder="apolloTemp"
     today=$(date +%m-%d-%Y)
+    singleLog=true
 
 
     # Check if directory exists
@@ -73,7 +74,7 @@
                     if [[ $# == 1 ]]; then
                         exit 0
                     elif [[ $# == 2 && $2 == "-" ]]; then
-                        NO_ARGS=true
+                        NORMAL=true
                     fi
                     BASH=true
                 fi
@@ -112,6 +113,8 @@
                 # Script related
                 *h*) HELP=true;; # Display Help
                 *a*) NART=true;; # Hide Art
+                *n*) NORMAL=true;; # Run script normally (Defaults)
+                *l*) singleLog=true;; # Only use one logfile
 
                 # Repository related
                 *s*) SELF=true;;# Update Self
@@ -131,7 +134,7 @@
             esac
         done
     else
-        NO_ARGS=true
+        NORMAL=true
         argsArrSelf+="-"
     fi
 
@@ -151,7 +154,7 @@
 
 
     # Self Update
-    if [[ ( "$SELF" = true || "$NO_ARGS" = true ) && "$BASH" != true ]]; then
+    if [[ ( "$SELF" = true || "$NORMAL" = true ) && "$BASH" != true ]]; then
         echo -e "\n${BC}=================================== SELF UPDATE ===================================${NC}"
         echo -e "Updating..."
         createTemp
@@ -178,6 +181,8 @@
         echo -e "${BY}Script related${NC}"
         echo -e "   ${BW}h${NC}  Display Help"
         echo -e "   ${BW}a${NC}  Hide Art"
+        echo -e "   ${BW}n${NC}  Run script normally (No arguments / Defaults) and execute additional argumentss"
+        echo -e "   ${BW}l${NC}  Use one log file for errors and output"
 
         echo -e "${BC}Repository related${NC}"
         echo -e "   ${BW}s${NC}  Update Self"
@@ -203,7 +208,7 @@
 
     # Stop processes
     if [[ "$exist" = true ]]; then
-    if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$UPDATE_SYS" = true || "$UPDATE_GLB" = true || "$UPDATE_LOC" = true || "$FILES" = true || "$NO_ARGS" = true ]]; then
+    if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$UPDATE_SYS" = true || "$UPDATE_GLB" = true || "$UPDATE_LOC" = true || "$FILES" = true || "$NORMAL" = true ]]; then
             echo -e "\n${BR}================================= STOPPING APOLLO =================================${NC}"
             forever stop Apollo/index.js
             if [[ $? != 0 ]]; then
@@ -218,7 +223,7 @@
 
 
     # Clone / Update
-    if [[ "$CLONE" = true || "$NO_ARGS" = true ]]; then
+    if [[ "$CLONE" = true || "$NORMAL" = true ]]; then
         if [[ "$exist" = true ]]; then
             echo -e "\n${BC}================================= UPDATING APOLLO =================================${NC}"
             rm -rf Apollo && echo -e "removed \'Apollo\'"
@@ -239,7 +244,7 @@
     # rm -d -r apolloTemp
 
     # Copy necessary files
-    if [[ "$FILES" = true || "$NO_ARGS" = true ]]; then
+    if [[ "$FILES" = true || "$NORMAL" = true ]]; then
         echo -e "\n${BY}================================== COPYING FILES ==================================${NC}"
         cp -v .env Apollo
         cp -v client.json Apollo/config
@@ -251,13 +256,13 @@
 
 
     # Install dependencies
-    if [[ "$UPDATE" = true || "$UPDATE_SYS" = true || "$UPDATE_GLB" = true || "$UPDATE_LOC" = true || "$NO_ARGS" = true ]]; then
+    if [[ "$UPDATE" = true || "$UPDATE_SYS" = true || "$UPDATE_GLB" = true || "$UPDATE_LOC" = true || "$NORMAL" = true ]]; then
         echo -e "\n${BP}============================= INSTALLING DEPENDENCIES =============================${NC}"
         cd Apollo
 
 
         # Update system related dependencies
-        if [[ "$UPDATE_SYS" = true || "$UPDATE" = true || "$NO_ARGS" = true ]]; then
+        if [[ "$UPDATE_SYS" = true || "$UPDATE" = true || "$NORMAL" = true ]]; then
             echo -e "\n${BP}APT Update${NC}"
             sudo apt -y update
 
@@ -275,7 +280,7 @@
 
 
         # Update global dependencies
-        if [[ "$UPDATE_GLB" = true || "$UPDATE" = true || "$NO_ARGS" = true ]]; then
+        if [[ "$UPDATE_GLB" = true || "$UPDATE" = true || "$NORMAL" = true ]]; then
             echo -e "\n${BP}Node Version Manager${RP}   ( nodejs | npm | yarn )${NC}"
             wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
             
@@ -294,7 +299,7 @@
 
 
         # Update local dependencies
-        if [[ "$UPDATE_LOC" = true || "$UPDATE" = true || "$NO_ARGS" = true ]]; then
+        if [[ "$UPDATE_LOC" = true || "$UPDATE" = true || "$NORMAL" = true ]]; then
             echo -e "\n${BP}NPM Install | Yarn${NC}"
             # Install dependencies using Yarn
             yarn
@@ -312,7 +317,7 @@
 
 
     # Manage files
-    if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$FILES" = true || "$NO_ARGS" = true ]]; then
+    if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$FILES" = true || "$NORMAL" = true ]]; then
         echo -e "\n${BY}================================= CREATING FILES ==================================${NC}"
         if [[ "$exist" = true ]]; then
             date=$(date +"%m-%d-%Y")
@@ -339,10 +344,14 @@
 
 
     # Run Apollo
-    if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$FILES" = true || "$NO_ARGS" = true ]]; then
+    if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$FILES" = true || "$NORMAL" = true ]]; then
         echo -e "\n${BG}================================= STARTING APOLLO =================================${NC}"
         cd Apollo
-        forever start -a -o $logName -e $errLogName index.js
+        if [[ "$singleLog" = true ]]; then
+            forever start -a -o $logName -e $logName index.js
+        else
+            forever start -a -o $logName -e $errLogName index.js
+        fi
         cd ..
         echo -e "${BG}===================================== ONLINE ======================================${NC}\n"
     fi
