@@ -149,7 +149,7 @@
 
     # Check for valid args
     if [[ ! -z $argsArr && "$BASH" != true ]]; then
-        echo -e "${BC}[INFO]${NC} Script ran with flags: $argsArr"
+        echo -e "\n${BC}[INFO]${NC} Script ran with flags: $argsArr"
     fi
 
 
@@ -321,9 +321,8 @@
     if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$FILES" = true || "$NORMAL" = true ]]; then
         echo -e "\n${BY}================================= CREATING FILES ==================================${NC}"
         if [[ "$exist" = true ]]; then
-            date=$(date +"%m-%d-%Y")
-            logName="apollo_$date.log"
-            errLogName="apollo_${date}_err.log"
+            logName="apollo_$today.log"
+            errLogName="apollo_${today}_err.log"
 
             touch "Apollo/$logName" && echo "created '$logName'"
             touch "Apollo/$errLogName" && echo "created '$errLogName'"
@@ -361,8 +360,8 @@
 
     # Tail logs
     if [[ "$TAIL" = true ]]; then
-        echo -e "${BG}====================================== TAIL =======================================${NC}\n"
-        tail -n +1 -f ./Apollo/apollo_$today.log
+        echo -e "\n${BG}====================================== TAIL =======================================${NC}"
+        tail -n +1 -f "./Apollo/apollo_$today.log"
     fi
 
 
