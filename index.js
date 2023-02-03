@@ -1,9 +1,15 @@
 const
     { Client, Collection, IntentsBitField, Partials } = require('discord.js'),
+    { cyanBright, greenBright, yellow, red, dim } = require('chalk'),
     filters = require('./config/filters.json'),
     DisTube = require('distube').default,
     https = require('https-proxy-agent'),
     Enmap = require('enmap');
+
+// Log execution date and time
+let today = new Date();
+let timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+console.log(`\n${cyanBright.bold("[INFO]")} Initializing ${today.toLocaleDateString()} ${today.toLocaleTimeString()} (${timeZone})\n`);
 
 // Variable checks (Use .env if present)
 let Token, spotifyAPI, nsfw, youtubeCookie;
