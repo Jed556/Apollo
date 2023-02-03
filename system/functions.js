@@ -117,6 +117,48 @@ function toError(error, message, lines) {
     else return alert + "Unknown Error";
 }
 
+/**
+ * 
+ * @param {*} client Discord client
+ * @param {*} interaction Discord interaction
+ * @param {*} error Error log
+ * @param {Boolean} reply Should reply to user
+ * @param {Boolean} custom Is a custom interaction
+ * @returns 
+ */
+function eventErrorSend(client, interaction, error, reply, custom) {
+    console.log(toError(error, "Interaction Error")); // Log error
+
+    const // Setup message
+        errorEmb = new EmbedBuilder()
+            .setTimestamp()
+            .setColor(emb.errColor)
+            .setAuthor({ name: "AN ERROR OCCURED", iconURL: emb.error }),
+        message = "An error occured during interacton",
+        err = error.stack ? error.stack : error;
+
+    if (reply) {
+        interaction.channel.send({ // Send error to channel
+            embeds: [errorEmb
+                .setFooter({ text: "ID: " + interaction.customId, iconURL: client.user.displayAvatarURL() })
+                .setDescription(message + ` \`/${interaction.customId}\` \`\`\`${err}\`\`\``)
+            ],
+            ephemeral: true
+        });
+    }
+
+    client.users.fetch(OwnerID, false).then((user) => { // Send error to DM
+        user.send({
+            embeds: [errorEmb
+                .setFooter({ text: `${guild.name} #${channel.name}`, iconURL: guild.iconURL({ dynamic: true }) })
+                .setDescription(message + ` ID:\`${interaction.customId}\`\nat **${guild.name}** (\`${guildId}\`) **#${channel.name}** (\`${channel.id}\`) \`\`\`${err}\`\`\``)
+            ]
+        });
+    });
+
+    return 1;
+}
+
 // EXPORT ALL FUNCTIONS
 module.exports = {
     mainDir,
@@ -126,5 +168,6 @@ module.exports = {
     escapeRegex,
     toTitleCase,
     toError,
-    PG
+    PG,
+    eventErrorSend
 }
