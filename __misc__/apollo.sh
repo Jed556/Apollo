@@ -96,11 +96,6 @@
             exit 1
         fi
 
-        # Check for valid args
-        if [[ ! -z $argsArr && "$BASH" != true ]]; then
-            echo -e "${BC}[INFO]${NC} Script ran with flags: $argsArr"
-        fi
-
         # Check for duplicate args
         if [[ ! -z $duplicateChars ]]; then
             echo -e "${BY}[WARN]${NC} Characters $duplicateChars are duplicate"
@@ -113,10 +108,10 @@
                 *h*) HELP=true;; # Display Help
                 *a*) NART=true;; # Hide Art
                 *n*) NORMAL=true;; # Run script normally (Defaults)
-                *l*) singleLog=true;; # Only use one logfile
+                *l*) ONE_LOG=true;; # Only use one logfile
 
                 # Repository related
-                *s*) SELF=true;;# Update Self
+                *s*) SELF=true;; # Update Self
                 *c*) CLONE=true;; # Clone repository
 
                 # File management related
@@ -148,6 +143,13 @@
         echo -e " ${OIB}   ${OB}        \____|__  /____|   \_______  /_______ \_______ \__//___  /         ${OIB}   ${NC} "
         echo -e "  ${OIB}     ${OB}             \/                 \/        \/       \/       \/       ${OIB}     ${NC}  "
         echo -e "    ${OIB}      ${OB}                                                               ${OIB}      ${NC}    "
+    fi
+
+
+
+    # Check for valid args
+    if [[ ! -z $argsArr && "$BASH" != true ]]; then
+        echo -e "${BC}[INFO]${NC} Script ran with flags: $argsArr"
     fi
 
 
@@ -346,7 +348,7 @@
     if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$FILES" = true || "$NORMAL" = true ]]; then
         echo -e "\n${BG}================================= STARTING APOLLO =================================${NC}"
         cd Apollo
-        if [[ "$singleLog" = true ]]; then
+        if [[ "$ONE_LOG" = true ]]; then
             forever start -a -o $logName -e $logName index.js
         else
             forever start -a -o $logName -e $errLogName index.js
@@ -359,6 +361,7 @@
 
     # Tail logs
     if [[ "$TAIL" = true ]]; then
+        echo -e "${BG}====================================== TAIL =======================================${NC}\n"
         tail -n +1 -f ./Apollo/apollo_$today.log
     fi
 

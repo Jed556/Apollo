@@ -7,9 +7,13 @@ const
     Enmap = require('enmap');
 
 // Log execution date and time
-let today = new Date();
-let timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-console.log(`\n${cyanBright.bold("[INFO]")} Initializing ${today.toLocaleDateString()} ${today.toLocaleTimeString()} (${timeZone})\n`);
+let
+    today = new Date(),
+    timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone,
+    timeArray = today.toLocaleTimeString().split(/[\s]+/),
+    date = today.toLocaleDateString(),
+    time = `${timeArray[0]} ${timeArray[1]}`;
+console.log(`\n${cyanBright.bold("[INFO]")} Initializing ${date} ${time} (${timeZone})\n`);
 
 // Variable checks (Use .env if present)
 let Token, spotifyAPI, nsfw, youtubeCookie;
