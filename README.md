@@ -1,7 +1,7 @@
 <div align="center">
   <br>
   <p>
-    <a href="https://tiny.one/Apollo-inv"><img src="https://i.imgur.com/pMReolo.png" width="760" alt="discord.js" /></a> 
+    <a href="https://bit.ly/Apollo-invite"><img src="https://i.imgur.com/pMReolo.png" width="760" alt="discord.js" /></a> 
   </p>
   <p>
     <a href="https://discord.gg/5ezrYqutmD"><img alt="Discord" src="https://img.shields.io/discord/946241935742488616?color=5865F2&logo=discord&logoColor=white&label="></a>
@@ -21,6 +21,7 @@
   - [Basic / Windows](https://github.com/Jed556/Apollo#basic--windows)
   - [Ubuntu / SSH](https://github.com/Jed556/Apollo#ubuntu--ssh)
   - [Ubuntu / SSH - Deprecated](https://github.com/Jed556/Apollo/tree/f4f37004912b4ec12cb503c52d3ead87d9f0a373#ubuntu--ssh---deprecated)
+  - [apollo.sh](https://github.com/Jed556/Apollo#apollosh)
   - [Other Dependencies](https://github.com/Jed556/Apollo#other-dependencies)
     - 24/7 Ubuntu Server
     - Windows
@@ -46,6 +47,34 @@ I recommend using **JSON files** for now.<br>
 curl -s -LO https://raw.githubusercontent.com/Jed556/Apollo/main/__misc__/apollo.sh && chmod u+x apollo.sh && ./apollo.sh && nvm use --lts --silent node
 ```
 - You may run `./apollo.sh` in your terminal if you want to get the latest release, update your dependencies and restart the client.
+
+### apollo.sh
+For bash script **apollo.sh** flags. <br>
+Flags can be added with or without dash ( `./apollo.sh -h` / `./apollo.sh h` ). <br>
+Examples of multiple flag declaration formats are: multiple dash ( `-h -n` / `h n` ), single dash ( `-hnl` / `hnl` ).
+
+| Flag  | Description                                                                    |
+| :---: | :---                                                                           |
+|       | **Script related**                                                             |
+|   h   | Display Help                                                                   |
+|   a   | Hide Art                                                                       |
+|   n   | Run script normally (No arguments / Defaults) and execute additional arguments |
+|   l   | Use one log file for errors and output                                         |
+|       | **Repository related**                                                         |
+|   s   | Update Self                                                                    |
+|   c   | Clone repository                                                               |
+|       | **File management related**                                                    |
+|   F   | Copy configs & manage files                                                    |
+|   X   | Clean-up files ( logs \| temps \| cache )                                      |
+|   U   | Update all dependencies                                                        |
+|   S   | Update system dependencies                                                     |
+|   G   | Update global dependencies                                                     |
+|   L   | Update package dependencies                                                    |
+|   X   | Update package dependencies                                                    |
+|       | **Run related**                                                                |
+|   r   | Start or restart                                                               |
+|   t   | Tail logs                                                                      |
+
 
 ### Other Dependencies
 These dependencies are required in certain circumstances<br/>
