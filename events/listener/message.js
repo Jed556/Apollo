@@ -32,9 +32,14 @@ module.exports = {
         if ((!message.guild || !message.channel) && ListenerDM) return DM();
 
         if (ListenerGuild) {
-            const guild = message.guild.name;
-            const channel = message.channel.name;
-            console.log(`${blurple(`[${guild} in #${channel} from ${message.author.tag}]`)}${message.content ? ` MESSAGE: ${message.content}` : ""}${message.attachments.size ? ` ATTACHMENT: ${message.attachments.first().url}` : ""}`);
+            const
+                guild = message.guild.name,
+                guildID = message.guild.id,
+                channel = message.channel.name,
+                channelID = interaction.channel.id,
+                user = message.author.tag,
+                userID = message.author.id;
+            console.log(`${blurple(`[${guild} ${dim(`<${guildID}>`)} in #${channel} ${dim(`<${channelID}>`)} from ${user} ${dim(`<${userID}>`)}]`)}${message.content ? ` MESSAGE: ${message.content}` : ""}${message.attachments.size ? ` ATTACHMENT: ${message.attachments.first().url}` : ""}`);
         }
 
         // DM message logging
@@ -47,7 +52,8 @@ module.exports = {
                     value: `${message.content ? `> ${message.content}` : "\u200b"}`
                 })
                 //.setImage(`${message.attachments.size ? `${message.attachments.first().url}` : ""}`)
-                .setAuthor({ name: message.author.tag, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
+                .setAuthor({ name: user, iconURL: message.author.displayAvatarURL({ dynamic: true }) })
+                .setDescription(`ID: ||[${userID}](https://discord.com/users/${userID})||`)
                 .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
 
             const msg = message.content.toLowerCase()
@@ -109,7 +115,7 @@ module.exports = {
             client.users.fetch(OwnerID, false).then((user) => {
                 user.send({ embeds: [log] });
             });
-            console.log(`${blurple(`[${message.author.tag}]`)}${message.content ? ` ${bold("MESSAGE:")} ${message.content}` : ""}${message.attachments.size ? ` ${bold("ATTACHMENT:")} ${message.attachments.first().url}` : ""}`);
+            console.log(`${blurple(`[${user} <${userID}> ]`)}${message.content ? ` ${bold("MESSAGE:")} ${message.content}` : ""}${message.attachments.size ? ` ${bold("ATTACHMENT:")} ${message.attachments.first().url}` : ""}`);
         }
     }
 }
