@@ -92,7 +92,7 @@ try {
             }, (cd * 1000) + 3000);
         }
     }
-} catch (e) { toError(e) }
+} catch (e) { toError(e, null, 0, false) }
 
 /**
  * 

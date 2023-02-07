@@ -1,7 +1,8 @@
 const
     { EmbedBuilder } = require('discord.js'),
     emb = require('../config/embed.json'),
-    { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk');
+    { bold } = require('chalk'),
+    { toError } = require('./functions');
 
 /**
  * 
@@ -13,7 +14,7 @@ const
 function distubeValidate(interaction, newQueue, checks, args) {
     const checksArray = ["channel", "userLimit", "playing", "previous", "DJ", "skip", "all"]
     if (!checksArray.some(c => checks.includes(c)))
-        return console.log(red.bold("[ERROR]") + ` Variable ${bold("checks")} doesn't include any of ${checksArray.map(c => `\"${c}\"`).join(", ")}`);
+        return toError(null, `Variable ${bold("checks")} doesn't include any of ${checksArray.map(c => `\"${c}\"`).join(", ")}`, 0, false);
 
     const
         { client, member, channelId, guildId } = interaction,

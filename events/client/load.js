@@ -1,10 +1,10 @@
 const
     Discord = require('discord.js'),
     { EmbedBuilder, ActivityType } = require('discord.js'),
-    { toError } = require('../../system/functions'),
+    { toError, toLog } = require('../../system/functions'),
     { loadFiles } = require('../../system/fileLoader'),
     { loadCommands } = require('../../handlers/commands'),
-    { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk'),
+    { bold, dim } = require('chalk'),
     { AsciiTable3 } = require('ascii-table3'),
     emb = require('../../config/embed.json'),
     os = require('os');
@@ -34,7 +34,7 @@ module.exports = {
             Files.forEach((file) => { check.push(file) });
 
             // Login Log
-            console.log(`${cyanBright.bold("[INFO]")} Logged in as ${bold(client.user.username) + dim("#" + client.user.tag.split("#")[1])}`);
+            toLog(`Logged in as ${bold(client.user.username) + dim("#" + client.user.tag.split("#")[1])}`, 1, false);
 
             // Create console log template
             const Table = new AsciiTable3().setStyle('unicode-single').setAlignCenter();

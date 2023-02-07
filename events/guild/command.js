@@ -1,6 +1,6 @@
 const
     { EmbedBuilder, InteractionType } = require('discord.js'),
-    { toError } = require('../../system/functions'),
+    { eventErrorSend } = require('../../system/functions'),
     emb = require('../../config/embed.json'),
     DB = require('../../schemas/Cooldowns');
 
@@ -95,15 +95,15 @@ module.exports = {
         }
 
         // ---------- MIGHT ADD SOON ---------- //
-        // // If Command has specific needed roles return error
+        // If Command has specific needed roles return error
         // if (command.requiredroles && command.requiredroles.length > 0 && interaction.member.roles.cache.size > 0 && !interaction.member.roles.cache.some(r => command.requiredroles.includes(r.id))) {
         //     return interaction.reply({
         //         embeds: [new EmbedBuilder()
         //             .setTimestamp()
         //             .setColor(emb.errColor)
-        //             .setAuthor("Invalid Role", emb.noRole)
-        //             .setFields({name:"Required Roles", value: `${(command && command.requiredroles) ? command.requiredroles.map(v => `<@&${v}>`).join(",") : command.requiredroles}`})
-        //             .setFooter(client.user.username, client.user.displayAvatarURL())
+        //             .setAuthor({ name: "Invalid Role", iconURL: emb.noRole })
+        //             .setFields({ name: "Required Roles", value: `${(command && command.requiredroles) ? command.requiredroles.map(v => `<@&${v}>`).join(",") : command.requiredroles}` })
+        //             .setFooter({ text: client.user.username, iconURL: client.user.displayAvatarURL() })
         //         ],
         //         ephemeral: true
         //     })
@@ -125,32 +125,7 @@ module.exports = {
 
         // Run the command
         command.run(client, interaction).catch(e => {
-            console.log(toError(e, "Command Error")); // Log error
-
-            const // Setup message
-                errorEmb = new EmbedBuilder()
-                    .setTimestamp()
-                    .setColor(emb.errColor)
-                    .setAuthor({ name: "AN ERROR OCCURED", iconURL: command.category == "music" ? emb.disc.error : emb.error }),
-                message = "An error occured while running command",
-                err = e.stack ? e.stack : e;
-
-            interaction.channel.send({ // Send error to channel
-                embeds: [errorEmb
-                    .setFooter({ text: "/" + command.data.name, iconURL: client.user.displayAvatarURL() })
-                    .setDescription(message + ` \`/${command.data.name}\` \`\`\`${err}\`\`\``)
-                ],
-                ephemeral: true
-            });
-
-            client.users.fetch(OwnerID, false).then((user) => { // Send error to DM
-                user.send({
-                    embeds: [errorEmb
-                        .setFooter({ text: `${guild.name} #${channel.name}`, iconURL: guild.iconURL({ dynamic: true }) })
-                        .setDescription(message + ` \`/${command.data.name}\`\nat **${guild.name}** (\`${guildId}\`) **#${channel.name}** (\`${channel.id}\`) \`\`\`${err}\`\`\``)
-                    ]
-                });
-            });
+            eventErrorSend(client, interaction, e, true, true);
         });
     }
 }

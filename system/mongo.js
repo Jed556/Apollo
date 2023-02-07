@@ -1,7 +1,7 @@
 
 const
     mongoose = require('mongoose'),
-    { cyanBright, greenBright, yellow, red } = require('chalk');
+    { toLog, toError } = require('./functions');
 
 // Variable checks (Use .env if present)
 require('dotenv').config();
@@ -17,9 +17,9 @@ if (process.env.database && process.env.connectDB) {
 
 // Check if can connect to database
 if (!connect)
-    return console.log(`${yellow.bold("[WARN]")} Database connection disabled`);
+    return toLog("Database connection disabled", 3, false);
 if (!mongoPath)
-    return console.log(`${yellow.bold("[WARN]")} MongoDB connection string is null`);
+    return toLog("MongoDB connection string variable is null", 3, false);
 
 // Connect to database
 /**
@@ -32,9 +32,9 @@ module.exports.mongo = async function (dbName) {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }).then(() => {
-        console.log(`${cyanBright.bold("[INFO]")} Connected to database!`);
+        toLog("Connected to database!", 1, false);
     }).catch((err) => {
-        console.log(`${red.bold("[ERROR]")} Can't connect to database \n${err}\n`);
+        toError(err, "Can't connect to database", 0, false);
     });
     return mongoose;
 }

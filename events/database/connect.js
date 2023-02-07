@@ -1,6 +1,6 @@
 const
-    { cyanBright, greenBright, yellow, red, dim } = require('chalk'),
-    { toError } = require('../../system/functions'),
+    { yellow, dim } = require('chalk'),
+    { toError, toLog } = require('../../system/functions'),
     cooldownDB = require('../../schemas/Cooldowns'),
     statusDB = require('../../schemas/Status'),
     mongoose = require('mongoose'),
@@ -44,10 +44,10 @@ module.exports = {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
             }).then(() => {
-                console.log(`${cyanBright.bold("[INFO]")} Connected to database`);
+                toLog("Connected to database", 1, false);
                 client.dbOk = true;
             }).catch((err) => {
-                console.log(toError(null, "Can't connect to database") + ` ${dim.bold("(Client)")}` + "\n        " + err.stack.split("\n").map(l => `${l}\n    `).join(""));
+                console.log(toError(null, "Can't connect to database", null, true) + ` ${dim.bold("(Client)")}` + "\n        " + err.stack.split("\n").map(l => `${l}\n    `).join(""));
             });
 
             let memArray = []; // Local array for memory

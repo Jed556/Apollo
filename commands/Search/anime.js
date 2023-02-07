@@ -60,4 +60,4 @@ try {
                 });
         }
     }
-} catch (e) { toError(e) }
+} catch (e) { toError(e, null, 0, false) }

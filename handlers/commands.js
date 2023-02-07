@@ -1,6 +1,6 @@
 const
-    { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk'),
-    { toTitleCase, toError } = require('../system/functions'),
+    { greenBright, red, dim } = require('chalk'),
+    { toTitleCase, toError, toLog } = require('../system/functions'),
     { loadFiles } = require('../system/fileLoader'),
     { AsciiTable3 } = require('ascii-table3');
 
@@ -43,9 +43,9 @@ async function loadCommands(client) {
     Files.forEach((file) => { check.push(file) });
 
     if (client.commands.size < check.length)
-        console.log(toError(null, "Refreshing commands failed") + err);
+        console.log(toError(null, "Refreshing commands failed", true) + err);
     else {
-        console.log(cyanBright.bold("[INFO]") + " Reloaded commands");
+        toLog("Reloaded commands", 1, false);
         client.cmdOk = true;
     }
 }
