@@ -1,6 +1,6 @@
 const
     { Client, Collection, IntentsBitField, Partials } = require('discord.js'),
-    { cyanBright, greenBright, yellow, red, dim } = require('chalk'),
+    { toLog } = require('./system/functions'),
     filters = require('./config/filters.json'),
     DisTube = require('distube').default,
     https = require('https-proxy-agent'),
@@ -13,7 +13,7 @@ let
     timeArray = today.toLocaleTimeString().split(/[\s]+/),
     date = today.toLocaleDateString(),
     time = `${timeArray[0]} ${timeArray[1]}`;
-console.log(`\n${cyanBright.bold("[INFO]")} Initializing ${date} ${time} (${timeZone})\n`);
+console.log(`\n${toLog(`Initializing ${date} ${time} (${timeZone})`, 1, true)}\n`);
 
 // Variable checks (Use .env if present)
 let Token, spotifyAPI, nsfw, youtubeCookie;

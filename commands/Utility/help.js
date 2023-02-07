@@ -41,4 +41,4 @@ try {
             interaction.reply({ embed: embed, components: [row], ephemeral: true });
         }
     }
-} catch (e) { toError(e) }
+} catch (e) { toError(e, null, 0, false) }

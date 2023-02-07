@@ -1,5 +1,5 @@
 const
-    { cyanBright, greenBright, yellow, red, dim } = require('chalk'),
+    { greenBright, red, dim } = require('chalk'),
     { loadFiles } = require('../system/fileLoader.js'),
     { Events } = require('../validation/eventNames'),
     { AsciiTable3 } = require('ascii-table3');

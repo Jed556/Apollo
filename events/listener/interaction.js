@@ -1,6 +1,6 @@
 
 const
-    { cyanBright, greenBright, yellow, red, bold, dim } = require('chalk'),
+    { bold, dim } = require('chalk'),
     chalk = require('chalk'),
     blurple = chalk.bold.hex("#7289da");
 
