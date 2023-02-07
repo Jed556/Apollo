@@ -1,5 +1,6 @@
 // REQUIRE DEPENDENCIES
 const
+    { EmbedBuilder } = require('discord.js'),
     { cyanBright, greenBright, yellow, red, dim } = require('chalk'),
     { promisify } = require('util'),
     { glob } = require('glob');
@@ -60,7 +61,7 @@ function delay(delayInms) {
             }, delayInms);
         });
     } catch (e) {
-        console.log(toError(e));
+        toError(e, null, 0, false);
     }
 }
 
@@ -77,7 +78,7 @@ function escapeRegex(str) {
             return str;
         }
     } catch (e) {
-        console.log(toError(e));
+        toError(e, null, 0, false);
     }
 }
 
@@ -97,24 +98,73 @@ function toTitleCase(str) {
  * @param {*} error Thrown error
  * @param {String} message Message to display before the error
  * @param {Number} lines Number of lines to display
- * @returns Formatted console error string
+ * @param {Boolean} string Return string only
+ * @returns A console log and formatted error string
  */
-function toError(error, message, lines) {
+function toError(error, message, lines, string) {
     const
-        alert = red.bold("[ERROR] "),
-        err = error ? error.stack ? error.stack : error : "";
+        alert = red.bold("[ERROR]") + " ",
+        err = error ? error.stack ? error.stack : error : "",
+        tab = " ".repeat(8);
+    let log;
 
     if (message && lines && err)
-        return alert + message + err.split("\n", lines).map(l => `\n        ${l}`).join("");
+        log = alert + message + err.split("\n", lines).map(l => `\n${tab + l}`).join("");
     else if (message && err)
-        return alert + message + err.split("\n").map(l => `\n        ${l}`).join("");
+        log = alert + message + err.split("\n").map(l => `\n${tab + l}`).join("");
     else if (lines && err)
-        return alert + err.split("\n", lines).map(l => `${l}\n        `).join("");
+        log = alert + err.split("\n", lines).map(l => `${l}\n${tab}`).join("");
     else if (err)
-        return alert + err.split("\n", lines).map(l => `${l}\n        `).join("");
+        log = alert + err.split("\n").map(l => `${l}\n${tab}`).join("");
     else if (message)
-        return alert + message;
-    else return alert + "Unknown Error";
+        log = alert + message;
+    else
+        log = alert + "Unknown Error";
+
+    if (string)
+        return log;
+    else
+        return console.log(log);
+}
+
+/**
+ * 
+ * @param {*} message Message to log
+ * @param {*} type Type of log ( 1 / "info", 2 / "success", 3 / "warn" )
+ * @param {Boolean} string Return string only
+ * @returns A console log and formatted string
+ */
+function toLog(message, type, string) {
+    let
+        type = type.toLowerCase(),
+        log = "";
+
+    switch (type) {
+        case 1 || "info":
+            log = cyanBright.bold("[INFO]") + " " + message;
+            break;
+
+        case 2 || "success":
+            log = greenBright.bold("[DONE]") + " " + message;
+            break;
+
+        case 3 || "warn":
+            log = yellow.bold("[WARN]") + " " + message;
+            break;
+
+        case 0 || "":
+            log = red.bold("[ERROR]") + " toLog: No Log Message";
+            break;
+
+        default:
+            log = red.bold("[ERROR]") + " toLog: Unknown Log Format";
+            break;
+    }
+
+    if (string)
+        return log;
+    else
+        return console.log(log);
 }
 
 /**
@@ -127,31 +177,43 @@ function toError(error, message, lines) {
  * @returns 
  */
 function eventErrorSend(client, interaction, error, reply, custom) {
-    console.log(toError(error, "Interaction Error")); // Log error
+    const
+        { member, guildId, channel, customId, commandName } = interaction,
+        { guild } = member;
 
-    const // Setup message
+    const
+        // Setup dynamic vars
+        err = error.stack ? error.stack : error,
+        action = custom ? customId : client.commands.get(commandName),
+        actionMsg = custom ? `ID: \`${action}\`` : `\`/${action}\``,
+        actionFoot = custom ? `ID: ${action}` : `/${action}`,
+        message = `An error occured ${custom ? "during interaction" : "while running command"} `,
+        // Setup message
         errorEmb = new EmbedBuilder()
             .setTimestamp()
             .setColor(emb.errColor)
-            .setAuthor({ name: "AN ERROR OCCURED", iconURL: emb.error }),
-        message = "An error occured during interacton",
-        err = error.stack ? error.stack : error;
+            .setAuthor({ name: "AN ERROR OCCURED", iconURL: action.category == "music" ? emb.disc.error : emb.error });
+
+    // Log error
+    toError(error, custom ? "Interaction Error: " : "Command Error: ");
 
     if (reply) {
-        interaction.channel.send({ // Send error to channel
+        // Send error to channel
+        interaction.channel.send({
             embeds: [errorEmb
-                .setFooter({ text: "ID: " + interaction.customId, iconURL: client.user.displayAvatarURL() })
+                .setFooter({ text: actionFoot, iconURL: client.user.displayAvatarURL() })
                 .setDescription(message + ` \`/${interaction.customId}\` \`\`\`${err}\`\`\``)
             ],
             ephemeral: true
         });
     }
 
-    client.users.fetch(OwnerID, false).then((user) => { // Send error to DM
+    // Send error to DM
+    client.users.fetch(OwnerID, false).then((user) => {
         user.send({
             embeds: [errorEmb
                 .setFooter({ text: `${guild.name} #${channel.name}`, iconURL: guild.iconURL({ dynamic: true }) })
-                .setDescription(message + ` ID:\`${interaction.customId}\`\nat **${guild.name}** (\`${guildId}\`) **#${channel.name}** (\`${channel.id}\`) \`\`\`${err}\`\`\``)
+                .setDescription(message + `${actionMsg}\nat **${guild.name}** (\`${guildId}\`) **#${channel.name}** (\`${channel.id}\`) \`\`\`${err}\`\`\``)
             ]
         });
     });
@@ -161,6 +223,7 @@ function eventErrorSend(client, interaction, error, reply, custom) {
 
 // EXPORT ALL FUNCTIONS
 module.exports = {
+    PG,
     mainDir,
     reSlash,
     randomNum,
@@ -168,6 +231,6 @@ module.exports = {
     escapeRegex,
     toTitleCase,
     toError,
-    PG,
+    toLog,
     eventErrorSend
 }
