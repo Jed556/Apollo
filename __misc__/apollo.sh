@@ -258,7 +258,7 @@
         fi
 
         # Install git if missing
-        if [[ ! command -v git &>/dev/null ]]; then
+        if [[ ! ( command -v git &>/dev/null ) ]]; then
             echo -e "${RP}Installing git...${NC}"
             sudo apt-get -y update
             sudo apt-get -y install git
