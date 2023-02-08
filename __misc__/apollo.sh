@@ -22,6 +22,8 @@
     # Declare variables
     tempFolder="apolloTemp"
     today=$(date +%m-%d-%Y)
+    logName="apollo_$today.log"
+    errLogName="apollo_${today}_err.log"
 
 
     # Check if directory exists
@@ -223,6 +225,20 @@
 
 
 
+    if [[ "$exist" = true ]]; then
+        echo -e "\n${BY}=================================== SAVING LOGS ===================================${NC}"
+            createTemp
+
+            for file in Apollo/apollo_*.log; do
+                if [[ "$file" != "$logName" && "$file" != "$errLogName" ]]; then
+                    mv "$file" "$tempFolder/" && echo "moved '$file to $tempFolder'"
+                fi
+            done
+        echo -e "\n${BY}=================================== SAVED LOGS ====================================${NC}"
+    fi
+
+
+
     # Clone / Update
     if [[ "$CLONE" = true || "$NORMAL" = true ]]; then
         if [[ "$exist" = true ]]; then
@@ -321,19 +337,9 @@
     if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$FILES" = true || "$NORMAL" = true ]]; then
         echo -e "\n${BY}================================= CREATING FILES ==================================${NC}"
         if [[ "$exist" = true ]]; then
-            logName="apollo_$today.log"
-            errLogName="apollo_${today}_err.log"
 
             touch "Apollo/$logName" && echo "created '$logName'"
             touch "Apollo/$errLogName" && echo "created '$errLogName'"
-
-           createTemp
-
-            for file in Apollo/apollo_*.log; do
-                if [[ "$file" != "$logName" && "$file" != "$errLogName" ]]; then
-                    mv "$file" "$tempFolder/" && echo "moved '$file to $tempFolder'"
-                fi
-            done
         else
             echo -e "${BR}[ERROR]${NC} No existing Apollo repo in current directory"
             exit 1
