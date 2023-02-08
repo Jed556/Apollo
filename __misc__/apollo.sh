@@ -260,8 +260,8 @@
         # Install git if missing
         if [[ ! command -v git &>/dev/null ]]; then
             echo -e "${RP}Installing git...${NC}"
-            sudo apt-get update
-            sudo apt-get install git
+            sudo apt-get -y update
+            sudo apt-get -y install git
         fi
 
         if [[ "$exist" = true ]]; then
@@ -315,6 +315,10 @@
             # Update APT
             echo -e "\n${BP}APT Update${NC}"
             sudo apt -y update
+
+            # Update Git
+            echo -e "\n${BP}Git Update${NC}"
+            sudo apt-get -y install git
 
             # Install FFMPEG
             echo -e "\n${BP}FFMPEG${NC}"
