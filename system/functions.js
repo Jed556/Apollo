@@ -137,7 +137,8 @@ function toError(error, message, lines, string) {
 function toLog(message, type, string) {
     let log = "";
 
-    type = type.toLowerCase();
+    if (typeof type === "string")
+        type = type.toLowerCase();
     switch (type) {
         case 1 || "info":
             log = cyanBright.bold("[INFO]") + " " + message;
