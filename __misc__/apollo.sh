@@ -255,7 +255,7 @@
     if [[ "$CLONE" = true || "$NORMAL" = true ]]; then
         if [[ "$exist" = true ]]; then
             echo -e "\n${BC}================================= UPDATING APOLLO =================================${NC}"
-            rm -rf Apollo && echo -e "removed \'Apollo\'"
+            rm -rf Apollo && echo -e "removed 'Apollo'"
         else
             echo -e "\n${BC}================================= CLONING APOLLO ==================================${NC}"
         fi
