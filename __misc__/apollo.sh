@@ -9,11 +9,12 @@
     BR='\033[1;31m' # Bold Red
     BG='\033[1;32m' # Bold Green
     BY='\033[1;33m' # Bold Yellow
+    RY='\033[0;33m' # Regular Yellow
     BB='\033[1;34m' # Bold Blue
     BP='\033[1;35m' # Bold Purple
-    RY='\033[0;33m' # Regular Yellow
     RP='\033[0;35m' # Regular Purple
     BC='\033[1;36m' # Bold Cyan
+    RC='\033[0;36m' # Regular Cyan
     BW='\033[1;37m' # Bold White
     OB='\033[44m'   # On Blue (Background)
     OIB='\033[104m' # On High Intensity Blue (Background)
@@ -21,6 +22,7 @@
 
 
     # Declare variables
+    repoName="Apollo"
     tempFolder=".apolloTemp"
     today=$(date +%m-%d-%Y)
     logName="apollo_$today.log"
@@ -28,7 +30,7 @@
 
 
     # Check if directory exists
-    [ -d "Apollo" ] && exist=true
+    [ -d "$repoName" ] && exist=true
 
     # Create temp folder if none
     createTemp () {
@@ -221,7 +223,7 @@
     if [[ "$exist" = true ]]; then
     if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$UPDATE_SYS" = true || "$UPDATE_GLB" = true || "$UPDATE_LOC" = true || "$FILES" = true || "$NORMAL" = true ]]; then
             echo -e "\n${BR}================================= STOPPING APOLLO =================================${NC}"
-            forever stop Apollo/index.js
+            forever stop $repoName/index.js
             if [[ $? != 0 ]]; then
                 echo -e "\n${BR}No instances running right now${NC}"
             else
@@ -237,7 +239,7 @@
         echo -e "\n${BY}=================================== SAVING LOGS ===================================${NC}"
             createTemp
             # Loop through log files and move them to $tempFolder
-            for file in Apollo/apollo_*.log; do
+            for file in $repoName/apollo_*.log; do
                 if [[ "$file" != "$logName" && "$file" != "$errLogName" ]]; then
                     mv "$file" "$tempFolder/" && echo "moved '$file' to '$tempFolder'"
                 fi
@@ -251,12 +253,26 @@
     if [[ "$CLONE" = true || "$NORMAL" = true ]]; then
         if [[ "$exist" = true ]]; then
             echo -e "\n${BC}================================= UPDATING APOLLO =================================${NC}"
-            rm -rf Apollo && echo -e "removed 'Apollo'"
         else
             echo -e "\n${BC}================================= CLONING APOLLO ==================================${NC}"
         fi
 
-        git clone https://github.com/Jed556/Apollo.git # Clone remote repository
+        # Install git if missing
+        if [[ ! command -v git &>/dev/null ]]; then
+            echo -e "${RP}Installing git...${NC}"
+            sudo apt-get update
+            sudo apt-get install git
+        fi
+
+        if [[ "$exist" = true ]]; then
+            echo -e "${RC}Pulling repository...${NC}"
+            cd $repoName
+            git pull origin main
+            cd ..
+        else
+            echo -e "${RC}Cloning repository...${NC}"
+            git clone https://github.com/Jed556/Apollo.git
+        fi
 
         if [[ "$exist" = true ]]; then
             echo -e "${BC}================================= UPDATED APOLLO ==================================${NC}"
@@ -279,10 +295,10 @@
     #! Copy necessary files
     if [[ "$FILES" = true || "$NORMAL" = true ]]; then
         echo -e "\n${BY}================================== COPYING FILES ==================================${NC}"
-        cp -v .env Apollo
-        cp -v client.json Apollo/config
-        cp -v distube.json Apollo/config
-        cp -v database.json Apollo/config
+        cp -v .env $repoName
+        cp -v client.json $repoName/config
+        cp -v distube.json $repoName/config
+        cp -v database.json $repoName/config
         echo -e "${BY}===================================== COPIED ======================================${NC}"
     fi
 
@@ -291,7 +307,7 @@
     #! Install dependencies
     if [[ "$UPDATE" = true || "$UPDATE_SYS" = true || "$UPDATE_GLB" = true || "$UPDATE_LOC" = true || "$NORMAL" = true ]]; then
         echo -e "\n${BP}============================= INSTALLING DEPENDENCIES =============================${NC}"
-        cd Apollo
+        cd $repoName
 
 
         #! Update system related dependencies
@@ -364,10 +380,10 @@
     if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$FILES" = true || "$NORMAL" = true ]]; then
         echo -e "\n${BY}================================= CREATING FILES ==================================${NC}"
         if [[ "$exist" = true ]]; then
-            touch "Apollo/$logName" && echo "created '$logName'"
-            touch "Apollo/$errLogName" && echo "created '$errLogName'"
+            touch "$repoName/$logName" && echo "created '$logName'"
+            touch "$repoName/$errLogName" && echo "created '$errLogName'"
         else
-            echo -e "${BR}[ERROR]${NC} No existing Apollo repo in current directory"
+            echo -e "${BR}[ERROR]${NC} No existing $repoName repo in current directory"
             exit 1
         fi
         echo -e "${BY}===================================== CREATED =====================================${NC}"
@@ -378,7 +394,7 @@
     #! Run Apollo
     if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$FILES" = true || "$NORMAL" = true ]]; then
         echo -e "\n${BG}================================= STARTING APOLLO =================================${NC}"
-        cd Apollo
+        cd $repoName
         # Run using forever
         [ "$ONE_LOG" = true ] && errLogName=$logName
         forever start -a -o $logName -e $errLogName index.js
@@ -391,7 +407,7 @@
     #! Tail logs
     if [[ "$TAIL" = true ]]; then
         echo -e "\n${BG}====================================== TAIL =======================================${NC}"
-        tail -n +1 -f "./Apollo/apollo_$today.log"
+        tail -n +1 -f "./$repoName/apollo_$today.log"
     fi
 
 
