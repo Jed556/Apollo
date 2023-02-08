@@ -2,6 +2,7 @@
 const
     { EmbedBuilder } = require('discord.js'),
     { cyanBright, greenBright, yellow, red, dim } = require('chalk'),
+    emb = require('../config/embed.json'),
     { promisify } = require('util'),
     { glob } = require('glob');
 
