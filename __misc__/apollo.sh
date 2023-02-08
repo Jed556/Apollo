@@ -41,7 +41,7 @@
     # Initialize args
     if [[ $# > 0 ]]; then
         # Set vars
-        validArgs=("h" "a" "n" "l" "s" "c" "F" "X" "U" "S" "G" "L" "r" "t" "-" "b")
+        validArgs=("h" "a" "n" "l" "s" "c" "F" "X" "U" "S" "G" "L" "Y" "r" "t" "-" "b")
         inputArgs="$*"
         argsArr=""
         argsArrSelf=""
@@ -123,6 +123,7 @@
                 *S*) UPDATE_SYS=true;; # Update system dependencies
                 *G*) UPDATE_GLB=true;; # Update global dependencies
                 *L*) UPDATE_LOC=true;; # Update package dependencies
+                *Y*) YARN=true;; # Try to update package dependencies using Yarn
 
                 # Run related
                 *r*) START=true;; # Start or restart
@@ -198,7 +199,7 @@
         echo -e "   ${BW}S${NC}  Update system dependencies"
         echo -e "   ${BW}G${NC}  Update global dependencies"
         echo -e "   ${BW}L${NC}  Update package dependencies"
-        echo -e "   ${BW}X${NC}  Update package dependencies"
+        echo -e "   ${BW}Y${NC}  Try to update package dependencies using Yarn"
 
         echo -e "${BG}Run related${NC}"
         echo -e "   ${BW}r${NC}  Start or restart"
@@ -228,13 +229,12 @@
     if [[ "$exist" = true ]]; then
         echo -e "\n${BY}=================================== SAVING LOGS ===================================${NC}"
             createTemp
-
             for file in Apollo/apollo_*.log; do
                 if [[ "$file" != "$logName" && "$file" != "$errLogName" ]]; then
                     mv "$file" "$tempFolder/" && echo "moved '$file to $tempFolder'"
                 fi
             done
-        echo -e "\n${BY}=================================== SAVED LOGS ====================================${NC}"
+        echo -e "${BY}=================================== SAVED LOGS ====================================${NC}"
     fi
 
 
@@ -317,12 +317,17 @@
 
         # Update local dependencies
         if [[ "$UPDATE_LOC" = true || "$UPDATE" = true || "$NORMAL" = true ]]; then
-            echo -e "\n${BP}NPM Install | Yarn${NC}"
-            # Install dependencies using Yarn
-            yarn
-            # If yarn failed, try npm
-            if [[ $? != 0 ]]; then
-                echo -e "\n${RP}Yarn failed. Falling back to npm...${NC}"
+            if [[ "$YARN" = true ]]; then
+                echo -e "\n${BP}Yarn${NC}"
+                # Install dependencies using Yarn
+                yarn
+                # If yarn failed, try npm
+                if [[ $? != 0 ]]; then
+                    echo -e "\n${RP}Yarn failed. Falling back to npm...${NC}"
+                    npm i
+                fi
+            else
+                echo -e "\n${BP}NPM Install${NC}"
                 npm i
             fi
         fi
