@@ -16,7 +16,7 @@ module.exports = {
             const ID = Math.floor(Math.random() * 90000);
 
             const config = await ticketSchema.findOne({
-                guildID: interaction.guild.id,
+                guildId: interaction.guild.id,
             });
 
             // Check if the user clicked the "create ticket" button
