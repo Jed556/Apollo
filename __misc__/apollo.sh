@@ -136,7 +136,9 @@
         argsArrSelf+="-"
     fi
 
-    # Art
+
+
+    #! Art
     if [[ "$NART" != true && "$BASH" != true && "$HELP" != true ]]; then
         echo -e "${BW}"
         echo -e "${NC}    ${OIB}      ${OB}                                                               ${OIB}      ${NC}    "
@@ -151,26 +153,33 @@
 
 
 
-    # Check for valid args
+    #! Check for valid args
     if [[ ! -z $argsArr && "$BASH" != true ]]; then
         echo -e "\n${BC}[INFO]${NC} Script ran with flags: $argsArr"
     fi
 
 
 
-    # Self Update
+    #! Self Update
     if [[ ( "$SELF" = true || "$NORMAL" = true ) && "$BASH" != true ]]; then
         echo -e "\n${BC}=================================== SELF UPDATE ===================================${NC}"
         echo -e "Updating..."
+
+        # Initialize temp files
         createTemp
         file1="apollo.sh"
         file2="apollo.remote"
+
+        # Pull bash from remote
         curl -s -L https://raw.githubusercontent.com/Jed556/Apollo/main/__misc__/apollo.sh -o $tempFolder/$file2
+
+        # Check for file changes
         compare="$(cmp --s $file1 $tempFolder/$file2; echo $?)"
         if [[ "$compare" = 1 ]]; then
-            cp -v "$tempFolder/$file2" "$file1"
+            cp -v "$tempFolder/$file2" "$file1" # Copy remote bash if diffs are found
             echo -e "Done"
             echo -e "${BC}================================ UPDATED apollo.sh ================================${NC}"
+            # Execute self with input args (except s) + b
             $0 b $argsArrSelf
             exit 0
         else
@@ -181,6 +190,7 @@
 
 
 
+    #! Help list
     if [[ "$HELP" = true ]]; then
         echo -e "\n${BW}HELP${NC}\n"
         echo -e "${BY}Script related${NC}"
@@ -211,7 +221,7 @@
 
 
 
-    # Stop processes
+    #! Stop processes
     if [[ "$exist" = true ]]; then
     if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$UPDATE_SYS" = true || "$UPDATE_GLB" = true || "$UPDATE_LOC" = true || "$FILES" = true || "$NORMAL" = true ]]; then
             echo -e "\n${BR}================================= STOPPING APOLLO =================================${NC}"
@@ -230,6 +240,7 @@
     if [[ "$exist" = true ]]; then
         echo -e "\n${BY}=================================== SAVING LOGS ===================================${NC}"
             createTemp
+            # Loop through log files and move them to $tempFolder
             for file in Apollo/apollo_*.log; do
                 if [[ "$file" != "$logName" && "$file" != "$errLogName" ]]; then
                     mv "$file" "$tempFolder/" && echo "moved '$file to $tempFolder'"
@@ -240,7 +251,7 @@
 
 
 
-    # Clone / Update
+    #! Clone / Update
     if [[ "$CLONE" = true || "$NORMAL" = true ]]; then
         if [[ "$exist" = true ]]; then
             echo -e "\n${BC}================================= UPDATING APOLLO =================================${NC}"
@@ -249,7 +260,7 @@
             echo -e "\n${BC}================================= CLONING APOLLO ==================================${NC}"
         fi
 
-        git clone https://github.com/Jed556/Apollo.git
+        git clone https://github.com/Jed556/Apollo.git # Clone remote repository
 
         if [[ "$exist" = true ]]; then
             echo -e "${BC}================================= UPDATED APOLLO ==================================${NC}"
@@ -260,7 +271,7 @@
 
 
 
-    # Clean up
+    #! Clean up
     if [[ "$CLEAN" = true ]]; then
         echo -e "\n${BR}================================= REMOVING FILES ==================================${NC}"
         rm -d -r $tempFolder
@@ -269,7 +280,7 @@
 
 
 
-    # Copy necessary files
+    #! Copy necessary files
     if [[ "$FILES" = true || "$NORMAL" = true ]]; then
         echo -e "\n${BY}================================== COPYING FILES ==================================${NC}"
         cp -v .env Apollo
@@ -281,23 +292,27 @@
 
 
 
-    # Install dependencies
+    #! Install dependencies
     if [[ "$UPDATE" = true || "$UPDATE_SYS" = true || "$UPDATE_GLB" = true || "$UPDATE_LOC" = true || "$NORMAL" = true ]]; then
         echo -e "\n${BP}============================= INSTALLING DEPENDENCIES =============================${NC}"
         cd Apollo
 
 
-        # Update system related dependencies
+        #! Update system related dependencies
         if [[ "$UPDATE_SYS" = true || "$UPDATE" = true || "$NORMAL" = true ]]; then
+            # Update APT
             echo -e "\n${BP}APT Update${NC}"
             sudo apt -y update
 
+            # Install FFMPEG
             echo -e "\n${BP}FFMPEG${NC}"
             sudo apt install -y ffmpeg
 
+            # Install Canvas builder
             echo -e "\n${BP}Canvas Builder${RP}   ( build-essential | libcairo2-dev | libpango1.0-dev | libjpeg-dev | libgif-dev | librsvg2-dev )${NC}"
             sudo apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
 
+            # Install Puppeteer dependencies
             echo -e "\n${BP}Puppeteer Dependencies${NC}"
             sudo apt install -y chromium-browser -y
             # Comment the line below if you don't want to accidentally change the kernel
@@ -305,26 +320,28 @@
         fi
 
 
-        # Update global dependencies
+        #! Update global dependencies
         if [[ "$UPDATE_GLB" = true || "$UPDATE" = true || "$NORMAL" = true ]]; then
             echo -e "\n${BP}Node Version Manager${RP}   ( nodejs | npm | yarn )${NC}"
+            # Install nvm
             wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
             
-            # Use nvm without closing terminal
+            # Use nvm without closing the terminal
             source ~/.bashrc
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
             [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-            nvm install --lts --latest-npm node
-            npm i -g yarn npm
+            nvm install --lts --latest-npm node # Install Node
+            npm i -g yarn npm # Install Yarn
 
+            # Install keep alive dependencies
             echo -e "\n${BP}NPM Global Install${RP}   ( forever | surge | puppeteer )${NC}"
             npm i -g forever surge
             npm i -g puppeteer --unsafe-perm=true -allow-root
         fi
 
 
-        # Update local dependencies
+        #! Update local dependencies
         if [[ "$UPDATE_LOC" = true || "$UPDATE" = true || "$NORMAL" = true ]]; then
             if [[ "$YARN" = true ]]; then
                 echo -e "\n${BP}Yarn${NC}"
@@ -347,11 +364,10 @@
 
 
 
-    # Manage files
+    #! Create files needed
     if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$FILES" = true || "$NORMAL" = true ]]; then
         echo -e "\n${BY}================================= CREATING FILES ==================================${NC}"
         if [[ "$exist" = true ]]; then
-
             touch "Apollo/$logName" && echo "created '$logName'"
             touch "Apollo/$errLogName" && echo "created '$errLogName'"
         else
@@ -363,10 +379,11 @@
 
 
 
-    # Run Apollo
+    #! Run Apollo
     if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$FILES" = true || "$NORMAL" = true ]]; then
         echo -e "\n${BG}================================= STARTING APOLLO =================================${NC}"
         cd Apollo
+        # Run using forever
         if [[ "$ONE_LOG" = true ]]; then
             forever start -a -o $logName -e $logName index.js
         else
@@ -378,7 +395,7 @@
 
 
 
-    # Tail logs
+    #! Tail logs
     if [[ "$TAIL" = true ]]; then
         echo -e "\n${BG}====================================== TAIL =======================================${NC}"
         tail -n +1 -f "./Apollo/apollo_$today.log"
@@ -386,6 +403,6 @@
 
 
 
-    # Bye
+    #! Bye
     exit 0
 }
