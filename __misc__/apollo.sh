@@ -11,6 +11,7 @@
     BY='\033[1;33m' # Bold Yellow
     BB='\033[1;34m' # Bold Blue
     BP='\033[1;35m' # Bold Purple
+    RY='\033[0;33m' # Regular Yellow
     RP='\033[0;35m' # Regular Purple
     BC='\033[1;36m' # Bold Cyan
     BW='\033[1;37m' # Bold White
@@ -20,7 +21,7 @@
 
 
     # Declare variables
-    tempFolder="apolloTemp"
+    tempFolder=".apolloTemp"
     today=$(date +%m-%d-%Y)
     logName="apollo_$today.log"
     errLogName="apollo_${today}_err.log"
@@ -194,7 +195,7 @@
 
         echo -e "${BP}File management related${NC}"
         echo -e "   ${BW}F${NC}  Copy configs & manage files"
-        # echo -e "   ${BW}X${NC}  Clean-up files ( logs | temps | cache )"
+        echo -e "   ${BW}X${NC}  Clean-up files ( logs | temps | cache )"
         echo -e "   ${BW}U${NC}  Update all dependencies"
         echo -e "   ${BW}S${NC}  Update system dependencies"
         echo -e "   ${BW}G${NC}  Update global dependencies"
@@ -257,8 +258,16 @@
         fi
     fi
 
+
+
     # Clean up
-    # rm -d -r apolloTemp
+    if [[ "$CLEAN" = true ]]; then
+        echo -e "\n${BR}================================= REMOVING FILES ==================================${NC}"
+        rm -d -r $tempFolder
+        echo -e "${BR}================================= REMOVED FILES ===================================${NC}"
+    fi
+
+
 
     # Copy necessary files
     if [[ "$FILES" = true || "$NORMAL" = true ]]; then

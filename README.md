@@ -70,7 +70,7 @@ Examples of multiple flag declaration formats are: multiple dash ( `-h -n` / `h 
 |   S   | Update system dependencies                                                     |
 |   G   | Update global dependencies                                                     |
 |   L   | Update package dependencies                                                    |
-|   X   | Update package dependencies                                                    |
+|   Y   | Try to update package dependencies using Yarn                                  |
 |       | **Run related**                                                                |
 |   r   | Start or restart                                                               |
 |   t   | Tail logs                                                                      |
