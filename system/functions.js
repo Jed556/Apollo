@@ -135,10 +135,9 @@ function toError(error, message, lines, string) {
  * @returns A console log and formatted string
  */
 function toLog(message, type, string) {
-    let
-        type = type.toLowerCase(),
-        log = "";
+    let log = "";
 
+    type = type.toLowerCase();
     switch (type) {
         case 1 || "info":
             log = cyanBright.bold("[INFO]") + " " + message;
