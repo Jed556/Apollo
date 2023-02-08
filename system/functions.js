@@ -198,7 +198,7 @@ function eventErrorSend(client, interaction, error, reply, custom) {
         // Setup dynamic vars
         err = error.stack ? error.stack : error,
         action = custom ? customId : client.commands.get(commandName),
-        actionMsg = custom ? `ID: \`${action}\`` : `\`/${action}\``,
+        actionMsg = custom ? `\`ID: ${action}\`` : `\`/${action}\``,
         actionFoot = custom ? `ID: ${action}` : `/${action}`,
         message = `An error occured ${custom ? "during interaction" : "while running command"} `,
         // Setup message
@@ -215,7 +215,7 @@ function eventErrorSend(client, interaction, error, reply, custom) {
         interaction.channel.send({
             embeds: [errorEmb
                 .setFooter({ text: actionFoot, iconURL: client.user.displayAvatarURL() })
-                .setDescription(message + ` \`/${interaction.customId}\` \`\`\`${err}\`\`\``)
+                .setDescription(message + `${actionMsg} \`\`\`${err}\`\`\``)
             ],
             ephemeral: true
         });
