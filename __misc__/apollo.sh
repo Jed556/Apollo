@@ -28,15 +28,11 @@
 
 
     # Check if directory exists
-    if [[ -d "Apollo" ]]; then
-        exist=true
-    fi
+    [ -d "Apollo" ] && exist=true
 
     # Create temp folder if none
     createTemp () {
-        if [ ! -d "$tempFolder" ]; then
-            mkdir $tempFolder
-        fi
+        [ ! -d "$tempFolder" ] && mkdir $tempFolder
     }
 
     # Initialize args
@@ -274,7 +270,7 @@
     #! Clean up
     if [[ "$CLEAN" = true ]]; then
         echo -e "\n${BR}================================= REMOVING FILES ==================================${NC}"
-        rm -d -r $tempFolder
+        rm -d -r $tempFolder && echo -e "removed '$tempFolder'"
         echo -e "${BR}================================= REMOVED FILES ===================================${NC}"
     fi
 
@@ -332,7 +328,7 @@
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
             [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
             nvm install --lts --latest-npm node # Install Node
-            npm i -g yarn npm # Install Yarn
+            [ "$YARN" = true ] && npm i -g yarn npm # Install Yarn if needed
 
             # Install keep alive dependencies
             echo -e "\n${BP}NPM Global Install${RP}   ( forever | surge | puppeteer )${NC}"
@@ -384,11 +380,8 @@
         echo -e "\n${BG}================================= STARTING APOLLO =================================${NC}"
         cd Apollo
         # Run using forever
-        if [[ "$ONE_LOG" = true ]]; then
-            forever start -a -o $logName -e $logName index.js
-        else
-            forever start -a -o $logName -e $errLogName index.js
-        fi
+        [ "$ONE_LOG" = true ] && errLogName=$logName
+        forever start -a -o $logName -e $errLogName index.js
         cd ..
         echo -e "${BG}===================================== ONLINE ======================================${NC}\n"
     fi
