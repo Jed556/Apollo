@@ -6,6 +6,18 @@ const
     { promisify } = require('util'),
     { glob } = require('glob');
 
+// Variable checks (Use .env if present)
+require('dotenv').config();
+let OwnerID, AdminIDs = [];
+if (process.env.ownerID) {
+    OwnerID = process.env.ownerID;
+    if (process.env.adminIDs) AdminIDs = process.env.adminIDs.split(', ');
+} else {
+    const { ownerID, adminIDs } = require('../config/client.json');
+    OwnerID = ownerID;
+    AdminIDs = adminIDs;
+}
+
 // ---------- FUNCTIONS ---------- //
 
 /**
