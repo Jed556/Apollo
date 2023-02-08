@@ -239,7 +239,7 @@
             # Loop through log files and move them to $tempFolder
             for file in Apollo/apollo_*.log; do
                 if [[ "$file" != "$logName" && "$file" != "$errLogName" ]]; then
-                    mv "$file" "$tempFolder/" && echo "moved '$file to $tempFolder'"
+                    mv "$file" "$tempFolder/" && echo "moved '$file' to '$tempFolder'"
                 fi
             done
         echo -e "${BY}=================================== SAVED LOGS ====================================${NC}"
