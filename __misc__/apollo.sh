@@ -235,7 +235,7 @@
 
 
 
-    if [[ "$exist" = true ]]; then
+    if [[ "$exist" = true && ( "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$UPDATE_SYS" = true || "$UPDATE_GLB" = true || "$UPDATE_LOC" = true || "$FILES" = true || "$NORMAL" = true ) ]]; then
         echo -e "\n${BY}=================================== SAVING LOGS ===================================${NC}"
             createTemp
             # Loop through log files and move them to $tempFolder
@@ -386,6 +386,7 @@
         if [[ "$exist" = true ]]; then
             touch "$repoName/$logName" && echo "created '$logName'"
             touch "$repoName/$errLogName" && echo "created '$errLogName'"
+            touch "$tempFolder/check.txt" && echo "created 'check file'"
         else
             echo -e "${BR}[ERROR]${NC} No existing $repoName repo in current directory"
             exit 1
