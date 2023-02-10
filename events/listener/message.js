@@ -31,14 +31,16 @@ module.exports = {
         if (message.author.bot) return;
         if ((!message.guild || !message.channel) && ListenerDM) return DM();
 
+        const
+            guild = message.guild.name,
+            guildID = message.guild.id,
+            channel = message.channel.name,
+            channelID = interaction.channel.id,
+            user = message.author.tag,
+            userID = message.author.id;
+
         if (ListenerGuild) {
-            const
-                guild = message.guild.name,
-                guildID = message.guild.id,
-                channel = message.channel.name,
-                channelID = interaction.channel.id,
-                user = message.author.tag,
-                userID = message.author.id;
+
             console.log(`${blurple(`[${guild} ${dim(`<${guildID}>`)} in #${channel} ${dim(`<${channelID}>`)} from ${user} ${dim(`<${userID}>`)}]`)}${message.content ? ` MESSAGE: ${message.content}` : ""}${message.attachments.size ? ` ATTACHMENT: ${message.attachments.first().url}` : ""}`);
         }
 
