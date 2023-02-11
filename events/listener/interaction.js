@@ -2,6 +2,7 @@
 const
     { bold, dim } = require('chalk'),
     chalk = require('chalk'),
+    { eventErrorSend } = require('../../system/functions'),
     blurple = chalk.bold.hex("#7289da");
 
 // Variable checks (Use .env if present)
@@ -18,30 +19,33 @@ module.exports = {
     name: "interactionCreate",
     on: true,
     run: async (client, interaction) => {
-        if (!ListenerInteraction) return;
-
-
-        let subCommand = "";
         try {
-            subCommand = interaction.options.getSubcommand() + " ";
-        } catch { }
+            if (!ListenerInteraction) return;
 
-        const
-            commandName = interaction.commandName,
-            guild = interaction.guild.name,
-            guildID = interaction.guild.id,
-            channel = interaction.channel.name,
-            channelID = interaction.channel.id,
-            user = interaction.user.tag,
-            userID = interaction.user.id;
+            let subCommand = "";
+            try {
+                subCommand = interaction.options.getSubcommand() + " ";
+            } catch { }
 
-        let
-            infoStr = blurple(`[${guild} ${dim(`<${guildID}>`)} in #${channel} ${dim(`<${channelID}>`)} from ${user} ${dim(`<${userID}>`)}]`),
-            cmdStr = bold("Command:") + ` /${commandName} ${subCommand}`;
+            const
+                commandName = interaction.commandName,
+                guild = interaction.guild.name,
+                guildID = interaction.guild.id,
+                channel = interaction.channel.name,
+                channelID = interaction.channel.id,
+                user = interaction.user.tag,
+                userID = interaction.user.id;
 
-        if (!interaction.isChatInputCommand())
-            console.log(`${infoStr} ${interaction.customId ? `${bold("Interaction ID:")} ${interaction.customId}` : bold("Component Interaction")}`);
-        else
-            console.log(`${infoStr} ${cmdStr} `);
+            let
+                infoStr = blurple(`[${guild} ${dim(`<${guildID}>`)} in #${channel} ${dim(`<${channelID}>`)} from ${user} ${dim(`<${userID}>`)}]`),
+                cmdStr = bold("Command:") + ` /${commandName} ${subCommand}`;
+
+            if (!interaction.isChatInputCommand())
+                console.log(`${infoStr} ${interaction.customId ? `${bold("Interaction ID:")} ${interaction.customId}` : bold("Component Interaction")}`);
+            else
+                console.log(`${infoStr} ${cmdStr} `);
+        } catch (e) {
+            eventErrorSend(client, interaction, e, true, true);
+        }
     }
 }
