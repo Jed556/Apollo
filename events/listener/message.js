@@ -35,7 +35,7 @@ module.exports = {
             guild = message.guild.name,
             guildID = message.guild.id,
             channel = message.channel.name,
-            channelID = interaction.channel.id,
+            channelID = message.channel.id,
             user = message.author.tag,
             userID = message.author.id;
 
