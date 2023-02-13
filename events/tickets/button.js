@@ -97,12 +97,14 @@ module.exports = {
 
                 const StartEmbed = new EmbedBuilder()
                     .setAuthor({
-                        name: interaction.user.username,
-                        iconURL: interaction.user.avatarURL(),
+                        name: interaction.user.tag,
+                        iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
                     })
-                    .setTitle(`Ticket-${interaction.user.username}#${interaction.user.discriminator}`)
-                    .setDescription(`Welcome **${interaction.user.username}** to this ticket!\nPlease wait for a staff member to reply to your ticket, or if you created it by accidentally please use the "close ticket" button to close it.`)
-                    .setColor("Blurple");
+                    .setTitle(`Ticket-[${interaction.user.tag}](https://discord.com/users/${interaction.user.id})`)
+                    .setDescription(
+                        `Welcome <@${interaction.user.id}> to this ticket!\nPlease wait for a staff member to reply to your ticket, or if you created it accidentally please use the "close ticket" button to close it.`
+                    )
+                    .setColor(emb.color);
 
                 channel.send({
                     embeds: [StartEmbed],
@@ -140,12 +142,8 @@ module.exports = {
 
                 // Some Embeds
                 const reply = new EmbedBuilder()
-                    .setDescription(`The ticket has been closed by **${interaction.user.tag}**`)
+                    .setDescription(`The ticket has been closed by <@${interaction.user.id}>[**#${interaction.user.discriminator}**](https://discord.com/users/${interaction.user.id})\nPlease wait 10 seconds until it gets deleted.`)
                     .setColor("Red");
-
-                const Embed = new EmbedBuilder()
-                    .setColor("Red")
-                    .setDescription(`The ticket is closing please wait 10 seconds until it gets deleted.`);
 
                 const EmbedDM = new EmbedBuilder()
                     .setTitle(`Ticket Closed!`)
@@ -163,6 +161,14 @@ module.exports = {
                     .setFooter({ text: "The ticket was closed at" })
                     .setTimestamp();
 
+                interaction.message.delete();
+
+                // Old message edit
+                // interaction.message.edit({
+                //     embeds: [Embed],
+                //     components: [DisabledClose],
+                // });
+
                 const attachment = await createTranscript(channel, {
                     limit: -1,
                     returnBuffer: false,
@@ -170,11 +176,6 @@ module.exports = {
                     saveImages: true,
                     footerText: "Exported {number} message{s}",
                     poweredBy: false
-                });
-
-                interaction.message.edit({
-                    embeds: [Embed],
-                    components: [DisabledClose],
                 });
 
                 await interaction.reply({
@@ -216,12 +217,12 @@ module.exports = {
 
                 const Embed = new EmbedBuilder()
                     .setAuthor({
-                        name: interaction.user.username,
-                        iconURL: interaction.user.avatarURL(),
+                        name: interaction.user.tag,
+                        iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
                     })
                     .setTitle(`Ticket-${interaction.user.username}#${interaction.user.discriminator}`)
                     .setDescription(
-                        `Welcome **${interaction.user.username}** to this ticket!\nPlease wait for a staff member to reply to your ticket, or if you created it by accidentally please use the "close ticket" button to close it.`
+                        `Welcome <@${interaction.user.id}> to this ticket!\nIf you created it accidentally please use the "close ticket" button to close it.`
                     )
                     .setColor(emb.color);
 
@@ -231,9 +232,7 @@ module.exports = {
                 });
 
                 const reply = new EmbedBuilder()
-                    .setDescription(
-                        `Ticket has been claimed by **${interaction.user.tag}**!`
-                    )
+                    .setDescription(`Ticket has been claimed by <@${interaction.user.id}>[**#${interaction.user.discriminator}**](https://discord.com/users/${interaction.user.id})!`)
                     .setColor("Green");
 
                 await interaction.reply({
