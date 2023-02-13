@@ -196,6 +196,8 @@ module.exports = {
 
             // Checks if a user clicked ticket claim
             else if (interaction.customId == "ticket-claim") {
+                interaction.deferUpdate();
+
                 if (!member.roles.cache.has(config.supportRole))
                     return interaction.reply({
                         content: `<@${user.id}> You require the support role to claim a ticket.`,
