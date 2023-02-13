@@ -201,6 +201,7 @@ module.exports = {
                         content: `<@${user.id}> You require the support role to claim a ticket.`,
                         ephemeral: true,
                     });
+
                 const DisabledClaim = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                         .setCustomId("ticket-close")
@@ -234,7 +235,7 @@ module.exports = {
                     .setDescription(`Ticket has been claimed by <@${user.id}>[**#${user.discriminator}**](https://discord.com/users/${user.id})!`)
                     .setColor("Green");
 
-                await interaction.followUp({
+                await channel.send({
                     embeds: [reply],
                     ephemeral: false,
                 });
