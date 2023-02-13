@@ -151,7 +151,7 @@ module.exports = {
                         name: `Information:`,
                         value: `
                     **Guild Name:** ${guild.name}
-                    **Guild Id:** ${guildId}
+                    **Guild Id:** ||${guildId}||
                     **Created By:** <@!${channel.topic}>[**#${user.discriminator}**](https://discord.com/users/${user.id})
                     **Ticket ID:** ${ID}
                     **Closed By:** <@${user.id}>[**#${user.discriminator}**](https://discord.com/users/${user.id})
@@ -234,7 +234,7 @@ module.exports = {
                     .setDescription(`Ticket has been claimed by <@${user.id}>[**#${user.discriminator}**](https://discord.com/users/${user.id})!`)
                     .setColor("Green");
 
-                await interaction.reply({
+                await interaction.followUp({
                     embeds: [reply],
                     ephemeral: false,
                 });
