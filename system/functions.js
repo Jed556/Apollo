@@ -189,7 +189,7 @@ function toLog(message, type, string) {
  * @param {Boolean} custom Is a custom interaction
  * @returns 
  */
-function eventErrorSend(client, interaction, error, reply, custom) {
+function eventErrorSend(client, interaction, error, reply, custom) { //create a switch for interaction and message
     const
         { member, guildId, channel, customId, commandName } = interaction,
         { guild } = member;
