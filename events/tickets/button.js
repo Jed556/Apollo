@@ -218,16 +218,14 @@ module.exports = {
                     components: [DisabledClaim],
                 });
 
-                let reply = channel.send({
+                channel.send({
                     embeds: [new EmbedBuilder()
                         .setDescription(`Ticket has been claimed by <@${user.id}>[**#${user.discriminator}**](https://discord.com/users/${user.id})!`)
                         .setColor(emb.okColor)],
                     ephemeral: false,
-                });
-
-                setTimeout(() => {
-                    reply.delete();
-                }, 10000);
+                }).then(reply => {
+                    reply.delete({ timeout: 10000 });
+                })
             }
         } catch (e) {
             eventErrorSend(client, interaction, e, true, true);
