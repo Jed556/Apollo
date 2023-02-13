@@ -48,7 +48,7 @@ const client = new Client({
         repliedUser: false,
     },
     failIfNotExists: false,
-    intents: [new IntentsBitField(98303)],
+    intents: [new IntentsBitField(3276799)], //131071
     presence: {
         activities: [{
             name: "Deployment",
