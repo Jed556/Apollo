@@ -20,6 +20,16 @@ module.exports = {
                 guildId: guildId,
             });
 
+            // Base ticket channel embed
+            const Embed = new EmbedBuilder()
+                .setAuthor({
+                    name: user.tag,
+                    iconURL: user.displayAvatarURL({ dynamic: true }),
+                })
+                .setTitle(`Ticket-${user.tag}`)
+                .setDescription(`Welcome <@${user.id}> to this ticket!\nIf you created it accidentally please use the "close ticket" button to close it.`)
+                .setColor(emb.color);
+
             // Check if the user clicked the "create ticket" button
             if (interaction.customId == "createTicket") {
                 await interaction.deferReply({
@@ -27,22 +37,21 @@ module.exports = {
                     ephemeral: true,
                 });
 
-                // Check if config config exists
+                // Check if config exists
                 if (!config) {
-                    const Reply = new EmbedBuilder()
-                        .setTitle("Ticket System")
-                        .setDescription(
-                            `You are required to set up the ticket system before using it! Please use \`/ticket setup\` to set it !up`
-                        )
-                        .setColor(colors.red);
-
                     await interaction.reply({
-                        embeds: [Reply],
+                        embeds: [new EmbedBuilder()
+                            .setTitle("Ticket System")
+                            .setDescription(
+                                `You are required to set up the ticket system before using it! Please use \`/ticket setup\` to set it !up`
+                            )
+                            .setColor(colors.red)],
                         ephemeral: true,
                     });
                     return;
                 }
 
+                // Create ticket channel
                 const category = guild.channels.cache.get(config.categoryId);
 
                 const {
@@ -54,7 +63,6 @@ module.exports = {
                     ReadMessageHistory
                 } = PermissionFlagsBits;
 
-                // Create the ticket channel
                 const channel = await category.children.create({
                     name: `ticket-${user.username}${user.discriminator}`,
                     type: ChannelType.GuildText,
@@ -82,7 +90,7 @@ module.exports = {
                     ],
                 });
 
-                // Send "ticket created" message
+                // Ticket system buttons
                 const TicketActions = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                         .setCustomId("ticket-close")
@@ -96,28 +104,18 @@ module.exports = {
                         .setDisabled(false)
                 );
 
-                const StartEmbed = new EmbedBuilder()
-                    .setAuthor({
-                        name: user.tag,
-                        iconURL: user.displayAvatarURL({ dynamic: true }),
-                    })
-                    .setTitle(`Ticket-${user.tag}`)
-                    .setDescription(
-                        `Welcome <@${user.id}> to this ticket!\nPlease wait for a staff member to reply to your ticket, or if you created it accidentally please use the "close ticket" button to close it.`
-                    )
-                    .setColor(emb.color);
-
+                // Embed updates and replies
                 channel.send({
-                    embeds: [StartEmbed],
+                    embeds: [Embed.setDescription(
+                        `Welcome <@${user.id}> to this ticket!\nPlease wait for a staff member to reply to your ticket, or if you created it accidentally please use the "close ticket" button to close it.`
+                    )],
                     components: [TicketActions],
                 });
 
-                const Reply = new EmbedBuilder()
-                    .setDescription(`Your ticket has been successfully created!`)
-                    .setColor("Green");
-
                 await interaction.followUp({
-                    embeds: [Reply],
+                    embeds: [new EmbedBuilder()
+                        .setDescription(`Your ticket has been successfully created!`)
+                        .setColor("Green")],
                     ephemeral: true,
                 });
             }
@@ -130,7 +128,7 @@ module.exports = {
                         ephemeral: true,
                     });
 
-                // Buttons
+                // Disable close button
                 const DisabledClose = new ActionRowBuilder().setComponents(
                     new ButtonBuilder()
                         .setCustomId("ticket-close")
@@ -139,27 +137,7 @@ module.exports = {
                         .setDisabled(true)
                 );
 
-                // Some Embeds
-                const reply = new EmbedBuilder()
-                    .setDescription(`The ticket has been closed by <@${user.id}>[**#${user.discriminator}**](https://discord.com/users/${user.id})\nPlease wait 10 seconds until it gets deleted.`)
-                    .setColor("Red");
-
-                const EmbedDM = new EmbedBuilder()
-                    .setTitle(`Ticket Closed!`)
-                    .setColor("Red")
-                    .setFields({
-                        name: `Information:`,
-                        value: `
-                    **Guild Name:** ${guild.name}
-                    **Guild Id:** ||${guildId}||
-                    **Created By:** <@!${channel.topic}>[**#${user.discriminator}**](https://discord.com/users/${user.id})
-                    **Ticket ID:** ${ID}
-                    **Closed By:** <@${user.id}>[**#${user.discriminator}**](https://discord.com/users/${user.id})
-                    `,
-                    })
-                    .setFooter({ text: "The ticket was closed at" })
-                    .setTimestamp();
-
+                // Adjust initial embeds before logging
                 await message.delete();
 
                 // Old message edit
@@ -168,6 +146,7 @@ module.exports = {
                 //     components: [DisabledClose],
                 // });
 
+                // Attach transcript
                 const attachment = await createTranscript(channel, {
                     limit: -1,
                     returnBuffer: false,
@@ -177,19 +156,35 @@ module.exports = {
                     poweredBy: false
                 });
 
+                // Embed updates and replies
                 await interaction.reply({
-                    embeds: [reply],
+                    embeds: [new EmbedBuilder()
+                        .setDescription(`The ticket has been closed by <@${user.id}>[**#${user.discriminator}**](https://discord.com/users/${user.id})\nPlease wait 10 seconds until it gets deleted.`)
+                        .setColor("Red")],
                     ephemeral: false,
                 });
 
                 setTimeout(() => {
                     client.channels.cache.get(config.ticketlog).send({
-                        embeds: [EmbedDM],
-                        files: [attachment],
+                        embeds: [new EmbedBuilder()
+                            .setTitle(`Ticket Closed!`)
+                            .setColor("Red")
+                            .setFields({
+                                name: `Information:`,
+                                value: `
+                            **Guild Name:** ${guild.name}
+                            **Guild Id:** ||${guildId}||
+                            **Created By:** <@!${channel.topic}>[**#${user.discriminator}**](https://discord.com/users/${user.id})
+                            **Ticket ID:** ${ID}
+                            **Closed By:** <@${user.id}>[**#${user.discriminator}**](https://discord.com/users/${user.id})
+                            `,
+                            })
+                            .setFooter({ text: "The ticket was closed at" })
+                            .setTimestamp()],
+                        files: [attachment]
                     });
-                }, 10000);
 
-                setTimeout(() => {
+                    // Delete ticket channel
                     channel.delete();
                 }, 10000);
             }
@@ -204,6 +199,7 @@ module.exports = {
                         ephemeral: true,
                     });
 
+                // Disable claim button
                 const DisabledClaim = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                         .setCustomId("ticket-close")
@@ -217,30 +213,22 @@ module.exports = {
                         .setDisabled(true)
                 );
 
-                const Embed = new EmbedBuilder()
-                    .setAuthor({
-                        name: user.tag,
-                        iconURL: user.displayAvatarURL({ dynamic: true }),
-                    })
-                    .setTitle(`Ticket-${user.tag}`)
-                    .setDescription(
-                        `Welcome <@${user.id}> to this ticket!\nIf you created it accidentally please use the "close ticket" button to close it.`
-                    )
-                    .setColor(emb.color);
-
+                // Embed updates and replies
                 message.edit({
                     embeds: [Embed],
                     components: [DisabledClaim],
                 });
 
-                const reply = new EmbedBuilder()
-                    .setDescription(`Ticket has been claimed by <@${user.id}>[**#${user.discriminator}**](https://discord.com/users/${user.id})!`)
-                    .setColor("Green");
-
-                await channel.send({
-                    embeds: [reply],
+                let reply = channel.send({
+                    embeds: [new EmbedBuilder()
+                        .setDescription(`Ticket has been claimed by <@${user.id}>[**#${user.discriminator}**](https://discord.com/users/${user.id})!`)
+                        .setColor("Green")],
                     ephemeral: false,
                 });
+
+                setTimeout(() => {
+                    reply.delete();
+                }, 10000);
             }
         } catch (e) {
             eventErrorSend(client, interaction, e, true, true);
