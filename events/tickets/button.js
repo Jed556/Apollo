@@ -157,7 +157,7 @@ module.exports = {
                 });
 
                 // Embed updates and replies
-                await interaction.reply({
+                await channel.send({
                     embeds: [new EmbedBuilder()
                         .setDescription(`The ticket has been closed by <@${user.id}>[**#${user.discriminator}**](https://discord.com/users/${user.id})\nPlease wait 10 seconds until it gets deleted.`)
                         .setColor(emb.errColor)],
@@ -224,7 +224,9 @@ module.exports = {
                         .setColor(emb.okColor)],
                     ephemeral: false,
                 }).then(reply => {
-                    reply.delete({ timeout: 10000 });
+                    setTimeout(() => {
+                        reply.delete();
+                    }, 10000);
                 })
             }
         } catch (e) {
