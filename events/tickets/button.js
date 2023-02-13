@@ -43,7 +43,7 @@ module.exports = {
                         embeds: [new EmbedBuilder()
                             .setTitle("Ticket System")
                             .setDescription(
-                                `You are required to set up the ticket system before using it! Please use \`/ticket setup\` to set it !up`
+                                "You are required to set up the ticket system before using it! Please use `/ticket setup` to set it up"
                             )
                             .setColor(colors.red)],
                         ephemeral: true,
@@ -70,7 +70,7 @@ module.exports = {
                     permissionOverwrites: [
                         {
                             id: guild.roles.everyone.id,
-                            deny: [ViewChannel], // View channel
+                            deny: [ViewChannel], // Private channel
                         },
                         {
                             id: config.supportRole,
@@ -114,8 +114,8 @@ module.exports = {
 
                 await interaction.followUp({
                     embeds: [new EmbedBuilder()
-                        .setDescription(`Your ticket has been successfully created!`)
-                        .setColor("Green")],
+                        .setDescription("Your ticket has been successfully created!")
+                        .setColor(emb.okColor)],
                     ephemeral: true,
                 });
             }
@@ -160,7 +160,7 @@ module.exports = {
                 await interaction.reply({
                     embeds: [new EmbedBuilder()
                         .setDescription(`The ticket has been closed by <@${user.id}>[**#${user.discriminator}**](https://discord.com/users/${user.id})\nPlease wait 10 seconds until it gets deleted.`)
-                        .setColor("Red")],
+                        .setColor(emb.errColor)],
                     ephemeral: false,
                 });
 
@@ -168,18 +168,17 @@ module.exports = {
                     client.channels.cache.get(config.ticketlog).send({
                         embeds: [new EmbedBuilder()
                             .setTitle(`Ticket Closed!`)
-                            .setColor("Red")
+                            .setColor(emb.errColor)
                             .setFields({
                                 name: `Information:`,
                                 value: `
                             **Guild Name:** ${guild.name}
-                            **Guild Id:** ||${guildId}||
+                            **Guild ID:** ||${guildId}||
                             **Created By:** <@!${channel.topic}>[**#${user.discriminator}**](https://discord.com/users/${user.id})
                             **Ticket ID:** ${ID}
                             **Closed By:** <@${user.id}>[**#${user.discriminator}**](https://discord.com/users/${user.id})
                             `,
                             })
-                            .setFooter({ text: "The ticket was closed at" })
                             .setTimestamp()],
                         files: [attachment]
                     });
@@ -222,7 +221,7 @@ module.exports = {
                 let reply = channel.send({
                     embeds: [new EmbedBuilder()
                         .setDescription(`Ticket has been claimed by <@${user.id}>[**#${user.discriminator}**](https://discord.com/users/${user.id})!`)
-                        .setColor("Green")],
+                        .setColor(emb.okColor)],
                     ephemeral: false,
                 });
 
