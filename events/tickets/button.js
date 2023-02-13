@@ -12,11 +12,12 @@ module.exports = {
     run: async (client, interaction) => {
         try {
             if (!interaction.isButton()) return;
+            const { member, user, guild, guildId, channel, channelId, message } = interaction;
 
             const ID = randomNum(0, 999999) // old: Math.floor(Math.random() * 90000);
 
             const config = await ticketSchema.findOne({
-                guildId: interaction.guild.id,
+                guildId: guildID,
             });
 
             // Check if the user clicked the "create ticket" button
@@ -42,7 +43,7 @@ module.exports = {
                     return;
                 }
 
-                const category = interaction.guild.channels.cache.get(config.categoryId);
+                const category = guild.channels.cache.get(config.categoryId);
 
                 const {
                     SendMessages,
@@ -55,12 +56,12 @@ module.exports = {
 
                 // Create the ticket channel
                 const channel = await category.children.create({
-                    name: `ticket-${interaction.user.username}${interaction.user.discriminator}`,
+                    name: `ticket-${user.username}${user.discriminator}`,
                     type: ChannelType.GuildText,
-                    topic: interaction.user.id,
+                    topic: user.id,
                     permissionOverwrites: [
                         {
-                            id: interaction.guild.roles.everyone.id,
+                            id: guild.roles.everyone.id,
                             deny: [ViewChannel], // View channel
                         },
                         {
@@ -75,7 +76,7 @@ module.exports = {
                             ],
                         },
                         {
-                            id: interaction.member.user.id,
+                            id: member.user.id,
                             allow: [SendMessages, ViewChannel, AddReactions, AttachFiles],
                         },
                     ],
@@ -97,12 +98,12 @@ module.exports = {
 
                 const StartEmbed = new EmbedBuilder()
                     .setAuthor({
-                        name: interaction.user.tag,
-                        iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                        name: user.tag,
+                        iconURL: user.displayAvatarURL({ dynamic: true }),
                     })
-                    .setTitle(`Ticket-[${interaction.user.tag}](https://discord.com/users/${interaction.user.id})`)
+                    .setTitle(`Ticket-${user.tag}`)
                     .setDescription(
-                        `Welcome <@${interaction.user.id}> to this ticket!\nPlease wait for a staff member to reply to your ticket, or if you created it accidentally please use the "close ticket" button to close it.`
+                        `Welcome <@${user.id}> to this ticket!\nPlease wait for a staff member to reply to your ticket, or if you created it accidentally please use the "close ticket" button to close it.`
                     )
                     .setColor(emb.color);
 
@@ -123,13 +124,11 @@ module.exports = {
 
             // Check if user clicked "close ticket" button
             else if (interaction.customId == "ticket-close") {
-                if (!interaction.member.roles.cache.has(config.supportRole))
+                if (!member.roles.cache.has(config.supportRole))
                     return interaction.reply({
-                        content: `<@${interaction.user.id}> You require the support role to claim a ticket.`,
+                        content: `<@${user.id}> You require the support role to claim a ticket.`,
                         ephemeral: true,
                     });
-
-                const { channel } = interaction;
 
                 // Buttons
                 const DisabledClose = new ActionRowBuilder().setComponents(
@@ -142,7 +141,7 @@ module.exports = {
 
                 // Some Embeds
                 const reply = new EmbedBuilder()
-                    .setDescription(`The ticket has been closed by <@${interaction.user.id}>[**#${interaction.user.discriminator}**](https://discord.com/users/${interaction.user.id})\nPlease wait 10 seconds until it gets deleted.`)
+                    .setDescription(`The ticket has been closed by <@${user.id}>[**#${user.discriminator}**](https://discord.com/users/${user.id})\nPlease wait 10 seconds until it gets deleted.`)
                     .setColor("Red");
 
                 const EmbedDM = new EmbedBuilder()
@@ -151,20 +150,20 @@ module.exports = {
                     .setFields({
                         name: `Information:`,
                         value: `
-                    **Guild Name:** ${interaction.guild.name}
-                    **Guild Id:** ${interaction.guild.id}
-                    **Created By:** <@!${channel.topic}>
+                    **Guild Name:** ${guild.name}
+                    **Guild Id:** ${guildId}
+                    **Created By:** <@!${channel.topic}>[**#${user.discriminator}**](https://discord.com/users/${user.id})
                     **Ticket ID:** ${ID}
-                    **Closed By:** ${interaction.user.tag}
+                    **Closed By:** <@${user.id}>[**#${user.discriminator}**](https://discord.com/users/${user.id})
                     `,
                     })
                     .setFooter({ text: "The ticket was closed at" })
                     .setTimestamp();
 
-                interaction.message.delete();
+                await message.delete();
 
                 // Old message edit
-                // interaction.message.edit({
+                // message.edit({
                 //     embeds: [Embed],
                 //     components: [DisabledClose],
                 // });
@@ -191,15 +190,15 @@ module.exports = {
                 }, 10000);
 
                 setTimeout(() => {
-                    interaction.channel.delete();
+                    channel.delete();
                 }, 10000);
             }
 
             // Checks if a user clicked ticket claim
             else if (interaction.customId == "ticket-claim") {
-                if (!interaction.member.roles.cache.has(config.supportRole))
+                if (!member.roles.cache.has(config.supportRole))
                     return interaction.reply({
-                        content: `<@${interaction.user.id}> You require the support role to claim a ticket.`,
+                        content: `<@${user.id}> You require the support role to claim a ticket.`,
                         ephemeral: true,
                     });
                 const DisabledClaim = new ActionRowBuilder().addComponents(
@@ -217,22 +216,22 @@ module.exports = {
 
                 const Embed = new EmbedBuilder()
                     .setAuthor({
-                        name: interaction.user.tag,
-                        iconURL: interaction.user.displayAvatarURL({ dynamic: true }),
+                        name: user.tag,
+                        iconURL: user.displayAvatarURL({ dynamic: true }),
                     })
-                    .setTitle(`Ticket-${interaction.user.username}#${interaction.user.discriminator}`)
+                    .setTitle(`Ticket-${user.tag}`)
                     .setDescription(
-                        `Welcome <@${interaction.user.id}> to this ticket!\nIf you created it accidentally please use the "close ticket" button to close it.`
+                        `Welcome <@${user.id}> to this ticket!\nIf you created it accidentally please use the "close ticket" button to close it.`
                     )
                     .setColor(emb.color);
 
-                interaction.message.edit({
+                message.edit({
                     embeds: [Embed],
                     components: [DisabledClaim],
                 });
 
                 const reply = new EmbedBuilder()
-                    .setDescription(`Ticket has been claimed by <@${interaction.user.id}>[**#${interaction.user.discriminator}**](https://discord.com/users/${interaction.user.id})!`)
+                    .setDescription(`Ticket has been claimed by <@${user.id}>[**#${user.discriminator}**](https://discord.com/users/${user.id})!`)
                     .setColor("Green");
 
                 await interaction.reply({
