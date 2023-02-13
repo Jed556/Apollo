@@ -1,7 +1,7 @@
 const
     { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, ChannelType, PermissionFlagsBits } = require('discord.js'),
     { createTranscript } = require('discord-html-transcripts'),
-    { eventErrorSend } = require('../../system/functions'),
+    { eventErrorSend, randomNum } = require('../../system/functions'),
     ticketSchema = require('../../schemas/Ticket'),
     emb = require('../../config/embed.json');
 
@@ -13,7 +13,7 @@ module.exports = {
         try {
             if (!interaction.isButton()) return;
 
-            const ID = Math.floor(Math.random() * 90000);
+            const ID = randomNum(0, 999999) // old: Math.floor(Math.random() * 90000);
 
             const config = await ticketSchema.findOne({
                 guildId: interaction.guild.id,
@@ -166,7 +166,10 @@ module.exports = {
                 const attachment = await createTranscript(channel, {
                     limit: -1,
                     returnBuffer: false,
-                    fileName: `Ticket-${ID}.html`,
+                    filename: `Ticket-${ID}.html`,
+                    saveImages: true,
+                    footerText: "Exported {number} message{s}",
+                    poweredBy: false
                 });
 
                 interaction.message.edit({

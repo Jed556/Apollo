@@ -53,9 +53,9 @@ function randomNum(min, max) {
     try {
         let number;
         if (min || max) {
-            number = Math.round(Math.random() * (max - min)) + min;
+            number = Math.floor(Math.random() * (max - min)) + min;
         } else {
-            number = Math.round(Math.random());
+            number = Math.floor(Math.random());
         }
         return number;
     } catch (e) { }
