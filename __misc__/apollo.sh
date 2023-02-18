@@ -240,7 +240,7 @@
             createTemp
             # Loop through log files and move them to $tempFolder
             for file in $repoName/apollo_*.log; do
-                if [[ "$file" != "$logName" && "$file" != "$errLogName" ]]; then
+                if [[ "$file" != "$repoName/$logName" && "$file" != "$repoName/$errLogName" ]]; then
                     mv "$file" "$tempFolder/" && echo "moved '$file' to '$tempFolder'"
                 fi
             done
@@ -385,7 +385,7 @@
         echo -e "\n${BY}================================= CREATING FILES ==================================${NC}"
         if [[ "$exist" = true ]]; then
             touch "$repoName/$logName" && echo "created '$logName'"
-            touch "$repoName/$errLogName" && echo "created '$errLogName'"
+            [ -z "$ONE_LOG" ] && touch "$repoName/$errLogName" && echo "created '$errLogName'"
             touch "$tempFolder/check.txt" && echo "created 'check file'"
         else
             echo -e "${BR}[ERROR]${NC} No existing $repoName repo in current directory"
