@@ -236,15 +236,24 @@
 
 
     if [[ "$exist" = true && ( "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$UPDATE_SYS" = true || "$UPDATE_GLB" = true || "$UPDATE_LOC" = true || "$FILES" = true || "$NORMAL" = true ) ]]; then
-        echo -e "\n${BY}=================================== SAVING LOGS ===================================${NC}"
-            createTemp
-            # Loop through log files and move them to $tempFolder
-            for file in $repoName/apollo_*.log; do
-                if [[ "$file" != "$repoName/$logName" && "$file" != "$repoName/$errLogName" ]]; then
-                    mv "$file" "$tempFolder/" && echo "moved '$file' to '$tempFolder'"
-                fi
-            done
-        echo -e "${BY}=================================== SAVED LOGS ====================================${NC}"
+        # Check if there are logs movable before moving
+        for file in $repoName/apollo_*.log; do
+            if [[ "$file" != "$repoName/$logName" && "$file" != "$repoName/$errLogName" ]]; then
+                hasLogs=true
+                break
+            fi
+        done
+        if [[ "$hasLogs" = true ]]; then
+            echo -e "\n${BY}=================================== SAVING LOGS ===================================${NC}"
+                createTemp
+                # Loop through log files and move them to $tempFolder
+                for file in $repoName/apollo_*.log; do
+                    if [[ "$file" != "$repoName/$logName" && "$file" != "$repoName/$errLogName" ]]; then
+                        mv "$file" "$tempFolder/" && echo "moved '$file' to '$tempFolder'"
+                    fi
+                done
+            echo -e "${BY}=================================== SAVED LOGS ====================================${NC}"
+        fi
     fi
 
 
