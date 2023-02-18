@@ -140,15 +140,14 @@
 
     #! Art
     if [[ "$NART" != true && "$BASH" != true && "$HELP" != true ]]; then
-        echo -e "${BW}"
-        echo -e "${NC}    ${OIB}      ${OB}                                                               ${OIB}      ${NC}    "
-        echo -e "  ${OIB}     ${OB}        _____ __________________  .____    .____    ________         ${OIB}     ${NC}  "
-        echo -e " ${OIB}   ${OB}          /  _  \\\\\\______   \_____  \ |    |   |    |   \_____//\           ${OIB}   ${NC} "
-        echo -e "${OIB}   ${OB}          /  /_\  \|     ___//   |   \|    |   |    |    /   //  \           ${OIB}   ${NC}"
-        echo -e "${OIB}   ${OB}         /    |    \    |   /    |    \    |___|    |___/   //    \          ${OIB}   ${NC}"
-        echo -e " ${OIB}   ${OB}        \____|__  /____|   \_______  /_______ \_______ \__//___  /         ${OIB}   ${NC} "
-        echo -e "  ${OIB}     ${OB}             \/                 \/        \/       \/       \/       ${OIB}     ${NC}  "
-        echo -e "    ${OIB}      ${OB}                                                               ${OIB}      ${NC}    "
+        echo "\n"
+        echo -e "      ${OIB}     ${OB}                                                            ${OIB}     ${NC}"
+        echo -e "    ${OIB}     ${OB}          _____ _______________  ___     ___  _________         ${OIB}     ${NC}"
+        echo -e "   ${OIB}     ${OB}          /  _  \\\\\\_____   \     \|   |   |   | \______//\         ${OIB}     ${NC}"
+        echo -e "  ${OIB}     ${OB}          /  /_\  \|    ___/  |   |   |   |   |   /   //  \         ${OIB}     ${NC}"
+        echo -e "   ${OIB}     ${OB}        /    |    \   |  |   |   |   |___|   |__/   //    \       ${OIB}     ${NC}"
+        echo -e "    ${OIB}     ${OB}      /_____|_____\__|  \_______|_______\_______\_//_____/      ${OIB}     ${NC}"
+        echo -e "      ${OIB}     ${OB}                                                            ${OIB}     ${NC}"
     fi
 
 
@@ -238,6 +237,7 @@
 
 
 
+    #! Save Logs
     if [[ "$exist" = true && ( "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$UPDATE_SYS" = true || "$UPDATE_GLB" = true || "$UPDATE_LOC" = true || "$FILES" = true || "$NORMAL" = true ) ]]; then
         # Check if there are logs movable before moving
         for file in $repoName/apollo_*.log; do
