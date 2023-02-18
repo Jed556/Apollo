@@ -27,6 +27,7 @@
     today=$(date +%m-%d-%Y)
     logName="apollo_$today.log"
     errLogName="apollo_${today}_err.log"
+    activeLog=$logName
 
 
     # Check if directory exists
@@ -40,7 +41,7 @@
     # Initialize args
     if [[ $# > 0 ]]; then
         # Set vars
-        validArgs=("h" "a" "n" "l" "s" "c" "F" "X" "U" "S" "G" "L" "Y" "r" "t" "-" "b")
+        validArgs=("h" "a" "n" "l" "x" "s" "c" "F" "X" "U" "S" "G" "L" "Y" "r" "t" "-" "b")
         inputArgs="$*"
         argsArr=""
         argsArrSelf=""
@@ -110,6 +111,7 @@
                 *a*) NART=true;; # Hide Art
                 *n*) NORMAL=true;; # Run script normally (Defaults)
                 *l*) ONE_LOG=true;; # Only use one logfile
+                *x*) STOP=true;; # Stops running instances
 
                 # Repository related
                 *s*) SELF=true;; # Update Self
@@ -196,6 +198,7 @@
         echo -e "   ${BW}a${NC}  Hide Art"
         echo -e "   ${BW}n${NC}  Run script normally (No arguments / Defaults) and execute additional argumentss"
         echo -e "   ${BW}l${NC}  Use one log file for errors and output"
+        echo -e "   ${BW}x${NC}  Stops running instances"
 
         echo -e "${BC}Repository related${NC}"
         echo -e "   ${BW}s${NC}  Update Self"
@@ -221,7 +224,7 @@
 
     #! Stop processes
     if [[ "$exist" = true ]]; then
-    if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$UPDATE_SYS" = true || "$UPDATE_GLB" = true || "$UPDATE_LOC" = true || "$FILES" = true || "$NORMAL" = true ]]; then
+    if [[ "$STOP" = true || "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$UPDATE_SYS" = true || "$UPDATE_GLB" = true || "$UPDATE_LOC" = true || "$FILES" = true || "$NORMAL" = true ]]; then
             echo -e "\n${BR}================================= STOPPING APOLLO =================================${NC}"
             forever stop $repoName/index.js
             if [[ $? != 0 ]]; then
@@ -390,12 +393,13 @@
 
 
     #! Create files needed
-    if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$FILES" = true || "$NORMAL" = true ]]; then
+    if [[ "$START" = true || "$CLONE" = true || "$FILES" = true || "$NORMAL" = true ]]; then
         echo -e "\n${BY}================================= CREATING FILES ==================================${NC}"
+        createTemp
         if [[ "$exist" = true ]]; then
             touch "$repoName/$logName" && echo "created '$logName'"
             [ -z "$ONE_LOG" ] && touch "$repoName/$errLogName" && echo "created '$errLogName'"
-            touch "$tempFolder/check.txt" && echo "created 'check file'"
+            [ "$START" = true ] && echo "$logName" > "$tempFolder/.check" && echo "created '.check' file"
         else
             echo -e "${BR}[ERROR]${NC} No existing $repoName repo in current directory"
             exit 1
@@ -406,7 +410,7 @@
 
 
     #! Run Apollo
-    if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$FILES" = true || "$NORMAL" = true ]]; then
+    if [[ "$START" = true || "$CLONE" = true || "$UPDATE" = true || "$NORMAL" = true ]]; then
         echo -e "\n${BG}================================= STARTING APOLLO =================================${NC}"
         cd $repoName
         # Run using forever
@@ -421,7 +425,11 @@
     #! Tail logs
     if [[ "$TAIL" = true ]]; then
         echo -e "\n${BG}====================================== TAIL =======================================${NC}"
-        tail -n +1 -f "./$repoName/apollo_$today.log"
+        if [ -f "$tempFolder/.check" ]; then
+            activeLog=$(sed -n 1p "$tempFolder/.check")
+        fi
+        tail -n +1 -f "./$repoName/$activeLog"
+        echo -e "${BG}==================================== TAIL END =====================================\n${NC}"
     fi
 
 
