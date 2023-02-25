@@ -205,7 +205,7 @@ function eventErrorSend(client, interaction, error, reply, custom) { //create a 
         errorEmb = new EmbedBuilder()
             .setTimestamp()
             .setColor(emb.errColor)
-            .setAuthor({ name: "AN ERROR OCCURED", iconURL: action.category == "music" ? emb.disc.error : emb.error });
+            .setAuthor({ name: "AN ERROR OCCURED", iconURL: action?.category == "music" ? emb.disc.error : emb.error });
 
     // Log error
     toError(error, custom ? "Interaction Error: " : "Command Error: ");
