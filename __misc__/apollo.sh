@@ -398,8 +398,8 @@
         createTemp
         if [[ "$exist" = true ]]; then
             touch "$repoName/$logName" && echo "created '$logName'"
-            [ -z "$ONE_LOG" ] && touch "$repoName/$errLogName" && echo "created '$errLogName'"
-            [ "$START" = true || "$NORMAL" = true ] && echo "$logName" > "$tempFolder/.check" && echo "created '.check' file"
+            [[ -z "$ONE_LOG" ]] && touch "$repoName/$errLogName" && echo "created '$errLogName'"
+            [[ "$START" = true || "$NORMAL" = true ]] && echo "$logName" > "$tempFolder/.check" && echo "created '.check' file"
         else
             echo -e "${BR}[ERROR]${NC} No existing $repoName repo in current directory"
             exit 1
