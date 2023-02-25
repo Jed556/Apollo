@@ -140,7 +140,7 @@
 
     #! Art
     if [[ "$NART" != true && "$BASH" != true && "$HELP" != true ]]; then
-        echo "\n"
+        echo -e "\n"
         echo -e "      ${OIB}     ${OB}                                                            ${OIB}     ${NC}"
         echo -e "    ${OIB}     ${OB}          _____ _______________  ___     ___  _________         ${OIB}     ${NC}"
         echo -e "   ${OIB}     ${OB}          /  _  \\\\\\_____   \     \|   |   |   | \______//\         ${OIB}     ${NC}"
