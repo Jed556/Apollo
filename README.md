@@ -18,14 +18,14 @@
 
 ## Table of Contents
 - [Installation](https://github.com/Jed556/Apollo#installation)
-  - [Basic / Windows](https://github.com/Jed556/Apollo#windows-host)
-  - [Ubuntu / SSH](https://github.com/Jed556/Apollo#ubuntu-server)
-  - [Ubuntu / SSH - Deprecated](https://github.com/Jed556/Apollo/tree/f4f37004912b4ec12cb503c52d3ead87d9f0a373#ubuntu--ssh---deprecated)
+  - [Windows Host](https://github.com/Jed556/Apollo#windows-host)
+  - [Ubuntu Server](https://github.com/Jed556/Apollo#ubuntu-server)
+  - [Ubuntu Server - Deprecated](https://github.com/Jed556/Apollo/tree/f4f37004912b4ec12cb503c52d3ead87d9f0a373#ubuntu--ssh---deprecated)
   - [apollo.sh](https://github.com/Jed556/Apollo#apollosh)
   - [Other Dependencies](https://github.com/Jed556/Apollo#other-dependencies)
-    - [24/7 Ubuntu Server](https://github.com/Jed556/Apollo#247-ubuntu-dependencies)
-    - [Windows](https://github.com/Jed556/Apollo#windows-dependencies)
-  - [Heroku - Deprecated](https://github.com/Jed556/Apollo/tree/f4f37004912b4ec12cb503c52d3ead87d9f0a373#heroku)
+    - [24/7 Ubuntu Dependencies](https://github.com/Jed556/Apollo#247-ubuntu-dependencies)
+    - [Windows Dependencies](https://github.com/Jed556/Apollo#windows-dependencies)
+  - [Heroku - Deprecated](https://github.com/Jed556/Apollo/tree/f4f37004912b4ec12cb503c52d3ead87d9f0a373#heroku) &nbsp;(*See [***v0.3.1***](https://github.com/Jed556/Apollo/tree/v0.3.1) files for hosting*)
 - [Support](https://github.com/Jed556/Apollo#support)
 
 ## Installation
