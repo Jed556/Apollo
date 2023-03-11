@@ -18,20 +18,22 @@
 
 ## Table of Contents
 - [Installation](https://github.com/Jed556/Apollo#installation)
-  - [Basic / Windows](https://github.com/Jed556/Apollo#basic--windows)
-  - [Ubuntu / SSH](https://github.com/Jed556/Apollo#ubuntu--ssh)
+  - [Basic / Windows](https://github.com/Jed556/Apollo#windows-host)
+  - [Ubuntu / SSH](https://github.com/Jed556/Apollo#ubuntu-server)
   - [Ubuntu / SSH - Deprecated](https://github.com/Jed556/Apollo/tree/f4f37004912b4ec12cb503c52d3ead87d9f0a373#ubuntu--ssh---deprecated)
   - [apollo.sh](https://github.com/Jed556/Apollo#apollosh)
   - [Other Dependencies](https://github.com/Jed556/Apollo#other-dependencies)
-    - 24/7 Ubuntu Server
-    - Windows
+    - [24/7 Ubuntu Server](https://github.com/Jed556/Apollo#247-ubuntu-dependencies)
+    - [Windows](https://github.com/Jed556/Apollo#windows-dependencies)
   - [Heroku - Deprecated](https://github.com/Jed556/Apollo/tree/f4f37004912b4ec12cb503c52d3ead87d9f0a373#heroku)
 - [Support](https://github.com/Jed556/Apollo#support)
 
 ## Installation
-I recommend using **JSON files** for now.<br>
-**.env files** are parsed as strings, causing some of the config values to be interpreted incorrectly.
-### Basic / Windows
+> **Warning** <br>
+> I recommend using **JSON files** for now.<br>
+> **.env files** are parsed as strings, causing some of the config values to be interpreted incorrectly.
+
+### Windows Host
 - Install [Node.js](https://nodejs.org/en/)
 - Download latest [Apollo.zip](https://github.com/Jed556/Apollo/releases) release
 - Extract the **Apollo-main** folder to your desired location
@@ -40,25 +42,27 @@ I recommend using **JSON files** for now.<br>
 - Install dependencies `npm i`
 - Run the program `node .`
 
-### Ubuntu / SSH
+### Ubuntu Server
 - Create or fill up a config file from the [**templates**](https://github.com/Jed556/Apollo/blob/main/__misc__/config) given in the directory you want to install Apollo. All configurations in the **JSON files** are also in the **.env** file (will ignore **JSON files** if **.env** is present)
 - Simply copy, paste and run the code below to your linux terminal. It automatically handles dependency installation, installation updates, copying of config files, runs the client and sets the global node version to use for future use cases.
 ```Bash
 curl -s -LO https://raw.githubusercontent.com/Jed556/Apollo/main/__misc__/apollo.sh && chmod u+x apollo.sh && ./apollo.sh && nvm use --lts --silent node
 ```
-- You may run `./apollo.sh` in your terminal if you want to get the latest release, update your dependencies and restart the client.
+- Expand `./apollo.sh` contents below to see available flags.
 
-### apollo.sh
+<details>
+  <summary><h3>apollo.sh</h3></summary>
+
 For bash script **apollo.sh** flags. <br>
 Flags can be added with or without dash ( `./apollo.sh -h` / `./apollo.sh h` ). <br>
-Examples of multiple flag declaration formats are: multiple dash ( `-h -n` / `h n` ), single dash ( `-hnl` / `hnl` ).
+Examples of multiple flag declaration formats are: separated ( `-h -n` / `h n` ), block ( `-hnl` / `hnl` ).
 
 | Flag  | Description                                                                    |
 | :---: | :---                                                                           |
 |       | **Script related**                                                             |
 |   h   | Display Help                                                                   |
 |   a   | Hide Art                                                                       |
-|   n   | Run script normally (No arguments / Defaults) and execute additional arguments |
+|   n   | Run script normally (No arguments / Defaults) and execute additional flags     |
 |   l   | Use one log file for errors and output                                         |
 |       | **Repository related**                                                         |
 |   s   | Update Self                                                                    |
@@ -75,10 +79,11 @@ Examples of multiple flag declaration formats are: multiple dash ( `-h -n` / `h 
 |   r   | Start or restart                                                               |
 |   t   | Tail logs                                                                      |
 
+</details>
 
 ### Other Dependencies
 These dependencies are required in certain circumstances<br/>
-- 24/7 Ubuntu Server
+- #### 24/7 Ubuntu Dependencies
   ``` bash
   # Keep alive
   npm i forever surge -g
@@ -89,7 +94,7 @@ These dependencies are required in certain circumstances<br/>
   # Puppeteer
   sudo apt install -y gconf-service libgbm-dev libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
   ```
-- Windows
+- #### Windows Dependencies
   ``` text
   npm i ffmpeg-static
   ```
