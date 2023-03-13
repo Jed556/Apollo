@@ -35,7 +35,7 @@
     "chartjs-node-canvas": "^4.1.6",
     "chartjs-plugin-gradient": "^0.6.1",
     "discord-html-transcripts": "^3.1.2",
-    "discord.js": "14.7.1",
+    "discord.js": "14.8.0",
     "distube": "^4.0.4",
     "dotenv": "^16.0.3",
     "enmap": "^5.9.5",
