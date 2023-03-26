@@ -114,8 +114,9 @@ async function reloadCommands(client, cd) {
  */
 async function reloadEvents(client, cd) {
     setTimeout(async () => {
-        for (const [key, value] of client.events)
-            client.removeListener(`${key}`, value, true);
+        await client.removeAllListeners();
+        // for (const [key, value] of client.events)
+        //     client.removeListener(`${key}`, value, true);
         loadEvents(client);
     }, cd * 1000);
 }

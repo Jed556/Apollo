@@ -2,7 +2,8 @@ const
     { greenBright, red, dim } = require('chalk'),
     { toTitleCase, toError, toLog } = require('../system/functions'),
     { loadFiles } = require('../system/fileLoader'),
-    { AsciiTable3 } = require('ascii-table3');
+    { AsciiTable3 } = require('ascii-table3'),
+    path = require('path');
 
 // Variable checks (Use .env if present)
 require('dotenv').config();
@@ -60,24 +61,25 @@ async function commandHandler(client) {
         .setAlignCenter(2).setAlignCenter(3).setAlignCenter(4).setAlignRight(1);
     Table.setHeading("Command", "Cooldown", "Permissions", "Status", "Description");
 
-    commandArray = [];
-    await client.commands.clear();
+    client.commands = new Map();
+    const commands = new Map();
 
     // Require every file ending with .js in the commands folder
     const Files = await loadFiles("commands");
 
-    Files.forEach(file => {
-        try {
-            let command = require(file);
-            const
-                L = file.split("/"),
-                fileName = L[L.length - 1],
-                commandName = fileName.split(".")[0],
-                category = L[L.length - 2],
-                fileDir = category + `/` + fileName,
-                cooldown = command.cooldown || DefaultCooldown;
+    for (const file of Files) {
+        const // Setup naming variables
+            L = file.split(path.sep),
+            fileName = L[L.length - 1],
+            commandName = fileName.split(".")[0],
+            category = L[L.length - 2],
+            fileDir = category + `/` + fileName;
 
-            // Log errors to table
+        try {
+            const command = require(file);
+            cooldown = command.cooldown || DefaultCooldown;
+
+            // Check if command is valid
             if (!command.data)
                 return Table.addRow(dim(commandName), cooldown, "None", red("FAILED"), "Invalid data or empty < " + fileDir);
 
@@ -90,20 +92,26 @@ async function commandHandler(client) {
             if (!description)
                 return Table.addRow(dim(name), cooldown, perms || "None", red("FAILED"), "Missing description < " + fileDir);
 
-            Table.addRow(name, cooldown, perms || "None", greenBright("LOADED"), fileDir);
-
             // Add the category to description
             command.data.description = `[${toTitleCase(category) || ""}]  ` + description;
 
             // Push the command to client
             client.commands.set(name, command);
-            commandArray.push(command.data.toJSON());
-        } catch (e) {
-            console.log(toError(e, e.stack.split("\n")[4], 3));
-        }
-    });
+            commands.push(command.data.toJSON());
 
-    client.application.commands.set(commandArray).catch(e => { }); // Load the slash commands
+            // Log command
+            Table.addRow(name, cooldown, perms || "None", greenBright("LOADED"), fileDir);
+        } catch (err) {
+            // Log error
+            const command = require(file);
+            const { name, description, default_member_permissions } = command.data;
+            const perms = default_member_permissions //? default_member_permissions.map(p => `${p}`).join(', ') : null;
+            const cooldown = command.cooldown || DefaultCooldown;
+            Table.addRow(name, cooldown, perms || "None", greenBright("LOADED"), fileDir);
+        }
+    }
+
+    client.application.commands.set(commands).catch(e => { }); // Load the slash commands
     console.log(Table.toString()); // Log table to console
     return Table.toString();
 }

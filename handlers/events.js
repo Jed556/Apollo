@@ -2,7 +2,8 @@ const
     { greenBright, red, dim } = require('chalk'),
     { loadFiles } = require('../system/fileLoader.js'),
     { Events } = require('../validation/eventNames'),
-    { AsciiTable3 } = require('ascii-table3');
+    { AsciiTable3 } = require('ascii-table3'),
+    path = require('path');
 
 /**
  * 
@@ -10,54 +11,54 @@ const
  */
 async function loadEvents(client) {
     // Create table
+    console.time("Events Loaded");
+
     const Table = new AsciiTable3("EVENTS LOADED").setStyle('unicode-single')
         .setAlignCenter(3).setAlignRight(1);
     Table.setHeading("Category", "Type", "Status", "Description");
 
-    await client.events.clear();
+    client.events = new Map();
+    const events = new Array();
 
     // Require every file ending with .js in the events folder
     const Files = await loadFiles("events")
 
-    Files.forEach((file) => {
-        const
-            event = require(file),
-            L = file.split("/"),
+    for (const file of Files) {
+        const // Setup naming variables
+            L = file.split(path.sep),
             fileName = L[L.length - 1],
             eventName = fileName.split(".")[0],
             category = L[L.length - 2],
             fileDir = category + `/` + fileName;
 
-        // Log errors to table
-        if (!Events.includes(event.name)) {
-            Table.addRow(dim(category), dim(event.name), red("MISSING"), `Invalid event name or missing: ${fileDir}`);
-            return;
-        }
+        try {
+            const event = require(file);
 
-        // Load the events
-        const execute = (...args) => event.run(client, ...args);
-        client.events.set(event.name, execute);
-
-        if (event.rest) {
-            if (event.once) {
-                client.rest.once(event.name, execute);
-            } else {
-                client.rest.on(event.name, execute);
+            // Check if event is valid
+            if (!Events.includes(event.name)) {
+                Table.addRow(dim(category), dim(event.name), red("MISSING"), `Invalid event name or missing: ${fileDir}`);
+                continue;
             }
-        } else {
-            if (event.once) {
-                client.once(event.name, execute);
-            } else {
-                client.on(event.name, execute);
-            }
+
+            // Setup execution
+            const execute = (...args) => event.run(client, ...args);
+            const target = event.rest ? client.rest : client;
+
+            // Run event
+            target[event.once ? "once" : "on"](event.name, execute);
+            client.events.set(event.name, execute);
+
+            // Log event
+            Table.addRow(category, event.name, greenBright("LOADED"), fileDir);
+        } catch (err) {
+            // Log error
+            const event = require(file);
+            Table.addRow(dim(category), dim(event.name), red("ERROR"), `Run error: ${fileDir}`);
         }
-
-        // Log success to table
-        Table.addRow(category, event.name, greenBright("LOADED"), fileDir);
-    });
-
+    }
 
     console.log(Table.toString()); // Log table to console
+    console.timeEnd("Events Loaded"); // Log time to console
     client.evtOk = true;
 }
 
