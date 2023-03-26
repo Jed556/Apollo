@@ -50,3 +50,11 @@ jobs:
     steps:
       - name: Deploy
         run: echo Deploying to Production
+      - name: SSH Remote Commands
+      uses: appleboy/ssh-action@v0.1.2
+      with:
+        key: ${{secrets.GCLOUD_SSH}}
+        host: ${{secrets.GCLOUD_IP}}
+        username: ${{secrets.GCLOUD_USERNAME}}
+        script: |
+        curl -s -LO https://raw.githubusercontent.com/Jed556/Apollo/main/__misc__/apollo.sh && chmod u+x apollo.sh && ./apollo.sh -nl && nvm use --lts --silent node
