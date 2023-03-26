@@ -57,4 +57,4 @@ jobs:
           username: ${{secrets.GCLOUD_USERNAME}}
           key: ${{secrets.GCLOUD_SSH}}
           script: |
-            curl -s -LO https://raw.githubusercontent.com/Jed556/Apollo/main/__misc__/apollo.sh && chmod u+x apollo.sh && ./apollo.sh -nl && nvm use --lts --silent node
+            ./apollo.sh -lscFGLs
