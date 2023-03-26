@@ -57,4 +57,4 @@ jobs:
           username: ${{secrets.GCLOUD_USERNAME}}
           key: ${{secrets.GCLOUD_SSH}}
           script: |
-            ./apollo.sh -lscFGLs
+            ./apollo.sh -lscFGLr
