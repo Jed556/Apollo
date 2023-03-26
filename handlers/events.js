@@ -10,54 +10,35 @@ const
  */
 async function loadEvents(client) {
     // Create table
+    console.time("Events Loaded");
+
     const Table = new AsciiTable3("EVENTS LOADED").setStyle('unicode-single')
         .setAlignCenter(3).setAlignRight(1);
     Table.setHeading("Category", "Type", "Status", "Description");
 
-    await client.events.clear();
+    client.events = new Map();
+    const events = new Array();
 
     // Require every file ending with .js in the events folder
     const Files = await loadFiles("events")
 
-    Files.forEach((file) => {
-        const
-            event = require(file),
-            L = file.split("/"),
-            fileName = L[L.length - 1],
-            eventName = fileName.split(".")[0],
-            category = L[L.length - 2],
-            fileDir = category + `/` + fileName;
+    for (const file of Files) {
+        try {
+            const event = require(file);
+            const execute = (...args) => event.run(client, ...args);
+            const target = event.rest ? client.rest : client;
 
-        // Log errors to table
-        if (!Events.includes(event.name)) {
-            Table.addRow(dim(category), dim(event.name), red("MISSING"), `Invalid event name or missing: ${fileDir}`);
-            return;
+            target[event.once ? "once" : "on"](event.name, execute);
+            client.events.set(event.name, execute);
+
+            Table.addRow(category, event.name, greenBright("LOADED"), fileDir);
+        } catch (err) {
+            Table.addRow(dim(category), dim(event.name), red("ERROR"), `Invalid event name or missing: ${fileDir}`);
         }
-
-        // Load the events
-        const execute = (...args) => event.run(client, ...args);
-        client.events.set(event.name, execute);
-
-        if (event.rest) {
-            if (event.once) {
-                client.rest.once(event.name, execute);
-            } else {
-                client.rest.on(event.name, execute);
-            }
-        } else {
-            if (event.once) {
-                client.once(event.name, execute);
-            } else {
-                client.on(event.name, execute);
-            }
-        }
-
-        // Log success to table
-        Table.addRow(category, event.name, greenBright("LOADED"), fileDir);
-    });
-
+    }
 
     console.log(Table.toString()); // Log table to console
+    console.timeEnd("Events Loaded"); // Log time to console
     client.evtOk = true;
 }
 

@@ -22,12 +22,6 @@ if (process.env.ownerID) {
 
 /**
  * 
- * @returns promisify(glob) shortcut
- */
-const PG = promisify(glob);
-
-/**
- * 
  * @returns Client's root directory
  */
 function mainDir() {
@@ -236,7 +230,6 @@ function eventErrorSend(client, interaction, error, reply, custom) { //create a 
 
 // EXPORT ALL FUNCTIONS
 module.exports = {
-    PG,
     mainDir,
     reSlash,
     randomNum,

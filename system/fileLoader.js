@@ -1,4 +1,7 @@
-const { PG, mainDir } = require('./functions');
+const
+    { toError, mainDir } = require('./functions'),
+    { glob } = require('glob'),
+    path = require('path');
 
 /**
  * 
@@ -6,9 +9,23 @@ const { PG, mainDir } = require('./functions');
  * @returns JavaScript files in directory
  */
 async function loadFiles(dirName) {
-    const Files = await PG(`${mainDir()}/${dirName}/**/*.js`);
-    Files.forEach(file => delete require.cache[require.resolve(file)]);
-    return Files;
+    try {
+        const files = await glob(path.join(mainDir(), dirName, "**/*.js"));
+        const jsFiles = files.filter(file => path.extname(file) === "js");
+        await Promise.all(jsFiles.map(deleteCachedFile));
+        return jsFiles;
+    } catch (err) {
+        toError(err, `Error loading files from ${dirName}: ${err}`, 0, false);
+    }
+}
+
+/**
+ * 
+ * @param {*} file File to delete in cache
+ */
+async function deleteCachedFile(file) {
+    const filePath = path.resolve(file);
+    if (require.cache[filePath]) delete require.cache[filePath];
 }
 
 module.exports = { loadFiles };
