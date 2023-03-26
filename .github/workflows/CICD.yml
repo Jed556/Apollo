@@ -17,11 +17,11 @@ jobs:
         run: echo Building
 
   DeployDev:
-    name: Deploy to Dev 
+    name: Deploy to Dev
     if: github.event_name == 'pull_request'
     needs: [Build]
     runs-on: ubuntu-latest
-    environment: 
+    environment:
       name: Development
       url: ''
     steps:
@@ -29,11 +29,11 @@ jobs:
         run: echo Deploying to Development
 
   DeployStaging:
-    name: Deploy to Staging 
+    name: Deploy to Staging
     if: github.event.ref == 'refs/heads/main'
     needs: [Build]
     runs-on: ubuntu-latest
-    environment: 
+    environment:
       name: Staging
       url: ''
     steps:
@@ -41,10 +41,10 @@ jobs:
         run: echo Staging
 
   DeployProd:
-    name: Deploy to Production 
+    name: Deploy to Production
     needs: [DeployStaging]
     runs-on: ubuntu-latest
-    environment: 
+    environment:
       name: Production
       url: 'https://tiny.one/Apollo-inv'
     steps:
