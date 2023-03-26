@@ -48,8 +48,9 @@ jobs:
       name: Production
       url: 'https://tiny.one/Apollo-inv'
     steps:
+      - name: Deploy
+        run: echo Connecting to Google Cloud VM Instance...
       - name: SSH Remote Commands
-        run: echo Deploying to Production
         uses: appleboy/ssh-action@v0.1.2
         with:
           host: ${{secrets.GCLOUD_IP}}
