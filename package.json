@@ -43,7 +43,7 @@
     "images-scraper": "^6.4.2",
     "iso-639-1": "^2.1.15",
     "libsodium-wrappers": "^0.7.11",
-    "mal-scraper": "2.12.0",
+    "mal-scraper": "2.12.1",
     "mathjs": "^11.7.0",
     "moment": "^2.29.4",
     "moment-duration-format": "^2.3.2",
