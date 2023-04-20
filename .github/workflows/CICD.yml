@@ -57,5 +57,6 @@ jobs:
           username: ${{secrets.GCLOUD_USERNAME}}
           key: ${{secrets.GCLOUD_SSH}}
           script: |
+            PATH=$PATH:/home/${{secrets.GCLOUD_USERNAME}}/.nvm/versions/node/v18.16.0/bin
             cd Production
             ./apollo.sh -lscFGLr
