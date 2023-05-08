@@ -111,7 +111,7 @@ async function commandHandler(client) {
         }
     }
 
-    client.application.commands.set(commands).catch(e => { }); // Load the slash commands
+    client.application.commands.set(commands).catch(e => { toError(e) }); // Load the slash commands
     console.log(Table.toString()); // Log table to console
     return Table.toString();
 }
