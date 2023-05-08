@@ -1,6 +1,4 @@
-const
-    { ActivityType } = require('discord.js'),
-    { randomNum } = require('../../system/functions'),
+const { ActivityType } = require('discord.js'), { randomNum } = require('../../system/functions'),
     DB = require('../../schemas/Status'),
     os = require('os'),
     osUtils = require('os-utils');
@@ -23,6 +21,9 @@ module.exports = {
                     _id: client.user.id
                 });
 
+                //set defaults if maintenance is null
+                await DB.findOneAndUpdate({ _id: client.user.id }, { maintenance: false }, { upsert: true });
+
                 if (!client.cmdOk || !client.dbOk || !client.evtOk) {
                     client.user.setStatus("idle");
                     client.user.setActivity("Deployment", { type: ActivityType.Watching });
@@ -35,8 +36,7 @@ module.exports = {
                     switch (display) {
                         // Set status as guild count
                         case 0:
-                            client.user.setActivity(`${Guilds} Server${Guilds > 1 || Guilds < 1 ? "s" : ""}`,
-                                { type: ActivityType.Listening });
+                            client.user.setActivity(`${Guilds} Server${Guilds > 1 || Guilds < 1 ? "s" : ""}`, { type: ActivityType.Listening });
                             break;
 
                         // Set status as user count
@@ -48,20 +48,17 @@ module.exports = {
                             else
                                 count = Math.ceil(Users) + " Member";
 
-                            client.user.setActivity(count,
-                                { type: ActivityType.Listening });
+                            client.user.setActivity(count, { type: ActivityType.Listening });
                             break;
 
                         // Set status as random 1
                         case 2:
-                            client.user.setActivity("Slash Commands",
-                                { type: ActivityType.Watching });
+                            client.user.setActivity("Slash Commands", { type: ActivityType.Watching });
                             break;
 
                         // Set status as random 2
                         case 3:
-                            client.user.setActivity("my DMs ✉",
-                                { type: ActivityType.Watching });
+                            client.user.setActivity("my DMs ✉", { type: ActivityType.Watching });
                             break;
 
                         // Set status as RAM usage
@@ -69,15 +66,13 @@ module.exports = {
                             // Calculate memory usage
                             const memUsage = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1);
 
-                            client.user.setActivity(`RAM: ${memUsage}MB`,
-                                { type: ActivityType.Watching });
+                            client.user.setActivity(`RAM: ${memUsage}MB`, { type: ActivityType.Watching });
                             break;
 
                         // Set status as CPU usage
                         case 5:
                             osUtils.cpuUsage((v) => {
-                                client.user.setActivity(`CPU: ${(v * 100).toFixed(1)}%`,
-                                    { type: ActivityType.Watching });
+                                client.user.setActivity(`CPU: ${(v * 100).toFixed(1)}%`, { type: ActivityType.Watching });
                             });
                             break;
                     }
