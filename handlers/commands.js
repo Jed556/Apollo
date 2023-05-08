@@ -20,7 +20,7 @@ if (process.env.token && process.env.guildID && process.env.defaultCooldown) {
 }
 
 /**
- * 
+ *
  * @param {*} client Discord client
  */
 async function loadCommands(client) {
@@ -52,7 +52,7 @@ async function loadCommands(client) {
 }
 
 /**
- * 
+ *
  * @param {*} client Discord client
  */
 async function commandHandler(client) {
@@ -62,7 +62,7 @@ async function commandHandler(client) {
     Table.setHeading("Command", "Cooldown", "Permissions", "Status", "Description");
 
     client.commands = new Map();
-    const commands = new Map();
+    const commands = [];
 
     // Require every file ending with .js in the commands folder
     const Files = await loadFiles("commands");
