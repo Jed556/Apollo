@@ -22,7 +22,8 @@ module.exports = {
                 });
 
                 //set defaults if maintenance is null
-                await DB.findOneAndUpdate({ _id: client.user.id }, { maintenance: false }, { upsert: true });
+                if (docs.maintenance == null)
+                    await DB.findOneAndUpdate({ _id: client.user.id }, { maintenance: false }, { upsert: true });
 
                 if (!client.cmdOk || !client.dbOk || !client.evtOk) {
                     client.user.setStatus("idle");
