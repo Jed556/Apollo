@@ -21,7 +21,7 @@ if (process.env.ownerID) {
 // ---------- FUNCTIONS ---------- //
 
 /**
- * 
+ *
  * @returns Client's root directory
  */
 function mainDir() {
@@ -29,7 +29,7 @@ function mainDir() {
 }
 
 /**
- * 
+ *
  * @param {string} string
  * @returns Replaces "\" with "/"
  */
@@ -38,7 +38,7 @@ function reSlash(string) {
 }
 
 /**
- * 
+ *
  * @param {*} min Number | Minimum number
  * @param {*} max Number | Maximum number
  * @returns Random number
@@ -56,7 +56,7 @@ function randomNum(min, max) {
 }
 
 /**
- * 
+ *
  * @param {*} delayInms Number | Time in Milliseconds
  * @returns Promise, waiting for the given Milliseconds
  */
@@ -73,7 +73,7 @@ function delay(delayInms) {
 }
 
 /**
- * 
+ *
  * @param {*} str String
  * @returns Formatted string
  */
@@ -90,18 +90,16 @@ function escapeRegex(str) {
 }
 
 /**
- * 
- * @param {*} str String
+ *
+ * @param {String} str String
  * @returns String in title case
  */
 function toTitleCase(str) {
-    return str.toLowerCase().split(' ').map(function (word) {
-        return (word.charAt(0).toUpperCase() + word.slice(1));
-    }).join(' ');
+    return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
 }
 
 /**
- * 
+ *
  * @param {*} error Thrown error
  * @param {String} message Message to display before the error
  * @param {Number} lines Number of lines to display
@@ -135,7 +133,7 @@ function toError(error, message, lines, string) {
 }
 
 /**
- * 
+ *
  * @param {*} message Message to log
  * @param {*} type Type of log ( 1 / "info", 2 / "success", 3 / "warn" )
  * @param {Boolean} string Return string only
@@ -175,13 +173,13 @@ function toLog(message, type, string) {
 }
 
 /**
- * 
+ *
  * @param {*} client Discord client
  * @param {*} interaction Discord interaction
  * @param {*} error Error log
  * @param {Boolean} reply Should reply to user
  * @param {Boolean} custom Is a custom interaction
- * @returns 
+ * @returns
  */
 function eventErrorSend(client, interaction, error, reply, custom) { //create a switch for interaction and message
     const
